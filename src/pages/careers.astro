@@ -1,0 +1,807 @@
+---
+/**
+ * careers.astro — Careers / Join Us page
+ * Route: /careers
+ *
+ * SEO targets:
+ *   Primary   — "mechanical engineer jobs Bengaluru"
+ *   Secondary — "engineering jobs bulk material handling India",
+ *               "fabrication jobs Bengaluru", "process engineer jobs Bangalore"
+ *   LSI       — VSK engineer, conveyor design engineer,
+ *               erection commissioning, technical sales bulk material handling
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const SITE_URL  = 'https://www.jayveecons.com';
+const PAGE_URL  = `${SITE_URL}/careers`;
+const YEAR      = new Date().getFullYear();
+
+// ─── Job Posting data — drives both the UI cards and JSON-LD schema ───────
+const roles = [
+  {
+    id:          'mechanical-design-engineer',
+    dept:        'Engineering',
+    title:       'Mechanical Design Engineer',
+    slug:        'mechanical-design-engineer-bengaluru',
+    desc:        'Equipment design for material handling and processing systems. Process calculations, mechanical sizing, GA and detail drawing production, BOM preparation. Works from client brief through to fabrication-ready documentation.',
+    skills:      ['AutoCAD / SolidWorks', 'Conveyor design', 'Mechanical calcs', 'B.E. Mechanical'],
+    // Schema fields
+    employmentType: 'FULL_TIME',
+    education:   "Bachelor's degree in Mechanical Engineering",
+    experience:  'Minimum 2 years in mechanical equipment design',
+    industry:    'Bulk Material Handling Equipment Manufacturing',
+  },
+  {
+    id:          'process-engineer',
+    dept:        'Engineering',
+    title:       'Process Engineer — Bulk Material Handling',
+    slug:        'process-engineer-bulk-material-handling-bengaluru',
+    desc:        'Process flow design, material balance calculations, equipment sizing and selection for bulk handling systems. Interfaces between client process requirements and mechanical design team. VSK or bulk processing experience strongly valued.',
+    skills:      ['Process design', 'Bulk material handling', 'Cement / Mining', 'B.E./M.E. Chemical or Mechanical'],
+    employmentType: 'FULL_TIME',
+    education:   "Bachelor's or Master's degree in Chemical or Mechanical Engineering",
+    experience:  'Minimum 2 years in process or bulk material handling engineering',
+    industry:    'Cement, Mining, Food Processing Equipment',
+  },
+  {
+    id:          'erection-commissioning-engineer',
+    dept:        'Projects',
+    title:       'Erection & Commissioning Engineer',
+    slug:        'erection-commissioning-engineer-bengaluru',
+    desc:        'On-site installation, alignment, and commissioning of VECTOMEC™ equipment at customer plants across India. Manages civil interface, mechanical assembly, drive commissioning, no-load trials, and process handover. Willingness to travel required.',
+    skills:      ['Site experience', 'Conveyor / elevator installation', 'Drive systems', 'Diploma / B.E. Mechanical'],
+    employmentType: 'FULL_TIME',
+    education:   'Diploma or Bachelor\'s degree in Mechanical Engineering',
+    experience:  'Minimum 2 years site erection and commissioning experience',
+    industry:    'Industrial Equipment Installation',
+  },
+  {
+    id:          'workshop-fabricator-welder',
+    dept:        'Fabrication',
+    title:       'Workshop Fabricator / Welder',
+    slug:        'fabricator-welder-bengaluru-manufacturing',
+    desc:        'Structural and plate fabrication of conveyors, elevators, hoppers, silos, and processing equipment at our 90,000 sq.ft Bengaluru facility. Reading and working to engineering drawings. Certified welding in MIG, TIG, or arc processes.',
+    skills:      ['Structural fabrication', 'Certified welding', 'Drawing reading', 'ITI / Diploma'],
+    employmentType: 'FULL_TIME',
+    education:   'ITI or Diploma in Mechanical / Welding',
+    experience:  'Minimum 2 years workshop fabrication or certified welding',
+    industry:    'Engineering Fabrication',
+  },
+  {
+    id:          'technical-sales-engineer',
+    dept:        'Sales & Business Development',
+    title:       'Technical Sales Engineer — Bulk Material Handling',
+    slug:        'technical-sales-engineer-bulk-material-handling',
+    desc:        'Customer engagement for VECTOMEC™ equipment and services — responding to enquiries, preparing technical proposals, and developing new client relationships across cement, mining, and food processing sectors. Must be comfortable discussing engineering requirements with plant engineers and procurement teams.',
+    skills:      ['Technical proposal writing', 'Bulk material handling', 'Client relationship', 'B.E. Mechanical preferred'],
+    employmentType: 'FULL_TIME',
+    education:   "Bachelor's degree in Mechanical Engineering preferred",
+    experience:  'Minimum 2 years technical sales in industrial equipment',
+    industry:    'Industrial Equipment Sales',
+  },
+  {
+    id:          'production-planning-qc',
+    dept:        'Operations',
+    title:       'Production Planning & Quality Control',
+    slug:        'production-planning-qc-bengaluru',
+    desc:        'Workshop production planning, job card management, material procurement coordination, and quality inspection — ensuring fabrication output meets engineering specifications and delivery commitments. Experience with small-to-medium batch engineering manufacturing preferred.',
+    skills:      ['Production planning', 'Quality inspection', 'Engineering manufacturing', 'Diploma / B.E.'],
+    employmentType: 'FULL_TIME',
+    education:   'Diploma or Bachelor\'s degree in Mechanical or Industrial Engineering',
+    experience:  'Minimum 2 years production planning or QC in engineering manufacturing',
+    industry:    'Engineering Manufacturing',
+  },
+];
+
+// ─── JSON-LD: BreadcrumbList ──────────────────────────────────────────────
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",    "item": SITE_URL },
+    { "@type": "ListItem", "position": 2, "name": "Join Us", "item": PAGE_URL },
+  ]
+};
+
+// ─── JSON-LD: Organization (employer for JobPosting) ─────────────────────
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${SITE_URL}/#organization`,
+  "name": "The Jayveecons Group",
+  "url": SITE_URL,
+  "logo": `${SITE_URL}/logo.png`,
+  "description": "Engineering and manufacturing of bulk material handling and processing equipment. Founded 1987, Bengaluru, India.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "1st Phase, Plot 87/D2, Mcnally Rd, Industrial Estate,Malur",
+    "addressRegion": "Karnataka",
+    "addressCountry": "IN"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+91 95388 67139",
+    "contactType": "Human Resources",
+    "email": "hr@jayveecons.com",
+    "availableLanguage": "English"
+  }
+};
+
+// ─── JSON-LD: JobPosting array ────────────────────────────────────────────
+const jobPostingSchema = roles.map(role => ({
+  "@context": "https://schema.org",
+  "@type": "JobPosting",
+  "title": role.title,
+  "description": role.desc,
+  "identifier": {
+    "@type": "PropertyValue",
+    "name": "Jayveecons Group",
+    "value": role.id
+  },
+  "datePosted": `${YEAR}-01-01`,
+  "employmentType": role.employmentType,
+  "hiringOrganization": {
+    "@type": "Organization",
+    "name": "The Jayveecons Group",
+    "sameAs": SITE_URL,
+    "logo": `${SITE_URL}/logo.png`
+  },
+  "jobLocation": {
+    "@type": "Place",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "1st Phase, Plot 87/D2, Mcnally Rd, Industrial Estate,",
+      "addressLocality": "Malur",
+      "addressRegion": "Karnataka",
+      "postalCode": "563130",
+      "addressCountry": "IN"
+    }
+  },
+  "applicantLocationRequirements": {
+    "@type": "Country",
+    "name": "India"
+  },
+  "educationRequirements": {
+    "@type": "EducationalOccupationalCredential",
+    "credentialCategory": role.education
+  },
+  "experienceRequirements": role.experience,
+  "industryIdentifier": role.industry,
+  "applicationContact": {
+    "@type": "ContactPoint",
+    "email": "hr@jayveecons.com",
+    "contactType": "HR / Recruitment"
+  }
+}));
+
+// ─── JSON-LD: FAQ ─────────────────────────────────────────────────────────
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What engineering roles does Jayveecons hire for?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Jayveecons hires for mechanical design engineers, process engineers, erection and commissioning engineers, workshop fabricators and welders, technical sales engineers, and production planning and QC roles — all based in Malur, India."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I apply for a job at Jayveecons?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Send your CV and a short covering note to hr@jayveecons.com. You do not need to wait for a specific role to be advertised — Jayveecons reviews all applications against current and upcoming requirements."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where is Jayveecons located?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Jayveecons is located at 1st Phase, Plot 87/D2, Mcnally Rd, Industrial Estate, Malur, Karnataka 563130, India, with a 90,000 sq.ft engineering and fabrication facility."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What industries does Jayveecons work in?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Jayveecons designs and manufactures bulk material handling and processing equipment for cement, mining, food processing, waste management, and steel industries. Engineers gain cross-sector exposure across all these industries."
+      }
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title="Engineering Jobs| Jayveecons Careers"
+  description="Mechanical, process, fabrication and commissioning engineering roles at Jayveecons — Bengaluru's bulk material handling equipment manufacturer. Apply to hr@jayveecons.com."
+  canonicalURL={PAGE_URL}
+  currentPath="/careers"
+>
+
+  <!-- ═══ JSON-LD SCHEMA INJECTION ═══ -->
+  <!-- BreadcrumbList -->
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} slot="head" />
+  <!-- Organization -->
+  <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} slot="head" />
+  <!-- JobPosting x6 -->
+  {jobPostingSchema.map(schema => (
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} slot="head" />
+  ))}
+  <!-- FAQ -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
+
+<!-- Page-specific styles -->
+<style>
+/* ── Keyframes (not in global sheet for this page) ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* PAGE HEADER */
+.page-header{position:relative;padding:130px 0 72px;overflow:hidden;
+  background:
+    radial-gradient(ellipse 90% 70% at 65% 40%,rgba(8,56,146,.85) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 60% at 5% 90%,rgba(192,24,30,.07) 0%,transparent 50%),
+    linear-gradient(155deg,var(--navy-deep) 0%,var(--ink) 55%,var(--black) 100%);
+}
+.page-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(192,24,30,.3) 50%,transparent)}
+.phi{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,48px)}
+.breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:18px;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.breadcrumb a{color:#7a8499;text-decoration:none;transition:color .2s}
+.breadcrumb a:hover{color:var(--fog)}
+.breadcrumb .sep{color:#3a4255}
+.breadcrumb .current{color:#ff7070}
+.page-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:14px;animation:fadeUp .7s ease .1s both}
+.page-eyebrow-line{width:40px;height:2px;background:var(--crimson)}
+.page-eyebrow span{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#ff7070}
+/* H1 — primary keyword in first heading */
+.page-title{font-family:var(--font-head);font-weight:800;
+  font-size:clamp(44px,6.5vw,84px);text-transform:uppercase;
+  line-height:.93;letter-spacing:-.01em;margin-bottom:16px;
+  animation:fadeUp .7s ease .2s both}
+.page-title .accent{color:var(--crimson-l)}
+.page-sub{font-size:clamp(14px,1.7vw,17px);font-weight:300;color:var(--fog);
+  max-width:580px;line-height:1.75;animation:fadeUp .7s ease .3s both}
+/* Direct-answer intro box — helps AI Overviews */
+.answer-box{
+  margin-top:24px;
+  background:rgba(13,26,58,.5);border:1px solid rgba(51,96,184,.25);
+  border-left:3px solid var(--crimson);
+  padding:14px 20px;max-width:640px;
+  animation:fadeUp .7s ease .4s both;
+}
+.answer-box p{font-size:14px;font-weight:300;color:var(--fog);line-height:1.7}
+.answer-box strong{color:var(--white);font-weight:500}
+
+/* COMMON */
+section{position:relative;z-index:1}
+.si{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,48px)}
+.section-tag{display:inline-flex;align-items:center;gap:10px;margin-bottom:12px}
+.section-tag .line{width:28px;height:2px;background:var(--crimson)}
+.section-tag span{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#ff7070}
+.section-headline{font-family:var(--font-head);font-weight:800;
+  font-size:clamp(30px,4vw,48px);text-transform:uppercase;line-height:.97;margin-bottom:14px}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--crimson);
+  color:var(--white);font-family:var(--font-head);font-weight:700;font-size:14px;
+  letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:13px 30px;
+  clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);
+  transition:background .2s,transform .2s;white-space:nowrap;border:none;cursor:pointer}
+.btn-primary:hover{background:var(--crimson-l);transform:translateX(2px)}
+
+/* WHY WORK HERE */
+.why-section{padding:clamp(52px,7vh,84px) 0;background:var(--ink-2)}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,5vw,80px);
+  align-items:start;margin-top:clamp(24px,4vh,40px)}
+.why-copy p{font-size:clamp(14px,1.5vw,16px);font-weight:300;color:var(--fog);
+  line-height:1.85;margin-bottom:16px}
+.why-copy p strong{color:var(--white);font-weight:500}
+/* Scannable bullet list for UX + SEO */
+.why-list{list-style:none;display:flex;flex-direction:column;gap:10px;
+  margin:16px 0;padding:0}
+.why-list li{display:flex;align-items:flex-start;gap:10px;
+  font-size:clamp(14px,1.4vw,15px);font-weight:300;color:var(--fog);line-height:1.65}
+.why-list li::before{content:'';display:inline-block;width:6px;height:6px;
+  background:var(--crimson);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+  flex-shrink:0;margin-top:5px}
+.why-points{display:flex;flex-direction:column;gap:2px}
+.why-point{background:var(--ink-3);padding:clamp(14px,2vw,22px);display:flex;
+  gap:16px;align-items:flex-start;border-left:3px solid transparent;
+  transition:border-left-color .25s,background .25s}
+.why-point:hover{background:rgba(13,26,58,.5);border-left-color:var(--crimson)}
+.wp-icon{width:34px;height:34px;background:rgba(192,24,30,.1);
+  border:1px solid rgba(192,24,30,.2);display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;color:var(--crimson-l)}
+.wp-icon svg{width:16px;height:16px}
+.wp-title{font-family:var(--font-head);font-weight:700;font-size:15px;
+  text-transform:uppercase;letter-spacing:.05em;color:var(--chrome);margin-bottom:4px}
+.wp-desc{font-size:13px;font-weight:300;color:#8898b0;line-height:1.6}
+
+/* ROLES */
+.roles-section{padding:clamp(52px,7vh,84px) 0;background:var(--ink)}
+.roles-intro{font-size:clamp(14px,1.5vw,16px);font-weight:300;color:var(--fog);
+  line-height:1.75;max-width:680px;margin-bottom:clamp(20px,3vh,32px)}
+.roles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+  margin-top:clamp(20px,3vh,32px)}
+/* role-card is a static island — no client JS needed */
+.role-card{background:var(--ink-2);padding:clamp(20px,2.8vw,30px);
+  border-top:2px solid transparent;transition:border-top-color .3s,background .3s}
+.role-card:hover{background:rgba(13,26,58,.4);border-top-color:var(--crimson)}
+.role-dept{font-family:var(--font-mono);font-size:9px;letter-spacing:.16em;
+  text-transform:uppercase;color:#ff7070;margin-bottom:8px}
+/* H3 — secondary keyword in role title */
+.role-title{font-family:var(--font-head);font-weight:700;
+  font-size:clamp(16px,2vw,20px);text-transform:uppercase;
+  letter-spacing:.04em;color:var(--white);margin-bottom:10px;line-height:1.1}
+.role-desc{font-size:13px;font-weight:300;color:#9098b0;line-height:1.65;margin-bottom:14px}
+.role-skills{display:flex;flex-wrap:wrap;gap:5px}
+.role-skill{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;background:rgba(13,26,58,.8);
+  border:1px solid rgba(51,96,184,.25);color:#7ab0ff;padding:3px 8px}
+
+/* INTERNAL LINKS BAND */
+.explore-band{padding:clamp(36px,5vh,56px) 0;background:var(--navy-deep);
+  border-top:1px solid rgba(51,96,184,.15);border-bottom:1px solid rgba(51,96,184,.15)}
+.explore-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;
+  margin-top:clamp(20px,3vh,28px)}
+.explore-card{background:rgba(10,12,18,.6);padding:clamp(18px,2.5vw,26px);
+  text-decoration:none;border-bottom:2px solid transparent;
+  transition:border-bottom-color .25s,background .25s;display:block}
+.explore-card:hover{background:rgba(13,26,58,.5);border-bottom-color:var(--crimson)}
+.ec-label{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;color:#ff7070;margin-bottom:6px}
+.ec-title{font-family:var(--font-head);font-weight:700;font-size:clamp(15px,1.8vw,18px);
+  text-transform:uppercase;color:var(--white);margin-bottom:5px}
+.ec-desc{font-size:12px;font-weight:300;color:#7a8aaa;line-height:1.5}
+
+/* FAQ */
+.faq-section{padding:clamp(52px,7vh,84px) 0;background:var(--ink-2)}
+.faq-grid{display:flex;flex-direction:column;gap:2px;margin-top:clamp(20px,3vh,32px)}
+.faq-item{background:var(--ink-3);border-left:3px solid transparent;
+  transition:border-left-color .25s}
+.faq-item:hover{border-left-color:var(--crimson)}
+.faq-q{font-family:var(--font-head);font-weight:700;font-size:clamp(16px,2vw,19px);
+  text-transform:uppercase;letter-spacing:.03em;color:var(--white);
+  padding:clamp(16px,2vw,22px);cursor:pointer;display:flex;
+  align-items:center;justify-content:space-between;gap:16px;
+  list-style:none;user-select:none}
+.faq-q::-webkit-details-marker{display:none}
+.faq-chevron{width:16px;height:16px;color:var(--crimson-l);flex-shrink:0;
+  transition:transform .25s}
+details[open] .faq-chevron{transform:rotate(180deg)}
+.faq-a{padding:0 clamp(16px,2vw,22px) clamp(16px,2vw,20px);
+  font-size:14px;font-weight:300;color:var(--fog);line-height:1.8}
+
+/* APPLICATION */
+.apply-section{padding:clamp(52px,7vh,84px) 0;background:var(--ink)}
+.apply-grid{display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(36px,5vw,80px);align-items:start}
+.apply-copy p{font-size:clamp(14px,1.5vw,16px);font-weight:300;color:var(--fog);
+  line-height:1.85;margin-bottom:16px}
+.apply-copy p strong{color:var(--white);font-weight:500}
+.apply-contact-block{background:rgba(10,12,18,.6);border:1px solid rgba(51,96,184,.2);
+  border-left:3px solid var(--crimson);padding:clamp(22px,3vw,34px);
+  display:flex;flex-direction:column;gap:18px}
+.acb-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:#ff7070;margin-bottom:4px}
+.acb-value{font-family:var(--font-head);font-weight:700;
+  font-size:clamp(17px,2.2vw,24px);color:var(--white);
+  letter-spacing:.04em;text-transform:uppercase}
+.acb-sub{font-size:13px;font-weight:300;color:var(--mist);margin-top:3px;line-height:1.5}
+.acb-divider{height:1px;background:rgba(51,96,184,.15)}
+.acb-hr-name{font-family:var(--font-head);font-weight:600;font-size:17px;
+  color:var(--chrome);text-transform:uppercase;letter-spacing:.04em}
+.acb-hr-role{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:#5580cc;margin-top:2px}
+.acb-email{display:inline-flex;align-items:center;gap:8px;margin-top:12px;
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;
+  color:var(--teal-l);text-decoration:none;transition:color .2s;word-break:break-all}
+.acb-email:hover{color:var(--white)}
+.apply-steps{display:flex;flex-direction:column;gap:2px;margin-top:clamp(18px,3vh,26px)}
+.apply-step{display:flex;gap:16px;align-items:flex-start;padding:14px 18px;
+  background:rgba(10,12,18,.4);border-left:2px solid rgba(192,24,30,.2)}
+.as-num{font-family:var(--font-head);font-weight:800;font-size:26px;
+  color:rgba(192,24,30,.2);line-height:1;flex-shrink:0;width:34px}
+.as-title{font-family:var(--font-head);font-weight:600;font-size:14px;
+  text-transform:uppercase;letter-spacing:.05em;color:var(--chrome);margin-bottom:3px}
+.as-desc{font-size:12px;font-weight:300;color:#8898b0;line-height:1.55}
+
+@media(max-width:1024px){
+  .why-grid,.apply-grid{grid-template-columns:1fr}
+  .explore-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .roles-grid{grid-template-columns:1fr 1fr}
+  .explore-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){
+  .roles-grid{grid-template-columns:1fr}
+  .explore-grid{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE HEADER
+     — H1 contains primary keyword near the start
+     — Direct-answer box answers "what jobs does
+       Jayveecons have?" in the first visible element
+═══════════════════════════════════════════════════ -->
+<div class="page-header">
+  <div class="phi">
+    <!-- BreadcrumbList visual (mirrors schema above) -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="sep" aria-hidden="true">/</span>
+      <span class="current" aria-current="page">Join Us</span>
+    </nav>
+
+    <div class="page-eyebrow"><div class="page-eyebrow-line"></div><span>Careers at Jayveecons</span></div>
+
+    <!-- Primary keyword: "Engineering Jobs" in H1 -->
+    <h1 class="page-title">
+      Engineering Jobs<br>in <span class="accent">Malur</span>
+    </h1>
+
+    <!-- Direct answer — first 100 words contain primary + secondary keywords -->
+    <p class="page-sub">
+      The Jayveecons Group is hiring mechanical engineers, process engineers,
+      fabricators, and technical sales staff at our Malur manufacturing facility.
+      We design and build bulk material handling and processing equipment — from
+      <a href="/products" style="color:var(--teal-l);text-decoration:none">VSK kilns to screw conveyors</a>
+      — for cement, mining, food, and waste industries across India.
+    </p>
+
+    <!-- Answer box — targets AI Overview / featured snippet -->
+    <div class="answer-box" role="note">
+      <p>
+        <strong>Open to applications across all roles.</strong>
+        Send your CV to <strong>hr@jayveecons.com</strong>.
+        We review every application against current and upcoming requirements —
+        you do not need to wait for a specific vacancy to be listed.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     WHY WORK HERE
+     — Secondary keywords: "engineering company Malur",
+       "mechanical design manufacturing India"
+═══════════════════════════════════════════════════ -->
+<section class="why-section" aria-labelledby="why-heading">
+  <div class="si">
+    <div class="section-tag reveal"><div class="line"></div><span>Why Jayveecons</span></div>
+    <h2 class="section-headline reveal" id="why-heading">
+      A Place Where Engineers<br>Do Real Work
+    </h2>
+    <div class="why-grid">
+      <div class="why-copy reveal">
+        <p>
+          Jayveecons is an engineering and manufacturing company in the original sense.
+          We design equipment, fabricate it in-house at our
+          <a href="/about" style="color:var(--teal-l);text-decoration:none">Malur facility</a>,
+          install it on-site, and support it for its working life.
+          For an engineer, that means end-to-end ownership — from calculation to commissioning,
+          without being handed off after a drawing review.
+        </p>
+        <!-- Scannable bullet list improves UX and crawlability -->
+        <ul class="why-list">
+          <li>90,000 sq.ft machining and fabrication facility in Malur</li>
+          <li>Projects span <a href="/industries" style="color:var(--teal-l);text-decoration:none">cement, mining, food processing, and waste management</a></li>
+          <li>Small enough that your contribution is visible; experienced enough to learn from</li>
+          <li>Engineers own their projects from process calculation to site commissioning</li>
+          <li>Direct access to senior engineers — no layers of management between you and decisions</li>
+        </ul>
+        <p>
+          <strong>We are not a large corporation with rigid hierarchies.</strong>
+          Problems on-site get escalated and solved, not passed along a chain.
+          Read more about <a href="/about#team" style="color:var(--teal-l);text-decoration:none">our team and leadership</a>.
+        </p>
+      </div>
+      <div class="why-points reveal">
+        <div class="why-point">
+          <div class="wp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div>
+            <div class="wp-title">Design to Commissioning</div>
+            <div class="wp-desc">Engineers work across the full project lifecycle — process calculations, fabrication drawings, site installation, and performance testing. No artificial handoffs.</div>
+          </div>
+        </div>
+        <div class="why-point">
+          <div class="wp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          </div>
+          <div>
+            <div class="wp-title">Cross-Sector Exposure</div>
+            <div class="wp-desc">Work on cement, mining, food processing, and waste management projects. Each sector brings different material and engineering demands — see our <a href="/industries" style="color:var(--teal-l);text-decoration:none">industries page</a>.</div>
+          </div>
+        </div>
+        <div class="why-point">
+          <div class="wp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <div>
+            <div class="wp-title">Nearly Four Decades of Knowledge</div>
+            <div class="wp-desc">Working alongside engineers with deep VSK, conveying, and bulk processing experience since 1987 — an education you cannot get from a textbook.</div>
+          </div>
+        </div>
+        <div class="why-point">
+          <div class="wp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div>
+            <div class="wp-title">Team That Builds Together</div>
+            <div class="wp-desc">Engineering, fabrication, and sales sit under one roof. The people who make and install what you design will tell you when a drawing does not work in practice.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     ROLES — H3 headings contain secondary keywords
+     Each card mirrors a JobPosting schema entry above
+═══════════════════════════════════════════════════ -->
+<section class="roles-section" aria-labelledby="roles-heading">
+  <div class="si">
+    <div class="section-tag reveal"><div class="line"></div><span>Roles We Hire For</span></div>
+    <h2 class="section-headline reveal" id="roles-heading">Current Openings &amp; Ongoing Interest</h2>
+    <p class="roles-intro reveal">
+      We do not always have positions advertised, but we are continuously interested
+      in strong candidates in these areas. If your background matches, send your CV
+      regardless of whether a specific vacancy is listed.
+    </p>
+
+    <!-- Static HTML grid — no client JS needed (Astro Island: none) -->
+    <div class="roles-grid" role="list">
+      {roles.map(role => (
+        <article class="role-card reveal" role="listitem" id={role.id}>
+          <div class="role-dept">{role.dept}</div>
+          <!-- H3 with LSI keyword naturally embedded -->
+          <h3 class="role-title">{role.title}</h3>
+          <p class="role-desc">{role.desc}</p>
+          <div class="role-skills" aria-label="Skills and qualifications">
+            {role.skills.map(s => <span class="role-skill">{s}</span>)}
+          </div>
+          <!-- CTA inline to each card for engagement + crawl signal -->
+          <p style="margin-top:14px">
+            <a
+              href={`mailto:hr@jayveecons.com?subject=Application — ${role.title}`}
+              style="font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-l);text-decoration:none"
+            >
+              Apply for this role →
+            </a>
+          </p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     INTERNAL LINKS BAND
+     — 4 contextual links improve crawl depth and
+       help search engines understand site architecture
+═══════════════════════════════════════════════════ -->
+<section class="explore-band" aria-label="Explore Jayveecons">
+  <div class="si">
+    <div class="section-tag reveal"><div class="line"></div><span>Before You Apply</span></div>
+    <div class="explore-grid">
+      <a href="/about" class="explore-card reveal">
+        <div class="ec-label">Our Story</div>
+        <div class="ec-title">About Jayveecons</div>
+        <div class="ec-desc">Company history, founding, and what drives our engineering culture since 1987.</div>
+      </a>
+      <a href="/products" class="explore-card reveal">
+        <div class="ec-label">VECTOMEC™</div>
+        <div class="ec-title">Equipment We Build</div>
+        <div class="ec-desc">Screw conveyors, bucket elevators, VSK kilns, ball mills — the equipment you will design and fabricate.</div>
+      </a>
+      <a href="/services" class="explore-card reveal">
+        <div class="ec-label">Engineering Services</div>
+        <div class="ec-title">What Engineers Do Here</div>
+        <div class="ec-desc">Design, fabrication, erection and commissioning, and after-sales support — the full lifecycle.</div>
+      </a>
+      <a href="/industries" class="explore-card reveal">
+        <div class="ec-label">Markets We Serve</div>
+        <div class="ec-title">Industries &amp; Sectors</div>
+        <div class="ec-desc">Cement, mining, food processing, waste management, steel — the sectors you will gain experience in.</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     FAQ — mirrors FAQPage schema injected above
+     Uses native <details>/<summary> — zero JS,
+     fast render, accessible, crawlable
+═══════════════════════════════════════════════════ -->
+<section class="faq-section" aria-labelledby="faq-heading">
+  <div class="si">
+    <div class="section-tag reveal"><div class="line"></div><span>Frequently Asked</span></div>
+    <h2 class="section-headline reveal" id="faq-heading">Common Questions</h2>
+    <div class="faq-grid" role="list">
+
+      <details class="faq-item reveal">
+        <summary class="faq-q">
+          What engineering roles does Jayveecons hire for?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="faq-a">
+          Jayveecons hires for mechanical design engineers, process engineers,
+          erection and commissioning engineers, workshop fabricators and welders,
+          technical sales engineers, and production planning and QC roles —
+          all based in Malur, Kartnataka, India.
+        </div>
+      </details>
+
+      <details class="faq-item reveal">
+        <summary class="faq-q">
+          How do I apply for a job at Jayveecons?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="faq-a">
+          Send your CV and a short covering note to
+          <a href="mailto:hr@jayveecons.com" style="color:var(--teal-l)">hr@jayveecons.com</a>.
+          You do not need to wait for a specific role to be advertised —
+          we review all applications against current and upcoming requirements and
+          respond within one to two weeks when there is a potential fit.
+        </div>
+      </details>
+
+      <details class="faq-item reveal">
+        <summary class="faq-q">
+          Where is Jayveecons located?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="faq-a">
+          Our offices and 90,000 sq.ft engineering and fabrication facility are at 1st Phase, Plot 87/D2, Mcnally Rd, Industrial Estate, Malur, Karnataka 563130, India. All current roles are Malur based,
+          with site travel required for erection and commissioning positions.
+        </div>
+      </details>
+
+      <details class="faq-item reveal">
+        <summary class="faq-q">
+          What industries will I work across at Jayveecons?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="faq-a">
+          Engineers at Jayveecons gain cross-sector exposure across
+          cement (including VSK technology), mining and ore processing,
+          food and agriculture processing, waste management, and steel industries.
+          See our <a href="/industries" style="color:var(--teal-l)">industries page</a>
+          for the full picture of what we build and for whom.
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     APPLICATION SECTION
+═══════════════════════════════════════════════════ -->
+<section class="apply-section" id="apply" aria-labelledby="apply-heading">
+  <div class="si">
+    <div class="apply-grid">
+      <div class="apply-copy reveal">
+        <div class="section-tag"><div class="line"></div><span>How to Apply</span></div>
+        <h2 class="section-headline" id="apply-heading">Send Us<br>Your CV</h2>
+        <p>
+          We keep the process straightforward. Send your CV and a brief note on what
+          you are looking for to our HR team. If your background matches a current
+          or upcoming requirement, we will respond within one to two weeks.
+        </p>
+        <p>
+          You do not need to wait for a specific vacancy.
+          <strong>We prefer to meet strong candidates before we have an urgent opening</strong>
+          — it gives both sides more time to assess the fit properly.
+        </p>
+        <p>
+          Applications are reviewed by Mrs. Sreenandini Jayaram, HR Manager,
+          who works closely with engineering and operations leadership on all
+          hiring decisions. For other enquiries, visit our
+          <a href="/contact" style="color:var(--teal-l);text-decoration:none">contact page</a>.
+        </p>
+        <div class="apply-steps">
+          <div class="apply-step">
+            <div class="as-num">01</div>
+            <div>
+              <div class="as-title">Send your CV</div>
+              <div class="as-desc">Email hr@jayveecons.com with a short covering note on your experience and the type of role you are seeking.</div>
+            </div>
+          </div>
+          <div class="apply-step">
+            <div class="as-num">02</div>
+            <div>
+              <div class="as-title">Initial conversation</div>
+              <div class="as-desc">If there is a potential fit, our HR team will reach out within one to two weeks to schedule a call or meeting.</div>
+            </div>
+          </div>
+          <div class="apply-step">
+            <div class="as-num">03</div>
+            <div>
+              <div class="as-title">Technical interview</div>
+              <div class="as-desc">Suitable candidates meet with the relevant engineering or operations lead for a technical discussion.</div>
+            </div>
+          </div>
+          <div class="apply-step">
+            <div class="as-num">04</div>
+            <div>
+              <div class="as-title">Offer</div>
+              <div class="as-desc">Successful candidates receive a formal offer. We aim to move quickly once we have identified the right person.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="apply-contact-block">
+          <div>
+            <div class="acb-label">Send your application to</div>
+            <div class="acb-value">hr@jayveecons.com</div>
+            <div class="acb-sub">Include your CV and a brief note on the type of role you are seeking</div>
+            <a href="mailto:hr@jayveecons.com" class="acb-email">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              hr@jayveecons.com
+            </a>
+          </div>
+          <div class="acb-divider"></div>
+          <div>
+            <div class="acb-label">HR Contact</div>
+            <div class="acb-hr-name">Mrs. Sreenandini Jayaram</div>
+            <div class="acb-hr-role">Human Resource Manager — Jayveecons Group</div>
+          </div>
+          <div class="acb-divider"></div>
+          <div>
+            <div class="acb-label">Office</div>
+            <address style="font-size:14px;font-weight:300;color:var(--fog);line-height:1.7;font-style:normal">
+              The Jayveecons Group<br>
+              1st Phase, Plot 87/D2, Mcnally Rd, Industrial Estate, Malur, Karnataka 563130, India<br>
+              Mon – Sat · 9:00 AM – 6:00 PM IST
+            </address>
+          </div>
+          <div class="acb-divider"></div>
+          <div>
+            <div class="acb-label">General enquiries</div>
+            <a href="tel:+91 95388 67139" style="font-size:14px;color:var(--fog);text-decoration:none">+91 95388 67139</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* Scroll reveal — lightweight IntersectionObserver, no framework needed */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+  });
+}, { threshold: 0.07, rootMargin: '0px 0px -20px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+/* Stagger role cards */
+document.querySelectorAll('.role-card').forEach((card, i) => {
+  (card as HTMLElement).style.transitionDelay = `${i * 60}ms`;
+});
+
+/* Stagger explore cards */
+document.querySelectorAll('.explore-card').forEach((card, i) => {
+  (card as HTMLElement).style.transitionDelay = `${i * 80}ms`;
+});
+</script>
+
+</BaseLayout>

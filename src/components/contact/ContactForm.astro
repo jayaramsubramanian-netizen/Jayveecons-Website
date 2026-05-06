@@ -1,0 +1,192 @@
+<div class="reveal">
+        <div class="rfq-form-wrap" id="rfq-form-wrap">
+          <h2> READY TO BUILD <span style="color: #e02428;">SOMETHING GREAT!</span></h2>
+          <div id="form-body">
+            <!-- Section: Your Details -->
+            <div class="form-section-title">Your Details</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="first-name">First Name <span class="req">*</span></label>
+                <input class="form-control" type="text" id="first-name" name="first_name" placeholder="Rajesh" required autocomplete="given-name">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="last-name">Last Name <span class="req">*</span></label>
+                <input class="form-control" type="text" id="last-name" name="last_name" placeholder="Kumar" required autocomplete="family-name">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="email">Email Address <span class="req">*</span></label>
+                <input class="form-control" type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone / WhatsApp</label>
+                <input class="form-control" type="tel" id="phone" name="phone" placeholder="+91 98765 43210" autocomplete="tel">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="company">Company Name <span class="req">*</span></label>
+                <input class="form-control" type="text" id="company" name="company" placeholder="ABC Industries Pvt. Ltd." required autocomplete="organization">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="designation">Your Role</label>
+                <input class="form-control" type="text" id="designation" name="designation" placeholder="Plant Manager / Procurement" autocomplete="organization-title">
+              </div>
+            </div>
+
+            <!-- Section: Project Details -->
+            <div class="form-section-title">Project Details</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="enquiry-type">Enquiry Type <span class="req">*</span></label>
+                <select class="form-control" id="enquiry-type" name="enquiry_type" required>
+                  <option value="" disabled selected>Select type</option>
+                  <option value="new-project">New Project / RFQ</option>
+                  <option value="technical">Technical Question</option>
+                  <option value="spares">Parts &amp; Spares</option>
+                  <option value="service">Service / Repair</option>
+                  <option value="partnership">Partnership / Collaboration</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="industry">Industry</label>
+                <select class="form-control" id="industry" name="industry">
+                  <option value="" disabled selected>Select industry</option>
+                  <option>Cement</option>
+                  <option>Mining &amp; Aggregates</option>
+                  <option>Food &amp; Agriculture</option>
+                  <option>Waste Management</option>
+                  <option>Steel &amp; Ceramics</option>
+                  <option>Oil &amp; Gas</option>
+                  <option>Pharmaceuticals</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Products of Interest</label>
+              <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox" name="products" value="screw-conveyor"><span>Screw Conveyors</span></label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="belt-conveyor"><span>Belt Conveyors</span></label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="bucket-elevator"><span>Bucket Elevators</span></label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="kiln"><span>Rotary Kilns</span></label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="mill"><span>Ball Mills / Grinding Mills</span></label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="crusher"><span>Crushers</span></label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="other-product"><span>Other / Not sure yet</span></label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="message">Project Description <span class="req">*</span></label>
+              <textarea class="form-control" id="message" name="message" placeholder="Describe your project, capacity requirements, material type, installation site, timeline, and any other relevant details..." required></textarea>
+            </div>
+
+            <p class="form-note">* Required fields. Your information is used solely to respond to your enquiry and is never shared with third parties.</p>
+            <button class="btn-submit" type="button" onclick="handleSubmit()">
+              Send Enquiry
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+
+          <!-- Success state -->
+          <div class="form-success" id="form-success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <h3>Enquiry Received</h3>
+            <p>Thank you — our engineering team will review your project details and respond within one business day.<br><br>For urgent matters, call us directly on <strong style="color:var(--fog)">+91 (080) 4115 7559</strong>.</p>
+          </div>
+
+        </div>
+      </div>
+
+<style>
+/* ── RFQ FORM ── */
+.rfq-form-wrap{background:radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+  radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+  linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+  padding:32px;
+  border-radius:12px;
+  padding:clamp(28px,3.5vw,44px)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-group{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.form-group.full{grid-column:1/-1}
+.form-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color: #b3cbfa;display:flex;align-items:center;gap:5px}
+.form-label .req{color:var(--crimson-l)}
+.form-control{
+  background:var(--white);border:1px solid rgba(51,96,184,.2);
+  color:var(--white);font-family:var(--font-body);font-size:14px;font-weight:400;
+  padding:12px 16px;outline:none;
+  transition:border-color .2s,background .2s;
+  width:100%;
+  -webkit-appearance:none;appearance:none;
+  border-radius:10px;
+}
+.form-control:focus{border-color:rgba(192,24,30,.6);background:rgba(13,26,58,.4)}
+.form-control::placeholder{color:#3d4660}
+.form-control option{background:var(--ink-2);color:var(--white)}
+textarea.form-control{resize:vertical;min-height:110px;line-height:1.6}
+select.form-control{cursor:pointer}
+
+.form-section-title{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#ff7070;padding-bottom:10px;border-bottom:1px solid rgba(51,96,184,.15);margin-bottom:16px;margin-top:8px}
+
+.checkbox-group{display:flex;flex-direction:column;gap:10px}
+.checkbox-item{display:flex;align-items:center;gap:10px;cursor:pointer}
+.checkbox-item input[type="checkbox"]{width:16px;height:16px;accent-color:var(--crimson);cursor:pointer;flex-shrink:0}
+.checkbox-item span{font-size:14px;color:var(--fog);font-weight:300}
+
+.form-note{font-size:12px;color:#5a6478;font-family:var(--font-mono);letter-spacing:.05em;margin-top:8px}
+
+.btn-submit{
+  display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
+  background:var(--crimson);color:var(--white);
+  font-family:var(--font-head);font-weight:700;font-size:16px;letter-spacing:.12em;text-transform:uppercase;
+  padding:17px 32px;border:none;cursor:pointer;
+  clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+  transition:background .2s,transform .15s;margin-top:8px;
+}
+.btn-submit:hover{background:var(--crimson-l);transform:translateY(-1px)}
+.btn-submit:active{transform:translateY(0)}
+.btn-submit svg{width:18px;height:18px}
+
+.form-success{display:none;text-align:center;padding:40px 20px}
+.form-success svg{width:52px;height:52px;color:var(--teal-l);margin:0 auto 16px;display:block}
+.form-success h3{font-family:var(--font-head);font-weight:700;font-size:26px;text-transform:uppercase;color:var(--white);margin-bottom:8px}
+.form-success p{font-size:14px;font-weight:300;color:#9098b0;line-height:1.6}
+
+.contact-form{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  background:radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+  radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+  linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+  padding:32px;
+  border-radius:12px;
+}
+
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+}
+
+input, select, textarea{
+  padding:12px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+
+@media(max-width:768px){
+  .grid-2{
+    grid-template-columns:1fr;
+  }
+}
+</style>

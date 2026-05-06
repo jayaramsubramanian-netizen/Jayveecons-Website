@@ -1,0 +1,329 @@
+---
+// src/components/Navbar.astro
+// Props: pass currentPath to highlight the active nav link
+const { currentPath = '/' } = Astro.props;
+
+const links = [
+  { href: '/about',      label: 'About'         },
+  { href: '/products',   label: 'Products'      },
+  { href: '/industries', label: 'Industries'    },
+  { href: '/services',   label: 'Services'      },
+  { href: 'https://akshayvipra.com', label: 'Manufacturing', external: true },
+  { href: '/contact',    label: 'Contact Us'    },
+];
+---
+
+<nav id="navbar">
+  <a href="/" class="nav-logo">
+    <img src="public/images/logo.png" alt="Jayveecons" class="nav-logo-img" width="160" height="42">
+    <div class="nav-logo-text">
+      <span class="name">Jayveecons</span>
+      <span class="sub">Moving Your World Ahead</span>
+    </div>
+  </a>
+
+  <button class="nav-burger" id="burger" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+
+  <ul class="nav-links" id="nav-links">
+    {links.map(link => (
+      <li>
+        <a
+          href={link.href}
+          class={currentPath.startsWith(link.href) && link.href !== '/' ? 'active' : ''}
+          {...(link.external ? { target: '_blank', rel: 'noopener' } : {})}
+        >
+          {link.label}
+        </a>
+      </li>
+    ))}
+    <li><a href="/contact" class="nav-cta">Request Quote</a></li>
+  </ul>
+</nav>
+
+<style>
+  /* ─── CSS CUSTOM PROPERTIES (scoped to this component) ─── */
+  nav {
+    --crimson:     #c0181e;
+    --crimson-l:   #e02428;
+    --fog:         #c8cdd8;
+    --chrome:      #d0d4dc;
+    --font-head:   'Barlow Condensed', sans-serif;
+    --font-body:   'Barlow', sans-serif;
+    --font-mono:   'JetBrains Mono', monospace;
+
+    background:
+      linear-gradient(
+        90deg,
+        rgba(0,0,0,0.10)       0%,
+        rgba(0,0,0,0.04)      12%,
+        rgba(255,255,255,0.14) 22%,
+        rgba(255,255,255,0.22) 35%,
+        rgba(255,255,255,0.08) 50%,
+        rgba(255,255,255,0.18) 64%,
+        rgba(0,0,0,0.06)       80%,
+        rgba(0,0,0,0.08)      100%
+      ),
+      repeating-linear-gradient(
+        180deg,
+        transparent                    0px,
+        rgba(255,255,255,0.07)         1px,
+        transparent                    2px,
+        rgba(0,0,0,0.03)               3px,
+        transparent                    4px
+      ),
+      linear-gradient(
+        172deg,
+        #c8cacc   0%,
+        #dddfe2   8%,
+        #e8eaec  15%,
+        #f0f2f4  22%,
+        #d8dadd  30%,
+        #c0c2c5  38%,
+        #d2d4d7  44%,
+        #e4e6e9  52%,
+        #f2f4f6  58%,
+        #e0e2e5  66%,
+        #caccce  72%,
+        #d8dadc  80%,
+        #e6e8ea  88%,
+        #d0d2d5  94%,
+        #c2c4c7  100%
+      );
+
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(18px, 4vw, 48px);
+    height: 70px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  nav.scrolled {
+    border-bottom-color: rgba(192,24,30,0.6);
+    box-shadow:
+      0 4px 24px rgba(0,0,0,0.28),
+      0 1px 0 rgba(255,255,255,0.35) inset;
+  }
+
+  /* ─── LOGO ─── */
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .nav-logo-img {
+    height: 50px;
+    width: auto;
+    display: block;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+  }
+  .nav-logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+  .nav-logo-text .name {
+    font-family: var(--font-head);
+    font-style: italic;
+    font-weight: 800;
+    font-size: 30px;
+    letter-spacing: 0.1em;
+    color: #c0181e;
+    text-transform: uppercase;
+    text-shadow:
+      0 1px 0 rgba(255,255,255,0.55),
+      0 -1px 0 rgba(0,0,0,0.18),
+      0 2px 6px rgba(0,0,0,0.12);
+  }
+  .nav-logo-text .sub {
+    font-family: var(--font-mono);
+    font-weight: bold;
+    font-size: 12px;
+    color: #2a2d32;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ─── BURGER ─── */
+  .nav-burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 8px;
+    background: none;
+    border: none;
+    z-index: 110;
+  }
+  .nav-burger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #083892; /* ← dark navy blue, visible on steel */
+    transition: transform 0.3s, opacity 0.3s, width 0.3s;
+    transform-origin: center;
+  }
+  .nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg);  }
+  .nav-burger.open span:nth-child(2) { opacity: 0; width: 0; }
+  .nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ─── LINKS ─── */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 2.5vw, 34px);
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #2a2d32;
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+    white-space: nowrap;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--crimson);
+    transition: width 0.25s;
+    box-shadow: 0 0 6px rgba(192,24,30,0.5);
+  }
+  .nav-links a:hover          { color: #0d0e10; }
+  .nav-links a:hover::after,
+  .nav-links a.active::after  { width: 100%; }
+  .nav-links a.active         { color: #0d0e10; }
+
+  .nav-cta {
+    background: var(--crimson) !important;
+    color: #fff !important;
+    padding: 9px 20px !important;
+    font-weight: 600 !important;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: background 0.2s !important;
+    text-shadow: none !important;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.15) inset,
+      0 -1px 0 rgba(0,0,0,0.3) inset !important;
+  }
+  .nav-cta:hover  { background: var(--crimson-l) !important; }
+  .nav-cta::after { display: none !important; }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 860px) {
+    .nav-burger { display: flex; }
+
+    .nav-links {
+      position: fixed;
+      top: 70px; left: 0; right: 0;
+      /* Same steel gradient as the nav bar — no extra overlays */
+      background:
+        linear-gradient(90deg,
+          rgba(0,0,0,0.06)       0%,
+          rgba(255,255,255,0.10) 30%,
+          rgba(255,255,255,0.10) 70%,
+          rgba(0,0,0,0.06)       100%
+        ),
+        repeating-linear-gradient(
+          180deg,
+          transparent                0px,
+          rgba(255,255,255,0.06)     1px,
+          transparent                2px,
+          rgba(0,0,0,0.025)          3px,
+          transparent                4px
+        ),
+        linear-gradient(172deg, #d0d2d5 0%, #e8eaec 40%, #dddfe2 70%, #cacccf 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      border-bottom: 1px solid rgba(192,24,30,0.2);
+      transform: translateY(-110%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      pointer-events: none;
+    }
+    .nav-links.open {
+      transform: translateY(0);
+      pointer-events: all;
+    }
+    .nav-links li {
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .nav-links a {
+      display: block;
+      padding: 17px clamp(18px, 4vw, 48px);
+      font-size: 15px;
+      color: #2a2d32;
+    }
+    .nav-links a::after { display: none; }
+    .nav-cta {
+      margin: 14px clamp(18px, 4vw, 48px) 18px !important;
+      clip-path: none !important;
+      display: block !important;
+      text-align: center !important;
+      padding: 14px !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    nav, .nav-links, .nav-burger span, .nav-links a::after {
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+
+<script>
+  const navbar  = document.getElementById('navbar')  as HTMLElement;
+  const burger  = document.getElementById('burger')  as HTMLButtonElement;
+  const navMenu = document.getElementById('nav-links') as HTMLUListElement;
+
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  burger.addEventListener('click', () => {
+    const open = navMenu.classList.toggle('open');
+    burger.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  navMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      navMenu.classList.remove('open');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!navbar.contains(e.target as Node) && navMenu.classList.contains('open')) {
+      navMenu.classList.remove('open');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+  });
+</script>

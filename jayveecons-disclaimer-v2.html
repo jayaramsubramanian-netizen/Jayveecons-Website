@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Legal — Disclaimer and Privacy Policy for Jayveecons Industries Pvt. Ltd. Website terms of use, content protection, liability notice, and data privacy statement.">
+<meta name="robots" content="noindex,follow">
+<title>Disclaimer &amp; Privacy Policy — Jayveecons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#06070a;--ink:#0a0c12;--ink-2:#0f1219;--ink-3:#151a24;
+  --navy-deep:#0d1a3a;--navy-mid:#1a3260;--navy-glow:#3360b8;
+  --crimson:#c0181e;--crimson-l:#e02428;
+  --chrome:#d0d4dc;--chrome-l:#eaecf0;
+  --white:#ffffff;--fog:#c8cdd8;--mist:#8890a4;--teal-l:#14a898;
+  --font-head:'Barlow Condensed',sans-serif;
+  --font-body:'Barlow',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--ink);color:var(--white);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(51,96,184,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(51,96,184,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,4vw,48px);height:70px;background:rgba(6,7,10,.95);backdrop-filter:blur(14px);border-bottom:1px solid rgba(192,24,30,.12);transition:border-color .3s,box-shadow .3s}
+nav.scrolled{border-bottom-color:rgba(192,24,30,.4);box-shadow:0 4px 32px rgba(0,0,0,.5)}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}
+.nav-logo-img{height:42px;width:auto;display:block}
+.nav-logo-text{display:flex;flex-direction:column;line-height:1}
+.nav-logo-text .name{font-family:var(--font-head);font-weight:800;font-size:19px;letter-spacing:.1em;color:var(--white);text-transform:uppercase}
+.nav-logo-text .sub{font-family:var(--font-mono);font-size:10px;color:#ff6b6b;letter-spacing:.14em;text-transform:uppercase;margin-top:4px}
+.nav-burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:110}
+.nav-burger span{display:block;width:24px;height:2px;background:var(--fog);transition:transform .3s,opacity .3s,width .3s;transform-origin:center}
+.nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-burger.open span:nth-child(2){opacity:0;width:0}
+.nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.nav-links{display:flex;align-items:center;gap:clamp(14px,2.5vw,34px);list-style:none}
+.nav-links a{font-family:var(--font-body);font-weight:500;font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:var(--fog);text-decoration:none;transition:color .2s;position:relative;white-space:nowrap}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--crimson);transition:width .25s}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{background:var(--crimson)!important;color:var(--white)!important;padding:9px 20px!important;font-weight:600!important;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:background .2s!important}
+.nav-cta:hover{background:var(--crimson-l)!important}
+.nav-cta::after{display:none!important}
+@media(max-width:860px){
+  .nav-burger{display:flex}
+  .nav-links{position:fixed;top:70px;left:0;right:0;background:rgba(6,7,10,.98);backdrop-filter:blur(16px);flex-direction:column;align-items:stretch;gap:0;border-bottom:1px solid rgba(192,24,30,.2);transform:translateY(-110%);transition:transform .35s cubic-bezier(.4,0,.2,1);pointer-events:none}
+  .nav-links.open{transform:translateY(0);pointer-events:all}
+  .nav-links li{border-bottom:1px solid rgba(255,255,255,.05)}
+  .nav-links a{display:block;padding:17px clamp(18px,4vw,48px);font-size:15px}
+  .nav-links a::after{display:none}
+  .nav-cta{margin:14px clamp(18px,4vw,48px) 18px!important;clip-path:none!important;display:block!important;text-align:center!important;padding:14px!important}
+}
+
+/* PAGE HEADER — compact for utility page */
+.page-header{position:relative;padding:120px 0 52px;background:linear-gradient(155deg,var(--navy-deep) 0%,var(--ink) 60%)}
+.page-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(192,24,30,.25) 50%,transparent)}
+.phi{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 clamp(18px,4vw,48px)}
+.breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:16px;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.breadcrumb a{color:#7a8499;text-decoration:none;transition:color .2s}
+.breadcrumb a:hover{color:var(--fog)}
+.breadcrumb .sep{color:#3a4255}
+.breadcrumb .current{color:#ff7070}
+.page-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:12px;animation:fadeUp .6s ease .1s both}
+.page-eyebrow-line{width:32px;height:2px;background:var(--crimson)}
+.page-eyebrow span{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#ff7070}
+.page-title{font-family:var(--font-head);font-weight:800;font-size:clamp(40px,6vw,72px);text-transform:uppercase;line-height:.93;letter-spacing:-.01em;animation:fadeUp .6s ease .2s both}
+
+/* CONTENT */
+.content-wrap{padding:clamp(48px,7vh,80px) 0 clamp(64px,9vh,100px)}
+.content-inner{max-width:860px;margin:0 auto;padding:0 clamp(18px,4vw,48px)}
+
+/* Last updated bar */
+.meta-bar{
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:14px 20px;
+  background:rgba(13,26,58,.5);
+  border:1px solid rgba(51,96,184,.18);
+  border-left:3px solid var(--crimson);
+  margin-bottom:clamp(32px,5vh,52px);
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+}
+.meta-bar .meta-item{display:flex;align-items:center;gap:8px;color:#7a8aaa}
+.meta-bar .meta-item strong{color:var(--fog);font-weight:500}
+
+/* Disclaimer sections */
+.disc-section{margin-bottom:clamp(28px,4vh,44px)}
+.disc-section + .disc-section{padding-top:clamp(28px,4vh,44px);border-top:1px solid rgba(51,96,184,.1)}
+.disc-heading{
+  font-family:var(--font-head);font-weight:700;
+  font-size:clamp(18px,2.5vw,24px);
+  text-transform:uppercase;letter-spacing:.05em;
+  color:var(--chrome);
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:12px;
+}
+.disc-heading::before{
+  content:'';
+  display:inline-block;width:18px;height:2px;
+  background:var(--crimson);flex-shrink:0;
+}
+.disc-body{
+  font-size:clamp(14px,1.5vw,15px);
+  font-weight:300;
+  color:#9098b0;
+  line-height:1.9;
+}
+.disc-body p{margin-bottom:14px}
+.disc-body p:last-child{margin-bottom:0}
+.disc-body a{color:var(--teal-l);text-decoration:none;transition:color .2s}
+.disc-body a:hover{color:var(--white)}
+.disc-body strong{color:var(--fog);font-weight:500}
+
+/* Contact reference block */
+.contact-ref{
+  margin-top:clamp(32px,5vh,52px);
+  background:rgba(13,26,58,.4);
+  border:1px solid rgba(51,96,184,.18);
+  border-left:3px solid var(--crimson);
+  padding:clamp(20px,3vw,32px);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;
+}
+.cr-text{}
+.cr-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#ff7070;margin-bottom:6px}
+.cr-value{font-family:var(--font-head);font-weight:700;font-size:clamp(16px,2vw,20px);text-transform:uppercase;letter-spacing:.04em;color:var(--white)}
+.cr-sub{font-size:13px;font-weight:300;color:var(--mist);margin-top:3px}
+.cr-link{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--crimson);color:var(--white);
+  font-family:var(--font-head);font-weight:700;font-size:13px;
+  letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  padding:11px 24px;
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+  transition:background .2s;white-space:nowrap;
+}
+.cr-link:hover{background:var(--crimson-l)}
+
+/* FOOTER */
+footer{background:var(--black);border-top:1px solid rgba(51,96,184,.14);padding:clamp(36px,5vh,52px) 0 24px}
+.footer-inner{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,48px)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.footer-copy{font-size:13px;color:#7a8499}
+.footer-copy a{color:var(--teal-l);text-decoration:none}
+.footer-legal{display:flex;gap:16px;flex-wrap:wrap}
+.footer-legal a{font-size:13px;color:#7a8499;text-decoration:none;transition:color .2s}
+.footer-legal a:hover{color:var(--fog)}
+.footer-nav{display:flex;gap:clamp(16px,3vw,32px);flex-wrap:wrap;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(51,96,184,.1)}
+.footer-nav a{font-size:13px;color:#7a8499;text-decoration:none;transition:color .2s;font-family:var(--font-body);letter-spacing:.04em}
+.footer-nav a:hover{color:var(--fog)}
+
+/* Tab navigation between Disclaimer and Privacy Policy */
+.legal-tabs{
+  display:flex;gap:2px;
+  margin-bottom:clamp(28px,4vh,44px);
+  border-bottom:1px solid rgba(51,96,184,.15);
+}
+.legal-tab{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  padding:13px 22px;
+  background:none;border:none;cursor:pointer;
+  color:#7a8aaa;
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+  transition:color .2s,border-color .2s;
+  text-decoration:none;
+  display:inline-block;
+}
+.legal-tab:hover{color:var(--fog)}
+.legal-tab.active{color:var(--white);border-bottom-color:var(--crimson)}
+
+/* Document header — used at top of each policy section */
+.doc-header{
+  margin-bottom:clamp(28px,4vh,44px);
+  padding-bottom:clamp(20px,3vh,32px);
+  border-bottom:1px solid rgba(51,96,184,.12);
+}
+.doc-title{
+  font-family:var(--font-head);font-weight:800;
+  font-size:clamp(28px,4vw,42px);
+  text-transform:uppercase;letter-spacing:.01em;
+  color:var(--white);margin-bottom:8px;line-height:.97;
+}
+.doc-title .accent{color:var(--crimson-l)}
+.doc-subtitle{font-size:clamp(13px,1.4vw,15px);font-weight:300;color:var(--mist);line-height:1.65}
+
+/* Divider between the two documents */
+.doc-divider{
+  margin:clamp(48px,7vh,80px) 0;
+  border:none;
+  border-top:1px solid rgba(51,96,184,.15);
+  position:relative;
+}
+.doc-divider::before{
+  content:'';
+  position:absolute;
+  top:-1px;left:0;
+  width:60px;height:2px;
+  background:var(--crimson);
+}
+
+@media(max-width:520px){.contact-ref{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="/" class="nav-logo">
+    <img src="logo.png" alt="Jayveecons" class="nav-logo-img">
+    <div class="nav-logo-text"><span class="name">Jayveecons</span><span class="sub">Moving Your World Ahead</span></div>
+  </a>
+  <button class="nav-burger" id="burger" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/about">About</a></li>
+    <li><a href="/products">Products</a></li>
+    <li><a href="/industries">Industries</a></li>
+    <li><a href="/services">Services</a></li>
+    <li><a href="/contact" class="nav-cta">Request Quote</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="phi">
+    <div class="breadcrumb"><a href="/">Home</a><span class="sep">/</span><span class="current">Legal</span></div>
+    <div class="page-eyebrow"><div class="page-eyebrow-line"></div><span>Legal Documents</span></div>
+    <h1 class="page-title">Disclaimer &amp;<br>Privacy Policy</h1>
+  </div>
+</div>
+
+<div class="content-wrap">
+  <div class="content-inner">
+
+    <div class="meta-bar">
+      <div class="meta-item"><strong>Company</strong> Jayveecons Industries Pvt. Ltd.</div>
+      <div class="meta-item"><strong>Jurisdiction</strong> Bengaluru, Karnataka, India</div>
+      <div class="meta-item"><strong>Last reviewed</strong> <span id="review-year"></span></div>
+    </div>
+
+    <!-- Tab navigation -->
+    <nav class="legal-tabs" aria-label="Legal document navigation">
+      <a href="#disclaimer" class="legal-tab active">Disclaimer</a>
+      <a href="#privacy" class="legal-tab">Privacy Policy</a>
+    </nav>
+
+    <!-- ═══ DISCLAIMER ═══ -->
+    <div id="disclaimer">
+      <div class="doc-header">
+        <div class="doc-title">Website <span class="accent">Disclaimer</span></div>
+        <div class="doc-subtitle">Terms of use, content protection, liability limitations, and governing law for jayveecons.com</div>
+      </div>
+
+    <div class="disc-section">
+      <div class="disc-heading">Content Protection</div>
+      <div class="disc-body">
+        <p>The entire content of this website — including but not limited to text, product descriptions, engineering specifications, images, drawings, graphics, and structural design — is the property of Jayveecons Industries Pvt. Ltd. and is protected under applicable copyright and intellectual property laws.</p>
+        <p>You may download or print individual pages and sections of this website solely to the extent permitted by their intended use — for personal reference, evaluation of Jayveecons' products and services, or legitimate business enquiry. <strong>Any duplication, reproduction, transmission, modification, redistribution, or commercial use of any content from this website is strictly prohibited</strong> without prior written consent from Jayveecons Industries Pvt. Ltd.</p>
+        <p>The VECTOMEC™ product name and associated product range identifiers are proprietary to Jayveecons Industries Pvt. Ltd. Unauthorised use of these marks is prohibited.</p>
+      </div>
+    </div>
+
+    <div class="disc-section">
+      <div class="disc-heading">Accuracy of Information</div>
+      <div class="disc-body">
+        <p>Jayveecons Industries Pvt. Ltd. makes its best efforts to ensure that all information presented on this website is accurate, reliable, and current at the time of publication. Product specifications, technical parameters, and capacity figures are provided as indicative guidance; actual specifications for any project are determined through the engineering design process and confirmed in formal quotation documentation.</p>
+        <p>Jayveecons reserves the right to modify, update, or remove any information on this website at any time without prior notice. We do not accept liability for any loss, damage, or inconvenience arising directly or indirectly from reliance on information published on this website.</p>
+      </div>
+    </div>
+
+    <div class="disc-section">
+      <div class="disc-heading">Limitation of Liability</div>
+      <div class="disc-body">
+        <p>Jayveecons Industries Pvt. Ltd. does not assume any liability for damage or loss — whether direct, indirect, incidental, consequential, or otherwise — caused in connection with accessing, browsing, or using this website, or with respect to its technical performance, availability, or any requests submitted through it.</p>
+        <p>This website is provided on an "as is" basis. While we take reasonable steps to maintain its availability and security, we do not warrant that the website will be uninterrupted, error-free, or free from harmful components including viruses or malicious code. Users access this website at their own risk.</p>
+      </div>
+    </div>
+
+    <div class="disc-section">
+      <div class="disc-heading">Third-Party Links</div>
+      <div class="disc-body">
+        <p>This website may contain links to external websites operated by third parties, including our manufacturing partner <a href="https://akshayvipra.com" target="_blank" rel="noopener">AkshayVipra El-Mec Pvt. Ltd.</a> and other industry or reference resources. These links are provided for convenience and informational purposes only.</p>
+        <p>Jayveecons Industries Pvt. Ltd. has not reviewed the content, security, or reliability of all linked third-party websites and does not assume any liability with respect to their technological quality, content, products, services, or any other aspect. The inclusion of a link does not imply endorsement of the linked website or its operator.</p>
+        <p>Once you leave the Jayveecons website via an external link, you are subject to the terms and privacy policies of the destination website, not those of Jayveecons.</p>
+      </div>
+    </div>
+
+    <div class="disc-section">
+      <div class="disc-heading">Engineering Information</div>
+      <div class="disc-body">
+        <p>Technical content, product specifications, capacity ranges, and application information published on this website are intended to provide a general overview of Jayveecons' capabilities and product range. They do not constitute engineering advice, a formal technical recommendation, or a contractual specification for any specific project.</p>
+        <p>All engineering decisions — including equipment selection, sizing, material specification, and installation requirements — must be made by qualified engineers on the basis of a formal project brief and are confirmed in writing through Jayveecons' standard quotation and order process. For project-specific technical enquiries, please <a href="/contact">contact our engineering team directly</a>.</p>
+      </div>
+    </div>
+
+    <div class="disc-section">
+      <div class="disc-heading">Governing Law</div>
+      <div class="disc-body">
+        <p>This disclaimer and the use of this website are governed by the laws of India. Any disputes arising in connection with this website shall be subject to the exclusive jurisdiction of the courts of Bengaluru, Karnataka, India.</p>
+      </div>
+    </div>
+
+    </div><!-- /#disclaimer -->
+
+    <hr class="doc-divider">
+
+    <!-- ═══ PRIVACY POLICY ═══ -->
+    <div id="privacy">
+      <div class="doc-header">
+        <div class="doc-title">Privacy <span class="accent">Policy</span></div>
+        <div class="doc-subtitle">How Jayveecons Industries Pvt. Ltd. collects, uses, and protects personal information submitted through this website</div>
+      </div>
+
+      <div class="disc-section">
+        <div class="disc-heading">Overview</div>
+        <div class="disc-body">
+          <p>Jayveecons Industries Pvt. Ltd. is committed to protecting the privacy of individuals who interact with this website. This Privacy Policy explains what personal information we collect, how we use it, how it is stored, and your rights in relation to it.</p>
+          <p>This website is an information and enquiry platform for an engineering and manufacturing company. We do not operate an online store, user accounts, subscription service, or any platform requiring ongoing personal data processing. Our data collection is limited to what is necessary to respond to legitimate business enquiries and employment applications.</p>
+          <p>By using this website or submitting an enquiry through it, you consent to the collection and use of your personal information as described in this policy.</p>
+        </div>
+      </div>
+
+      <div class="disc-section">
+        <div class="disc-heading">Information We Collect</div>
+        <div class="disc-body">
+          <p>We collect personal information only when you actively provide it to us. The primary ways this occurs are:</p>
+          <p><strong>Contact and project enquiries:</strong> When you submit a Request for Quotation (RFQ) or general enquiry through our contact form, we collect your name, email address, phone number, company name, job title, and the details of your project or equipment requirement. This information is used solely to evaluate and respond to your enquiry.</p>
+          <p><strong>Career applications:</strong> When you submit a CV or job application via email to hr@jayveecons.com, we collect the personal and professional information contained in your CV and covering communication. This is used only to assess your suitability for roles at Jayveecons and is handled by our HR team.</p>
+          <p><strong>Email correspondence:</strong> If you contact us directly by email, we retain those communications for the purpose of responding to and following up on your enquiry.</p>
+          <p><strong>Website usage data:</strong> Our website hosting provider (Cloudflare Pages) may collect standard server log data including IP addresses, browser type, referring URLs, and page visit timestamps for security and performance monitoring. This data is not linked to individually identifiable persons and is not used for marketing or profiling.</p>
+        </div>
+      </div>
+
+      <div class="disc-section">
+        <div class="disc-heading">Information We Do Not Collect</div>
+        <div class="disc-body">
+          <p>To be explicit about the limited scope of our data collection, Jayveecons does <strong>not</strong> collect or process:</p>
+          <p>Payment card numbers, bank account details, or any financial information — we do not process online transactions. Sensitive personal information including health data, identity document numbers, or biometric data. Location data beyond the country or city you voluntarily provide in an enquiry. Data from social media platforms or advertising networks. Behavioural tracking data for remarketing or targeted advertising purposes.</p>
+          <p>We do not use third-party advertising networks, tracking pixels, or behavioural analytics tools on this website.</p>
+        </div>
+      </div>
+
+      <div class="disc-section">
+        <div class="disc-heading">How We Use Your Information</div>
+        <div class="disc-body">
+          <p><strong>Responding to enquiries:</strong> Information submitted via our contact form or by email is used to evaluate your project requirements, prepare a technical or commercial response, and follow up on the enquiry. This is the primary and predominant use of any personal data we receive.</p>
+          <p><strong>Career applications:</strong> CV and application data is reviewed by our HR team and relevant department heads to assess candidate suitability. Unsuccessful applications may be retained for up to six months in the event a suitable position arises. Applications are not shared with third parties.</p>
+          <p><strong>Business communications:</strong> With your implicit consent through initiating contact, we may send follow-up communications related to your specific enquiry. We do not send unsolicited marketing communications.</p>
+          <p><strong>We do not</strong> sell, rent, trade, or share personal information with third parties for commercial purposes. We do not use enquiry data to build marketing profiles or lists.</p>
+        </div>
+      </div>
+
+      <div class="disc-section">
+        <div class="disc-heading">Data Storage and Security</div>
+        <div class="disc-body">
+          <p>Enquiry and correspondence data is stored in Jayveecons' internal business systems, accessible only to relevant sales, engineering, and management personnel on a need-to-know basis. Career application data is handled by our HR team.</p>
+          <p>We take reasonable technical and organisational measures to protect personal information from unauthorised access, disclosure, or misuse. These include access controls, secure email handling, and standard professional data management practices appropriate to a business of our size and nature.</p>
+          <p>While we take these precautions, no data transmission over the internet or electronic storage system is completely secure. We cannot guarantee absolute security of information transmitted to us electronically, and you do so at your own risk.</p>
+          <p><strong>Retention:</strong> Project enquiry data is retained for as long as the business relationship or potential business relationship is active, and for a reasonable period thereafter to support any follow-up or dispute resolution. Career applications are retained for up to six months from receipt if unsuccessful. You may request deletion of your data at any time (see Your Rights below).</p>
+        </div>
+      </div>
+
+      <div class="disc-section">
+        <div class="disc-heading">Cookies</div>
+        <div class="disc-body">
+          <p>This website does not use tracking cookies, advertising cookies, or analytics cookies that collect personally identifiable information.</p>
+          <p>Our hosting provider (Cloudflare) may set security-related cookies (such as a challenge cookie) as part of its standard DDoS protection and performance infrastructure. These are functional and security cookies that do not identify you personally and are not used for marketing purposes. They are set by Cloudflare's infrastructure, not by Jayveecons.</p>
+          <p>If we introduce any additional cookies in future, this policy will be updated and you will be notified through a notice on the website.</p>
+        </div>
+      </div>
+
+      <div class="disc-section">
+        <div class="disc-heading">Your Rights</div>
+        <div class="disc-body">
+          <p>In relation to personal information you have provided to Jayveecons, you have the right to:</p>
+          <p><strong>Access:</strong> Request a copy of the personal information we hold about you.</p>
+          <p><strong>Correction:</strong> Request correction of any inaccurate or incomplete information we hold.</p>
+          <p><strong>Deletion:</strong> Request deletion of your personal information, subject to any legal or legitimate business obligations we have to retain it.</p>
+          <p><strong>Withdrawal of consent:</strong> Withdraw consent to further communication at any time by notifying us in writing. This will not affect the lawfulness of any processing carried out before withdrawal.</p>
+          <p>To exercise any of these rights, contact us at <a href="mailto:sales@jayveecons.com">sales@jayveecons.com</a> or by post at our Bengaluru office. We will respond to requests within 30 days.</p>
+        </div>
+      </div>
+
+      <div class="disc-section">
+        <div class="disc-heading">Children's Privacy</div>
+        <div class="disc-body">
+          <p>This website is intended for business and professional use only. We do not knowingly collect personal information from individuals under the age of 18. If we become aware that we have inadvertently received personal information from a minor, we will delete it promptly.</p>
+        </div>
+      </div>
+
+      <div class="disc-section">
+        <div class="disc-heading">Changes to This Policy</div>
+        <div class="disc-body">
+          <p>We may update this Privacy Policy from time to time to reflect changes in our practices, legal requirements, or the services we offer. The "Last reviewed" date at the top of this page will be updated accordingly. We encourage you to review this page periodically.</p>
+          <p>Continued use of the website following any changes constitutes your acceptance of the updated policy.</p>
+        </div>
+      </div>
+
+      <div class="disc-section">
+        <div class="disc-heading">Governing Law</div>
+        <div class="disc-body">
+          <p>This Privacy Policy is governed by the laws of India, including the Information Technology Act, 2000 and applicable rules thereunder. Any disputes relating to this policy shall be subject to the exclusive jurisdiction of the courts of Bengaluru, Karnataka, India.</p>
+        </div>
+      </div>
+
+    </div><!-- /#privacy -->
+
+    <div class="contact-ref">
+      <div class="cr-text">
+        <div class="cr-label">Privacy &amp; legal enquiries</div>
+        <div class="cr-value">Contact Jayveecons</div>
+        <div class="cr-sub">sales@jayveecons.com · +91 (080) 4115 7559 · Bengaluru, India</div>
+      </div>
+      <a href="/contact" class="cr-link">Get in Touch →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-nav">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/products">Products</a>
+      <a href="/industries">Industries</a>
+      <a href="/services">Services</a>
+      <a href="/careers">Join Us</a>
+      <a href="/contact">Contact</a>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© <span id="copy-year"></span> Jayveecons Industries Pvt. Ltd. All rights reserved. Manufacturing partner: <a href="https://akshayvipra.com" target="_blank" rel="noopener">AkshayVipra El-Mec Pvt. Ltd.</a></div>
+      <div class="footer-legal"><a href="/disclaimer">Disclaimer &amp; Privacy</a><a href="/sitemap">Sitemap</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const y = new Date().getFullYear();
+document.getElementById('copy-year').textContent = y;
+document.getElementById('review-year').textContent = y;
+// Tab navigation — activates correct tab based on URL hash
+function activateTab(hash) {
+  document.querySelectorAll('.legal-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.getAttribute('href') === hash || (!hash && tab.getAttribute('href') === '#disclaimer'));
+  });
+}
+activateTab(window.location.hash || '#disclaimer');
+document.querySelectorAll('.legal-tab').forEach(tab => {
+  tab.addEventListener('click', () => activateTab(tab.getAttribute('href')));
+});
+window.addEventListener('hashchange', () => activateTab(window.location.hash));
+
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', scrollY > 60), {passive:true});
+const burger = document.getElementById('burger'), navLinks = document.getElementById('nav-links');
+burger.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  burger.classList.toggle('open', open); burger.setAttribute('aria-expanded', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+});
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  navLinks.classList.remove('open'); burger.classList.remove('open');
+  burger.setAttribute('aria-expanded','false'); document.body.style.overflow = '';
+}));
+document.addEventListener('click', e => {
+  if (!navbar.contains(e.target) && navLinks.classList.contains('open')) {
+    navLinks.classList.remove('open'); burger.classList.remove('open');
+    burger.setAttribute('aria-expanded','false'); document.body.style.overflow = '';
+  }
+});
+</script>
+</body>
+</html>

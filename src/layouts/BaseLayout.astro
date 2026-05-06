@@ -1,0 +1,100 @@
+---
+/**
+ * BaseLayout.astro
+ * 
+ * This is the "wrapper" that every page uses.
+ * It provides:
+ *   · The <html>, <head>, and <body> tags
+ *   · Google Fonts
+ *   · Global CSS (brand colours, nav, footer styles)
+ *   · The Nav and Footer components
+ *   · The scroll-reveal JavaScript
+ * 
+ * HOW TO USE IN A PAGE:
+ * 
+ *   ---
+ *   import BaseLayout from '../layouts/BaseLayout.astro';
+ *   ---
+ *   <BaseLayout title="Page Title" description="Page description" currentPath="/about">
+ *     <!-- Your page content goes here -->
+ *   </BaseLayout>
+ * 
+ * Props:
+ *   title       (string)  — text shown in the browser tab
+ *   description (string)  — text used by Google for search results
+ *   currentPath (string)  — current URL path, used to highlight the active nav link
+ */
+
+import Nav    from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title:       string;
+  description: string;
+  currentPath?: string;
+}
+
+const {
+  title,
+  description,
+  currentPath = '/',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+
+  <!-- Open Graph (social sharing previews) -->
+  <meta property="og:title"       content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type"        content="website" />
+
+  <title>{title}</title>
+
+  <!-- Google Fonts — loaded once here, shared by all pages -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+
+  <!-- Navigation bar (fixed at top) -->
+  <Nav currentPath={currentPath} />
+
+  <!-- Page-specific content -->
+  <slot />
+
+  <!-- Footer -->
+  <Footer />
+
+  <!-- Scroll-reveal: watches .reveal elements and adds .visible when they enter the viewport -->
+  <script>
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -28px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    // Stagger grid children for a cascade effect
+    document.querySelectorAll('.products-grid, .ind-grid, .why-grid').forEach(g => {
+      g.querySelectorAll('.reveal').forEach((el, i) => {
+        (el as HTMLElement).style.transitionDelay = (i * 85) + 'ms';
+      });
+    });
+  </script>
+
+</body>
+</html>

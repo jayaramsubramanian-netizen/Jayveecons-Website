@@ -1,0 +1,335 @@
+---
+// src/components/Footer.astro
+const year = new Date().getFullYear();
+const yearsInBusiness = year - 1987;
+---
+
+<footer>
+  <div class="footer-inner">
+
+    <div class="footer-top">
+
+      <!-- Brand column -->
+      <div>
+        <div class="footer-logo-wrap">
+          <img src="/public/images/logo.png" alt="Jayveecons" class="footer-logo-img" width="38" height="38">
+          <span class="footer-logo-name">Jayveecons</span>
+        </div>
+        <div class="footer-tagline">Moving Your World Ahead</div>
+        <p class="footer-desc">
+          Engineering and design of material handling and processing systems
+          for bulk processing industries worldwide. Part of the JV Group.
+        </p>
+      </div>
+
+      <!-- Products column -->
+      <div>
+        <div class="footer-heading">Products</div>
+        <ul class="footer-links">
+          <li><a href="/products#handling-section">Material Handling Systems</a></li>
+          <li><a href="/products#processing-section">Material Processing Systems</a></li>
+          <li><a href="/products#ancillary-section">Ancillary Equipment</a></li>
+          <li><a href="/products#accessories-section">Accessories &amp; Parts</a></li>
+          <li><a href="/products">VECTOMEC™ Full Catalogue</a></li>
+        </ul>
+      </div>
+
+      <!-- Company column -->
+      <div>
+        <div class="footer-heading">Company</div>
+        <ul class="footer-links">
+          <li><a href="/about">About Jayveecons</a></li>
+          <li><a href="/about#team">Our Team</a></li>
+          <li><a href="/industries">Industries Served</a></li>
+          <li><a href="/services">Engineering Services</a></li>
+          <li><a href="/careers">Join Us</a></li>
+          <li><a href="https://akshayvipra.com" target="_blank" rel="noopener">AkshayVipra El-Mec ↗</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact column -->
+      <div>
+        <div class="footer-heading">Contact</div>
+        <div class="footer-contact-item">
+          <span class="label">Phone</span>
+          <span class="value">+91 94480 88230</span>
+        </div>
+        <div class="footer-contact-item">
+          <span class="label">Email</span>
+          <span class="value">sales@jayveecons.com</span>
+        </div>
+        <div class="footer-contact-item">
+          <span class="label">Location</span>
+          <span class="value">1st Phase, Plot 87/D2, Mcnally Rd, Industrial Estate, Malur, Karnataka 563130, India</span>
+        </div>
+        <div class="footer-contact-item">
+          <span class="label">Hours</span>
+          <span class="value">Mon–Sat, 9:00 AM – 6:00 PM IST</span>
+        </div>
+      </div>
+
+    </div><!-- /footer-top -->
+
+    <div class="footer-bottom">
+      <div class="footer-copy">
+        © {year} Jayveecons Industries Pvt. Ltd. All rights reserved.
+        Manufacturing partner:
+        <a href="https://akshayvipra.com" target="_blank" rel="noopener">AkshayVipra El-Mec Pvt. Ltd.</a>
+      </div>
+      <div class="footer-legal">
+        <a href="/disclaimer">Disclaimer &amp; Privacy Policy</a>
+        <a href="/sitemap.xml">Sitemap</a>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<style>
+  /* ─── CSS CUSTOM PROPERTIES ─── */
+  footer {
+    --teal-l:    #14a898;
+    --chrome:    #d0d4dc;
+    --fog:       #c8cdd8;
+    --font-head: 'Barlow Condensed', sans-serif;
+    --font-body: 'Barlow', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* ─── STEEL BACKGROUND ─────────────────────────────────
+       Same light silver palette as the navbar. Angle shifted
+       to 168deg so the highlight sweeps the opposite direction
+       — reads as the same sheet of metal seen at a different
+       position, not a copy of the nav.
+
+       Four layers composited top → bottom:
+       1. Vertical specular — overhead light reflection
+       2. Horizontal brushed grain — fine 1px lines
+       3. Top-edge vignette — gradual darkening where the
+          footer meets the page content above it
+       4. Diagonal base sheen — light silver/platinum tones
+    ─────────────────────────────────────────────────────── */
+    background:
+      /* Layer 1 — vertical specular highlight */
+      linear-gradient(
+        90deg,
+        rgba(0,0,0,0.10)       0%,
+        rgba(0,0,0,0.04)       10%,
+        rgba(255,255,255,0.14) 22%,
+        rgba(255,255,255,0.20) 36%,
+        rgba(255,255,255,0.06) 50%,
+        rgba(255,255,255,0.16) 64%,
+        rgba(0,0,0,0.04)       78%,
+        rgba(0,0,0,0.10)       100%
+      ),
+      /* Layer 2 — horizontal brushed grain */
+      repeating-linear-gradient(
+        180deg,
+        transparent                    0px,
+        rgba(255,255,255,0.07)         1px,
+        transparent                    2px,
+        rgba(0,0,0,0.025)              3px,
+        transparent                    4px
+      ),
+      /* Layer 3 — top-edge vignette */
+      linear-gradient(
+        180deg,
+        rgba(0,0,0,0.18)  0%,
+        rgba(0,0,0,0.06)  6%,
+        transparent       18%,
+        transparent      100%
+      ),
+      /* Layer 4 — diagonal base sheen (opposite direction to navbar) */
+      linear-gradient(
+        168deg,
+        #c2c4c7   0%,
+        #d0d2d5   5%,
+        #dddfe2  12%,
+        #e8eaec  18%,
+        #f0f2f4  25%,
+        #e2e4e7  32%,
+        #d0d2d5  40%,
+        #dadcdf  47%,
+        #eaecee  54%,
+        #f2f4f6  60%,
+        #e0e2e5  67%,
+        #caccce  75%,
+        #d6d8db  83%,
+        #c8cacc  92%,
+        #bec0c3  100%
+      );
+
+    border-top: 1px solid rgba(0,0,0,0.15);
+    padding: clamp(44px, 6vh, 60px) 0 26px;
+    position: relative;
+  }
+
+  /* Inner top-edge highlight — bright line where steel edge catches light */
+  footer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,0.55) 30%,
+      rgba(255,255,255,0.70) 50%,
+      rgba(255,255,255,0.55) 70%,
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  /* ─── LAYOUT ─── */
+  .footer-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 clamp(18px, 4vw, 48px);
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: clamp(24px, 4vw, 56px);
+    margin-bottom: 40px;
+  }
+
+  /* ─── LOGO ─── */
+  .footer-logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 9px;
+  }
+  .footer-logo-img {
+    height: 38px;
+    width: auto;
+    /* Shadow lifts logo off steel surface */
+    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.55));
+  }
+  .footer-logo-name {
+    font-family: var(--font-head);
+    font-style: italic;
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #c0181e;
+    /* Engraved nameplate on polished steel */
+    text-shadow:
+      0 1px 0 rgba(255,255,255,0.55),
+      0 -1px 0 rgba(0,0,0,0.15),
+      0 2px 6px rgba(0,0,0,0.10);
+  }
+  .footer-tagline {
+    font-family: var(--font-mono);
+    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    color: #3a3d44;
+    text-transform: uppercase;
+    margin-bottom: 13px;
+  }
+  .footer-desc {
+    font-size: 14px;
+    font-weight: 300;
+    color: #3a3d44;
+    line-height: 1.75;
+    max-width: 260px;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  }
+
+  /* ─── COLUMN HEADINGS ─── */
+  .footer-heading {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c0181e;
+    margin-bottom: 16px;
+  }
+
+  /* ─── LINKS ─── */
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .footer-links a {
+    font-size: 14px;
+    color: #3a3d44;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 400;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .footer-links a:hover { color: #0d0e10; }
+
+  /* ─── CONTACT ITEMS ─── */
+  .footer-contact-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 11px;
+  }
+  .footer-contact-item .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: #1a3a8a;
+    text-transform: uppercase;
+  }
+  .footer-contact-item .value {
+    font-size: 14px;
+    color: #2a2d34;
+    font-weight: 400;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  }
+
+  /* ─── BOTTOM BAR ─── */
+  .footer-bottom {
+    border-top: 1px solid rgba(0,0,0,0.12);
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer-copy {
+    font-size: 13px;
+    color: #555860;
+    font-weight: 300;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+  }
+  .footer-copy a {
+    color: #0a7a6e;
+    text-decoration: none;
+  }
+  .footer-legal {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .footer-legal a {
+    font-size: 13px;
+    color: #555860;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-legal a:hover { color: #0d0e10; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 28px; }
+  }
+  @media (max-width: 520px) {
+    .footer-top { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .footer-links a, .footer-legal a { transition-duration: 0.01ms !important; }
+  }
+</style>

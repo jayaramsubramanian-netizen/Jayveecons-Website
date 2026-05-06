@@ -1,0 +1,425 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Industries — Jayveecons Group"
+  description="Jayveecons serves cement, mining, food & agriculture, waste management, and steel & ceramics industries with VECTOMEC™ material handling and processing systems."
+  currentPath="/industries"
+>
+
+<style>
+/* PAGE HEADER */
+.page-header{position:relative;padding:130px 0 72px;overflow:hidden;background:linear-gradient(155deg,var(--navy-deep) 0%,var(--ink) 55%,var(--black) 100%)}
+.page-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 60% 50%,rgba(26,50,96,.6),transparent 65%)}
+.page-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(192,24,30,.3) 50%,transparent)}
+.page-header-inner{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,48px)}
+.breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:18px;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.breadcrumb a{color:#7a8499;text-decoration:none;transition:color .2s}
+.breadcrumb a:hover{color:var(--fog)}
+.breadcrumb .sep{color:#3a4255}
+.breadcrumb .current{color:#ff7070}
+.page-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:14px;animation:fadeUp .7s ease .1s both}
+.page-eyebrow-line{width:40px;height:2px;background:var(--crimson)}
+.page-eyebrow span{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#ff7070}
+.page-title{font-family:var(--font-head);font-weight:800;font-size:clamp(44px,6.5vw,84px);text-transform:uppercase;line-height:.93;letter-spacing:-.01em;margin-bottom:16px;animation:fadeUp .7s ease .2s both}
+.page-title .accent{color:var(--crimson-l)}
+.page-title .chrome{background:linear-gradient(135deg,var(--chrome-l),var(--chrome));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-sub{font-size:clamp(14px,1.7vw,17px);font-weight:300;color:var(--fog);max-width:640px;line-height:1.75;animation:fadeUp .7s ease .3s both}
+
+/* COMMON */
+section{position:relative;z-index:1}
+.section-inner{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,48px)}
+.section-tag{display:inline-flex;align-items:center;gap:10px;margin-bottom:12px}
+.section-tag .line{width:28px;height:2px;background:var(--crimson)}
+.section-tag span{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#ff7070}
+.section-headline{font-family:var(--font-head);font-weight:800;font-size:clamp(34px,4.5vw,56px);text-transform:uppercase;line-height:.97;margin-bottom:14px}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--crimson);color:var(--white);font-family:var(--font-head);font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:13px 30px;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:background .2s,transform .2s;white-space:nowrap}
+.btn-primary:hover{background:var(--crimson-l);transform:translateX(2px)}
+.btn-secondary{display:inline-flex;align-items:center;gap:9px;background:transparent;color:var(--chrome);font-family:var(--font-head);font-weight:600;font-size:14px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:12px 30px;border:1px solid rgba(208,212,220,.2);transition:color .2s,border-color .2s;white-space:nowrap}
+.btn-secondary:hover{color:var(--white);border-color:rgba(208,212,220,.5)}
+
+/* SECTOR INTRO STAT BAR */
+.stat-bar{padding:clamp(32px,5vh,52px) 0;background:var(--navy-deep);border-bottom:1px solid rgba(51,96,184,.15)}
+.stat-bar-inner{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,48px);display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.stat-item{background:rgba(10,12,18,.6);padding:clamp(18px,2.5vw,28px);border-top:2px solid transparent;transition:border-top-color .3s}
+.stat-item:hover{border-top-color:var(--crimson)}
+.stat-num{font-family:var(--font-head);font-weight:800;font-size:clamp(36px,5vw,52px);line-height:1;color:var(--white);letter-spacing:-.02em}
+.stat-num .u{font-size:.5em;color:#ff7070}
+.stat-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7a8aaa;margin-top:5px;margin-bottom:4px}
+.stat-detail{font-size:12px;font-weight:300;color:#8898b0;line-height:1.5}
+@media(max-width:768px){.stat-bar-inner{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.stat-bar-inner{grid-template-columns:1fr}}
+
+/* ACTIVE SECTORS SECTION */
+.active-sectors{padding:clamp(56px,8vh,96px) 0;background:var(--ink-2)}
+
+/* Large industry card */
+.ind-card-large{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+  background:var(--ink-3);
+  margin-bottom:2px;
+  overflow:hidden;
+  border-left:4px solid var(--crimson);
+  transition:border-left-color .3s;
+}
+.ind-card-large:hover{border-left-color:var(--crimson-l)}
+.ind-card-large.reverse{direction:rtl}
+.ind-card-large.reverse > *{direction:ltr}
+
+.ind-img{
+  position:relative;
+  overflow:hidden;
+  min-height:clamp(220px,30vh,340px);
+}
+.ind-img img{
+  width:100%;height:100%;
+  object-fit:cover;
+  filter:grayscale(25%) contrast(1.1);
+  transition:transform .6s ease,filter .4s;
+  display:block;
+}
+.ind-card-large:hover .ind-img img{transform:scale(1.04);filter:grayscale(10%) contrast(1.15)}
+.ind-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 40%,rgba(10,12,18,.85) 100%);
+}
+.ind-card-large.reverse .ind-img::after{
+  background:linear-gradient(270deg,transparent 40%,rgba(10,12,18,.85) 100%);
+}
+
+.ind-body{padding:clamp(28px,4vw,52px);display:flex;flex-direction:column;justify-content:center;gap:0}
+.ind-status{display:inline-flex;align-items:center;gap:8px;margin-bottom:14px}
+.ind-status-dot{width:8px;height:8px;border-radius:50%;background:var(--crimson);flex-shrink:0}
+.ind-status-dot.target{background:var(--teal-l)}
+.ind-status span{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#ff7070}
+.ind-status span.target{color:var(--teal-l)}
+.ind-name{font-family:var(--font-head);font-weight:800;font-size:clamp(28px,4vw,46px);text-transform:uppercase;letter-spacing:.01em;color:var(--white);line-height:.95;margin-bottom:14px}
+.ind-desc{font-size:clamp(14px,1.5vw,15px);font-weight:300;color:var(--fog);line-height:1.8;margin-bottom:20px}
+.ind-products-title{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#ff7070;margin-bottom:10px}
+.ind-products{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px}
+.ind-product-tag{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:rgba(13,26,58,.8);border:1px solid rgba(51,96,184,.3);color:#7ab0ff;padding:4px 10px}
+.ind-cta{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--crimson-l);text-decoration:none;transition:color .2s}
+.ind-cta:hover{color:var(--white)}
+.ind-cta svg{width:12px;height:12px}
+
+/* TARGET SECTORS */
+.target-sectors{padding:clamp(56px,8vh,96px) 0;background:var(--ink)}
+.target-intro{max-width:800px;margin-bottom:clamp(32px,4vh,52px)}
+.target-intro p{font-size:clamp(15px,1.6vw,17px);font-weight:300;color:var(--fog);line-height:1.8;margin-top:16px}
+
+.target-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.target-card{
+  background:var(--ink-2);padding:clamp(24px,3vw,36px);
+  border-top:2px solid var(--teal-l);
+  position:relative;overflow:hidden;
+  transition:background .3s;
+}
+.target-card:hover{background:rgba(13,122,110,.06)}
+.target-card::before{
+  content:'';position:absolute;top:0;right:0;
+  width:60px;height:60px;
+  background:radial-gradient(circle at top right,rgba(20,168,152,.08),transparent 70%);
+  pointer-events:none;
+}
+.tc-icon{width:40px;height:40px;color:var(--teal-l);margin-bottom:18px;opacity:.85}
+.tc-name{font-family:var(--font-head);font-weight:700;font-size:clamp(20px,2.5vw,26px);text-transform:uppercase;letter-spacing:.04em;color:var(--white);margin-bottom:8px}
+.tc-status{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;background:rgba(20,168,152,.12);color:var(--teal-l);padding:3px 8px;display:inline-block;margin-bottom:14px}
+.tc-desc{font-size:clamp(13px,1.4vw,14px);font-weight:300;color:#9098b0;line-height:1.7;margin-bottom:16px}
+.tc-opportunity{font-size:12px;font-weight:300;color:#7a8aaa;line-height:1.6;border-top:1px solid rgba(20,168,152,.1);padding-top:14px;margin-top:4px}
+.tc-opportunity strong{color:var(--teal-l);font-weight:500}
+
+/* WHY JAYVEECONS ACROSS SECTORS */
+.cross-sector{padding:clamp(56px,8vh,96px) 0;background:var(--navy-deep)}
+.cross-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,5vw,80px);align-items:center}
+.cross-copy{}
+.cross-copy p{font-size:clamp(14px,1.5vw,16px);font-weight:300;color:var(--fog);line-height:1.8;margin-bottom:16px}
+.cross-copy p strong{color:var(--white);font-weight:500}
+.cross-points{display:flex;flex-direction:column;gap:2px}
+.cross-point{background:rgba(10,12,18,.7);padding:clamp(16px,2vw,22px);display:flex;gap:16px;align-items:flex-start;border-left:3px solid transparent;transition:border-left-color .25s,background .25s}
+.cross-point:hover{background:rgba(13,26,58,.5);border-left-color:var(--crimson)}
+.cp-icon{width:36px;height:36px;background:rgba(192,24,30,.12);border:1px solid rgba(192,24,30,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--crimson-l)}
+.cp-icon svg{width:18px;height:18px}
+.cp-title{font-family:var(--font-head);font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.05em;color:var(--chrome);margin-bottom:4px}
+.cp-desc{font-size:13px;font-weight:300;color:#8898b0;line-height:1.6}
+
+/* CTA BAND */
+.cta-band{padding:clamp(64px,9vh,104px) 0;background:linear-gradient(155deg,var(--navy-deep) 0%,var(--ink) 60%);position:relative;overflow:hidden}
+.cta-band::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 110%,rgba(192,24,30,.1),transparent 60%)}
+.cta-band::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(192,24,30,.3) 50%,transparent)}
+.cta-inner{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,48px);display:grid;grid-template-columns:1fr auto;gap:clamp(24px,4vw,56px);align-items:center}
+.cta-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;color:#ff7070;text-transform:uppercase;margin-bottom:12px}
+.cta-headline{font-family:var(--font-head);font-weight:800;font-size:clamp(32px,4.5vw,56px);text-transform:uppercase;line-height:.97;margin-bottom:10px}
+.cta-headline .accent{color:var(--crimson-l)}
+.cta-sub{font-size:clamp(14px,1.5vw,16px);font-weight:300;color:var(--fog);line-height:1.65;max-width:560px}
+.cta-actions{display:flex;flex-direction:column;gap:12px;align-items:flex-end}
+
+/* FOOTER */
+footer{background:var(--black);border-top:1px solid rgba(51,96,184,.14);padding:clamp(44px,6vh,60px) 0 26px}
+.footer-inner{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,48px)}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:clamp(24px,4vw,56px);margin-bottom:40px}
+.footer-logo-wrap{display:flex;align-items:center;gap:11px;margin-bottom:9px}
+.footer-logo-img{height:38px;width:auto}
+.footer-logo-name{font-family:var(--font-head);font-weight:800;font-size:19px;letter-spacing:.1em;text-transform:uppercase;color:var(--white)}
+.footer-tagline{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;color:#ff7070;text-transform:uppercase;margin-bottom:13px}
+.footer-desc{font-size:14px;font-weight:300;color:#9098ac;line-height:1.75;max-width:260px}
+.footer-heading{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#ff7070;margin-bottom:16px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-links a{font-size:14px;color:#a0a8bc;text-decoration:none;transition:color .2s;font-weight:400}
+.footer-links a:hover{color:var(--chrome)}
+.footer-contact-item{display:flex;flex-direction:column;gap:2px;margin-bottom:11px}
+.footer-contact-item .label{font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;color:#5580cc;text-transform:uppercase}
+.footer-contact-item .value{font-size:14px;color:#c0c8d8;font-weight:400}
+.footer-bottom{border-top:1px solid rgba(51,96,184,.1);padding-top:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.footer-copy{font-size:13px;color:#7a8499;font-weight:300}
+.footer-copy a{color:var(--teal-l);text-decoration:none}
+.footer-legal{display:flex;gap:16px;flex-wrap:wrap}
+.footer-legal a{font-size:13px;color:#7a8499;text-decoration:none;transition:color .2s}
+.footer-legal a:hover{color:var(--fog)}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .ind-card-large{grid-template-columns:1fr}
+  .ind-card-large.reverse{direction:ltr}
+  .ind-img{min-height:240px}
+  .ind-img::after,.ind-card-large.reverse .ind-img::after{background:linear-gradient(180deg,transparent 40%,rgba(10,12,18,.9) 100%)}
+  .cross-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr;gap:28px}
+  .cta-inner{grid-template-columns:1fr}
+  .cta-actions{align-items:flex-start;flex-direction:row}
+}
+@media(max-width:768px){
+  .target-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){
+  .target-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr}
+  .cta-actions{flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb"><a href="/">Home</a><span class="sep">/</span><span class="current">Industries</span></div>
+    <div class="page-eyebrow"><div class="page-eyebrow-line"></div><span>Markets We Serve</span></div>
+    <h1 class="page-title">Decades of<br><span class="accent">Process</span> <span class="chrome">Depth</span></h1>
+    <p class="page-sub">The Jayveecons Group has built domain knowledge across five industrial sectors — each with its own material characteristics, operating conditions, and engineering demands. That breadth of cross-sector experience is what makes our solutions better, not just broader.</p>
+  </div>
+</div>
+
+<!-- STAT BAR -->
+<div class="stat-bar">
+  <div class="stat-bar-inner">
+    <div class="stat-item reveal"><div class="stat-num">5<span class="u">+</span></div><div class="stat-label">Active Industries</div><div class="stat-detail">Cement · Mining &amp; Ore Processing · Food · Waste · Steel</div></div>
+    <div class="stat-item reveal"><div class="stat-num">3</div><div class="stat-label">Sectors We Are Growing Into</div><div class="stat-detail">Oil &amp; Gas · Pharmaceuticals · Agriculture Processing</div></div>
+    <div class="stat-item reveal"><div class="stat-num" id="ind-years">39<span class="u">+</span></div><div class="stat-label">Years of Domain Experience</div><div class="stat-detail">Cross-sector bulk material expertise since 1987</div></div>
+    <div class="stat-item reveal"><div class="stat-num">4</div><div class="stat-label">Product Lines</div><div class="stat-detail">Handling · Processing · Ancillary · Parts</div></div>
+  </div>
+</div>
+
+<!-- ACTIVE SECTORS -->
+<section class="active-sectors" id="active">
+  <div class="section-inner">
+    <div class="section-tag reveal"><div class="line"></div><span>Currently Serving</span></div>
+    <h2 class="section-headline reveal">Active Industries</h2>
+
+    <!-- CEMENT -->
+    <div class="ind-card-large reveal" id="cement">
+      <div class="ind-img">
+        <img src="images/cement_plant.jpeg" alt="Cement Plant" loading="lazy">
+      </div>
+      <div class="ind-body">
+        <div class="ind-status"><div class="ind-status-dot"></div><span>Active — Core Sector</span></div>
+        <div class="ind-name">Cement</div>
+        <p class="ind-desc">Cement is Jayveecons' founding industry — we were established in 1987 specifically to serve small-scale cement plants using Vertical Shaft Kiln technology. Nearly four decades later, cement remains our deepest area of expertise, spanning VSK systems, kilns and kiln components, raw material handling, clinker processing, and finished cement packaging and storage. We understand the full cement process chain from quarry to despatch silo.</p>
+        <div class="ind-products-title">VECTOMEC™ Equipment for Cement</div>
+        <div class="ind-products">
+          <span class="ind-product-tag">VSK — Complete System</span>
+          <span class="ind-product-tag">Kiln Components</span>
+          <span class="ind-product-tag">Crushers</span>
+          <span class="ind-product-tag">Nodulizer</span>
+          <span class="ind-product-tag">Grinding Mills</span>
+          <span class="ind-product-tag">Screw Conveyors</span>
+          <span class="ind-product-tag">Bucket Elevators</span>
+          <span class="ind-product-tag">Classifiers</span>
+          <span class="ind-product-tag">Air Slides</span>
+          <span class="ind-product-tag">Dust Collectors</span>
+          <span class="ind-product-tag">Storage Silos</span>
+        </div>
+        <a href="/contact?industry=cement" class="ind-cta">Discuss your cement project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+
+    <!-- MINING -->
+    <div class="ind-card-large reverse reveal" id="mining">
+      <div class="ind-img">
+        <img src="images/Mining.jpg" alt="Mining Industry" style="height: 770px" loading="lazy">
+      </div>
+      <div class="ind-body">
+        <div class="ind-status"><div class="ind-status-dot"></div><span>Active</span></div>
+        <div class="ind-name">Mining, Ore<br>Processing &amp;<br>Aggregates</div>
+        <p class="ind-desc">While the mining and materials industry is vast, Jayveecons focuses on three distinct engineering challenges, addressing each with specialized equipment. Run-of-mine extraction and aggregates production demand heavy-duty conveying, primary and secondary crushing, and scalping screens that can handle large, irregular, abrasive feed. Ore processing — particularly for limestone, bauxite, iron ore, and mineral sands — adds classification, grinding, and thermal treatment steps where precise particle size control is critical. Finished aggregate handling requires high-throughput belt conveyors, elevated stockpile systems, and efficient load-out infrastructure. Jayveecons has engineered equipment for all three phases, and we understand that each has different wear rates, duty cycles, and maintenance access requirements.</p>
+        <div class="ind-products-title">VECTOMEC™ Equipment for Mining &amp; Ore Processing</div>
+        <div class="ind-products">
+          <span class="ind-product-tag">Crusher — Primary &amp; Secondary</span>
+          <span class="ind-product-tag">Vibrating Screen</span>
+          <span class="ind-product-tag">Belt Conveyor — Heavy Duty</span>
+          <span class="ind-product-tag">Bucket Elevator — Chain Type</span>
+          <span class="ind-product-tag">Ball Mill — Ore Grinding</span>
+          <span class="ind-product-tag">Classifier</span>
+          <span class="ind-product-tag">Hopper &amp; Bins</span>
+          <span class="ind-product-tag">AR Wear Parts &amp; Liners</span>
+          <span class="ind-product-tag">Industrial Dryer</span>
+        </div>
+        <a href="/contact?industry=mining" class="ind-cta">Discuss your mining project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+
+    <!-- FOOD & AGRI -->
+    <div class="ind-card-large reveal" id="food">
+      <div class="ind-img">
+        <img src="images/food-processing.jpg" alt="Food and Agriculture Industry" loading="lazy">
+      </div>
+      <div class="ind-body">
+        <div class="ind-status"><div class="ind-status-dot"></div><span>Active</span></div>
+        <div class="ind-name">Food &amp;<br>Agriculture</div>
+        <p class="ind-desc">Food processing demands handling systems that are hygienic, gentle on product, and constructed to food-safety standards. Jayveecons supplies stainless steel screw conveyors, bucket elevators, and storage systems for grain, pulses, spices, sugar, and processed food operations. All food-grade equipment is designed with full-flush cleanability, food-approved materials, and smooth internal surfaces that meet applicable hygiene codes.</p>
+        <div class="ind-products-title">VECTOMEC™ Equipment for Food &amp; Agri</div>
+        <div class="ind-products">
+          <span class="ind-product-tag">Screw Conveyor — SS</span>
+          <span class="ind-product-tag">Bucket Elevator — Food Grade</span>
+          <span class="ind-product-tag">Belt Conveyor</span>
+          <span class="ind-product-tag">Vibrating Screen</span>
+          <span class="ind-product-tag">Feeder</span>
+          <span class="ind-product-tag">Silo &amp; Storage</span>
+          <span class="ind-product-tag">Industrial Dryer</span>
+        </div>
+        <a href="/contact?industry=food" class="ind-cta">Discuss your food project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+
+    <!-- WASTE MANAGEMENT -->
+    <div class="ind-card-large reverse reveal" id="waste">
+      <div class="ind-img">
+        <img src="images/wastemagmt_industry.png" alt="Waste Management" loading="lazy" style="height: 100%;">
+      </div>
+      <div class="ind-body">
+        <div class="ind-status"><div class="ind-status-dot"></div><span>Built for Recovery, Engineered for Transformation</span></div>
+        <div class="ind-name">Waste<br>Management</div>
+        <p class="ind-desc">Robust handling and processing systems for municipal and industrial waste streams, designed to support efficient segregation, conveying, and controlled transformation of organic fractions into value-added outputs such as compost and soil amendments. Our experience extends to integrated material handling solutions for city waste processing facilities, including systems engineered for biodegradable recovery, stabilization, and downstream conversion into organic fertilizer, in alignment with large-scale municipal initiatives such as Karnataka Compost Development Corporation.</p>
+        <div class="ind-products-title">VECTOMEC™ Equipment for Waste</div>
+        <div class="ind-products">
+          <span class="ind-product-tag">Screw Conveyor — Enclosed</span>
+          <span class="ind-product-tag">Belt Conveyor</span>
+          <span class="ind-product-tag">Crusher — Shredder</span>
+          <span class="ind-product-tag">Vibrating Screen</span>
+          <span class="ind-product-tag">Industrial Dryer</span>
+          <span class="ind-product-tag">Chimney &amp; Flue Duct</span>
+          <span class="ind-product-tag">Rotary Air Lock</span>
+        </div>
+        <a href="/contact?industry=waste" class="ind-cta">Discuss your waste project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+
+    <!-- STEEL & CERAMICS -->
+    <div class="ind-card-large reveal" id="steel">
+      <div class="ind-img">
+        <img src="images/steel-ceramic.png" alt="Steel Industry" loading="lazy">
+      </div>
+      <div class="ind-body">
+        <div class="ind-status"><div class="ind-status-dot"></div><span>Built for Extreme Engineered for Continuity</span></div>
+        <div class="ind-name">Steel to <br>Fertilizers</div>
+        <p class="ind-desc">Industries like steel, coal, refractory, fertilizers and others operatire in some of the most demanding environments where bulk materials are hot, abrasive, corrosive and relentless. Our equipment is purpose built to perform in these conditions with consistency and confidence.</p>
+        <p class ="ind-desc">From size reduction to granulation, drying, screening and material handling every system we build is engineered for high temperature operation, corrosive atmospheres and continuous heavy duty performance.</p>
+        <p class ="ind-desc">With proceven esperience across thermal processing, mineral handling and chemical environments we deisgn equipment that keeps your process running safely, efficiently and wihtout compromise.</p>
+        <div class="ind-products-title">VECTOMEC™ Equipment for Steel &amp; Ceramics</div>
+        <div class="ind-products">
+          <span class="ind-product-tag">Belt Conveyor — Heat Resistant</span>
+          <span class="ind-product-tag">Bucket Elevator — Chain Type</span>
+          <span class="ind-product-tag">Screw Conveyor — AR</span>
+          <span class="ind-product-tag">Ball Mill</span>
+          <span class="ind-product-tag">Vibrating Screen</span>
+          <span class="ind-product-tag">Rotary Nodulizers</span>
+          <span class="ind-product-tag">Crushers</span>
+        <span class="ind-product-tag">Dryers and CoolersCrushers</span>
+        </div>
+        <a href="/contact?industry=steel" class="ind-cta">Discuss your steel project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXPANDING SECTORS -->
+<section class="target-sectors" id="target">
+  <div class="section-inner">
+    <div class="target-intro reveal">
+      <div class="section-tag"><div class="line"></div><span>Where We Are Growing</span></div>
+      <h2 class="section-headline">Equipment Ready.<br>Experience Transferable.</h2>
+      <p>The equipment we build for cement plants, mines, and food processing operations is the same equipment these sectors need — the material characteristics differ, the engineering principles do not. If your operation in any of these sectors handles bulk solids, powders, or granular material, Jayveecons has fabricated something like it before.</p>
+    </div>
+    <div class="target-grid">
+
+      <div class="target-card reveal">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <div class="tc-name">Oil &amp; Gas</div>
+        <div class="tc-status">Diversifying With Proven Equipment</div>
+        <p class="tc-desc">Upstream and midstream oil and gas operations move large volumes of bulk solids — proppants (frac sand), drilling muds, barite, and bentonite in drilling; petroleum coke, catalyst fines, and sulphur in refining. These materials demand enclosed, leak-proof conveying systems and pressure-rated containment vessels built to material-specific standards.</p>
+        <div class="tc-opportunity">
+          <strong>What we bring to this sector:</strong> Enclosed screw conveyors suited to dusty and hazardous bulk solids; belt and bucket systems scaled for high-volume proppant handling at drilling sites; fabricated pressure vessels and storage systems for bulk chemical intermediates; experience with abrasion-resistant material selection from our mining work. Where API or ASME documentation is specified, we work to those requirements.
+        </div>
+      </div>
+
+      <div class="target-card reveal">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+        <div class="tc-name">Pharmaceuticals</div>
+        <div class="tc-status">Diversifying With Proven Equipment</div>
+        <p class="tc-desc">Pharmaceutical bulk handling requires precision, containment, and cleanability above all else. Active pharmaceutical ingredients (APIs), excipients, and formulation powders must be transferred without contamination, without cross-mixing, and with full material traceability. Equipment construction must permit clean-in-place or strip-down cleaning, with no crevices, dead zones, or surface finishes that trap product.</p>
+        <div class="tc-opportunity">
+          <strong>What we bring to this sector:</strong> Stainless steel screw conveyors and bucket elevators designed to Ra surface finish requirements; crevice-free weld geometry; contained transfer points that eliminate open-air product exposure; IBC handling systems; full material certification (mill certificates, test reports) and dimensional inspection documentation. Our food-grade fabrication experience is the direct foundation for pharma-grade work.
+        </div>
+      </div>
+
+      <div class="target-card reveal">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M12 6v6l4 2"/><path d="M2 12h4M18 12h4M12 6V2M12 22v-4"/></svg>
+        <div class="tc-name">Agriculture Processing</div>
+        <div class="tc-status">Diversifying With Proven Equipment</div>
+        <p class="tc-desc">Industrial-scale post-harvest operations — grain reception and storage, oilseed crushing, rice milling, sugar processing, and animal feed compounding — require handling systems that are high-throughput, gentle on product quality, and designed for the seasonal intensity of harvest intake. Moisture management, pest exclusion, and dust control are critical operating parameters, not afterthoughts.</p>
+        <div class="tc-opportunity">
+          <strong>What we bring to this sector:</strong> High-capacity bucket elevators and belt conveyors for grain intake and transfer; flat-bottom and hopper-bottom silos for short and long-term storage with aeration systems; rotary dryers for moisture reduction of harvested grain; screw conveyors and feeders for milling and blending operations. Our food-processing background means food-safe material selection is standard, not an upgrade.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="cta-band">
+  <div class="cta-inner">
+    <div class="reveal">
+      <div class="cta-eyebrow">Let's Talk About Your Industry</div>
+      <h2 class="cta-headline">Your Domain.<br>Our <span class="accent">Engineered Solutions.</span></h2>
+      <p class="cta-sub">Whether you're in an industry we've served for decades or a sector we're entering for the first time — tell us about your material, your capacity, and your challenge. Our engineers will respond within 24 hours.</p>
+    </div>
+    <div class="cta-actions reveal">
+      <a href="/contact" class="btn-primary">Request a Quote <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="/products" class="btn-secondary">View Products →</a>
+    </div>
+  </div>
+</section>
+
+<script>
+document.getElementById('copy-year').textContent = new Date().getFullYear();
+const yr = new Date().getFullYear() - 1987;
+document.getElementById('ind-years').innerHTML = yr + '<span class="u">+</span>';
+
+</script>
+
+</BaseLayout>
