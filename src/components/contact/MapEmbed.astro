@@ -1,47 +1,105 @@
 <section class="map-section">
+  <div class="map-inner">
 
-  <div class="map-container">
+    <div class="map-header">
+      <div class="map-eyebrow">
+        <div class="map-eyebrow-line"></div>
+        <span>Find Us</span>
+      </div>
+      <h2 class="map-title">Our <span class="accent">Location</span></h2>
+      <p class="map-sub">1st Phase, Plot 87/D2, Mcnally Road, Industrial Estate, Malur, Karnataka 563130, India</p>
+    </div>
 
-    <iframe
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d8453.928015847026!2d77.9220041109396!3d12.984988214531223!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae09ff1aaa1559%3A0x7297d4b69b72573a!2sJAYVEECONS%20UNIT-2!5e1!3m2!1sen!2sus!4v1777997754384!5m2!1sen!2sus"
-      width="100%"
-      height="450"
-      style="border:0;"
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
+    <div class="map-frame">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d8453.928015847026!2d77.9220041109396!3d12.984988214531223!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae09ff1aaa1559%3A0x7297d4b69b72573a!2sJAYVEECONS%20UNIT-2!5e1!3m2!1sen!2sus!4v1777997754384!5m2!1sen!2sus"
+        width="100%"
+        height="100%"
+        style="border:0; display:block;"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Jayveecons location map">
+      </iframe>
+    </div>
 
   </div>
-
 </section>
 
 <style>
-.office{
-padding:80px 24px;
-background:white;
-text-align:center;
-}
-.container{
-max-width:900px;
-margin:auto;
-}
-h2{
-margin-bottom:16px;
-}
-</style>
-<style>
+  .map-section {
+    padding-block: clamp(40px, 7vh, 88px);
+    background: #f8fafc;
+  }
 
-.map-section{
-  padding:80px 20px;
-  background:white;
-}
+  .map-inner {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 16px;
+    box-sizing: border-box;
+    /* hard cap so the iframe never stretches beyond the content column */
+    container-type: inline-size;
+  }
+  @media (min-width: 480px)  { .map-inner { padding-inline: 20px; } }
+  @media (min-width: 768px)  { .map-inner { padding-inline: 32px; } }
+  @media (min-width: 1024px) { .map-inner { padding-inline: 48px; } }
 
-.map-container{
-  max-width:1440px;
-  margin:0 auto;
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 8px 30px rgba(0,0,0,0.08);
-}
+  /* ── Header ── */
+  .map-header { margin-bottom: clamp(20px, 3vh, 32px); }
 
+  .map-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .map-eyebrow-line {
+    width: 30px;
+    height: 2px;
+    background: var(--crimson);
+    flex-shrink: 0;
+  }
+  .map-eyebrow span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--crimson);
+  }
+
+  .map-title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 48px);
+    line-height: 1;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    color: #1a1d24;
+    margin-bottom: 10px;
+  }
+  .map-title .accent { color: var(--crimson); }
+
+  .map-sub {
+    font-family: var(--font-body);
+    font-size: clamp(13px, 1.4vw, 15px);
+    font-weight: 300;
+    color: #4a5068;
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  /* ── Map frame ── */
+  .map-frame {
+    width: 100%;
+    height: 260px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid var(--crimson);
+    box-shadow:
+      0 0 0 1px rgba(192,24,30,.25),
+      0 8px 32px rgba(0,0,0,.45);
+  }
+  @media (min-width: 480px)  { .map-frame { height: 320px; } }
+  @media (min-width: 768px)  { .map-frame { height: 400px; } }
+  @media (min-width: 1024px) { .map-frame { height: 460px; } }
 </style>

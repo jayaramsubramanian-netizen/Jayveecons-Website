@@ -120,6 +120,8 @@ const links = [
     gap: 12px;
     text-decoration: none;
     flex-shrink: 0;
+    position: relative; /* FIX: establish stacking context */
+    z-index: 10;        /* FIX: always above the sliding mobile menu */
   }
   .nav-logo-img {
     height: 50px;
@@ -164,13 +166,14 @@ const links = [
     padding: 8px;
     background: none;
     border: none;
-    z-index: 110;
+    position: relative; /* FIX: establish stacking context */
+    z-index: 10;        /* FIX: always above the sliding mobile menu */
   }
   .nav-burger span {
     display: block;
     width: 24px;
     height: 2px;
-    background: #083892; /* ← dark navy blue, visible on steel */
+    background: #083892;
     transition: transform 0.3s, opacity 0.3s, width 0.3s;
     transform-origin: center;
   }
@@ -231,12 +234,20 @@ const links = [
 
   /* ─── MOBILE ─── */
   @media (max-width: 860px) {
+    nav {
+      border-bottom-color: transparent;
+      box-shadow: none;
+    }
+    nav.scrolled {
+      border-bottom-color: transparent;
+      box-shadow: none;
+    }
     .nav-burger { display: flex; }
 
     .nav-links {
       position: fixed;
       top: 70px; left: 0; right: 0;
-      /* Same steel gradient as the nav bar — no extra overlays */
+      z-index: 5; /* FIX: below logo (z-index: 10) so it never overlaps it */
       background:
         linear-gradient(90deg,
           rgba(0,0,0,0.06)       0%,
@@ -259,7 +270,7 @@ const links = [
       align-items: stretch;
       gap: 0;
       border-bottom: 1px solid rgba(192,24,30,0.2);
-      transform: translateY(-110%);
+      transform: translateY(-150%);
       transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
       pointer-events: none;
     }

@@ -1,0 +1,191 @@
+<section class="sp-section" id="promise">
+  <div class="sp-inner">
+    <div class="promise-grid">
+
+      <!-- Left: copy -->
+      <div class="promise-copy reveal">
+        <div class="section-tag">
+          <div class="line"></div>
+          <span>Our Service Promise</span>
+        </div>
+        <h2 class="section-headline">Why Single-Source<br>Matters</h2>
+        <p class="body-text">In industrial equipment, the weakest link is almost always the handoff. When a design firm passes a drawing to a fabricator, and the fabricator passes equipment to an installation contractor, and the contractor hands over to a maintenance team — critical knowledge is lost at every transfer. Nobody owns the outcome.</p>
+        <p class="body-text"><strong>Jayveecons is built to eliminate that problem.</strong> The engineer who designed your conveyor is available to answer your installation team's questions. The fabricator who built your kiln can diagnose why a component has worn faster than expected. The commissioning engineer can write the maintenance procedure because they ran the machine.</p>
+        <blockquote>
+          <p>"Customer satisfaction comes in providing cost-effective and superior products and services coupled with technological innovation."</p>
+        </blockquote>
+        <p class="body-text">That philosophy was written into our founding mission in 1987. Every service we offer exists to deliver on it.</p>
+      </div>
+
+      <!-- Right: stats -->
+      <div class="promise-stats reveal">
+        <div class="pstat">
+          <div class="pstat-num" id="svc-years">39<span class="u">+</span></div>
+          <div class="pstat-label">Years of Continuous Operation</div>
+          <div class="pstat-desc">Uninterrupted service delivery since 1987</div>
+        </div>
+        <div class="pstat">
+          <div class="pstat-num">24<span class="u">h</span></div>
+          <div class="pstat-label">Response Commitment</div>
+          <div class="pstat-desc">All project and parts enquiries responded to within one business day</div>
+        </div>
+        <div class="pstat">
+          <div class="pstat-num">90<span class="u">K</span></div>
+          <div class="pstat-label">Sq.ft Workshop Capacity</div>
+          <div class="pstat-desc">Full machining and fabrication in-house, no subcontracting of critical work</div>
+        </div>
+        <div class="pstat">
+          <div class="pstat-num">100<span class="u">%</span></div>
+          <div class="pstat-label">In-House Engineering</div>
+          <div class="pstat-desc">Design, fabrication, erection, and support — all one team</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ── Section — white + blue grid, alternates with dark ServicesList ── */
+  .sp-section {
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 90px 90px;
+    padding-block: clamp(52px, 7vh, 88px);
+    border-bottom: 1px solid rgba(8,56,146,.08);
+  }
+
+  /* ── Container ── */
+  .sp-inner {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 16px;
+    box-sizing: border-box;
+  }
+  @media (min-width: 480px)  { .sp-inner { padding-inline: 20px; } }
+  @media (min-width: 768px)  { .sp-inner { padding-inline: 32px; } }
+  @media (min-width: 1024px) { .sp-inner { padding-inline: 48px; } }
+
+  /* ── Two-column grid ── */
+  .promise-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .promise-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── Section tag ── */
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .section-tag .line {
+    width: 28px; height: 2px;
+    background: var(--crimson);
+    flex-shrink: 0;
+  }
+  .section-tag span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--crimson);
+  }
+
+  /* ── Headline — dark on light bg ── */
+  .section-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(30px, 4vw, 48px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: #1a1d24;
+    margin-bottom: 20px;
+  }
+
+  /* ── Body copy ── */
+  .body-text {
+    font-family: var(--font-body);
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-weight: 300;
+    color: #4a5068;
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .body-text strong { color: #1a1d24; font-weight: 600; }
+
+  /* ── Blockquote ── */
+  blockquote {
+    border-left: 3px solid var(--crimson);
+    padding: 16px 20px;
+    background: rgba(8,56,146,.05);
+    margin: 20px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p {
+    font-family: var(--font-body);
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-style: italic;
+    font-weight: 300;
+    color: #2a3050;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* ── Stats grid — 2×2 ── */
+  .promise-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .pstat {
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    border-top: 3px solid transparent;
+    border-radius: 4px;
+    padding: clamp(18px, 2.5vw, 28px);
+    transition: border-top-color .3s, box-shadow .3s;
+  }
+  .pstat:hover {
+    border-top-color: var(--crimson);
+    box-shadow: 0 4px 24px rgba(8,56,146,.25);
+  }
+  .pstat-num {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1;
+    color: var(--white);
+    letter-spacing: -.02em;
+  }
+  .pstat-num .u {
+    font-size: .5em;
+    color: #ff7070;
+  }
+  .pstat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+    margin-top: 5px;
+    margin-bottom: 4px;
+  }
+  .pstat-desc {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.5;
+  }
+</style>

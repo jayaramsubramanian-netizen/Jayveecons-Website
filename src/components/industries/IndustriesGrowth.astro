@@ -1,0 +1,229 @@
+---
+// IndustriesGrowth.astro
+// "Where We Are Growing" — 3 target/growth sector cards.
+// Uses section-container + page-container padding tokens.
+---
+---
+
+<style>
+  .target-sectors {
+    padding-block: clamp(48px, 8vh, 96px);
+    background: var(--ink, #090c14);
+  }
+
+  /* Header row — matches page-container */
+  .section-header {
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: clamp(18px, 4vw, 48px);
+    margin-bottom: clamp(28px, 4vh, 52px);
+  }
+
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .section-tag .line { width: 28px; height: 2px; background: var(--crimson); flex-shrink: 0; }
+  .section-tag span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+  }
+
+  .section-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(28px, 5vw, 52px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: var(--white);
+    margin-bottom: 14px;
+  }
+
+  .intro-copy {
+    font-size: clamp(14px, 1.6vw, 17px);
+    font-weight: 300;
+    color: var(--fog);
+    max-width: 720px;
+    line-height: 1.8;
+  }
+
+  /* Card grid — inside page-container */
+  .cards-wrap {
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: clamp(18px, 4vw, 48px);
+  }
+
+  .target-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .target-card {
+    background: var(--ink-2, #0a0d16);
+    padding: clamp(22px, 3vw, 36px);
+    border-top: 2px solid var(--teal-l, #14a898);
+    position: relative;
+    overflow: hidden;
+    transition: background .3s;
+  }
+  .target-card:hover { background: rgba(13, 122, 110, .06); }
+  .target-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 60px; height: 60px;
+    background: radial-gradient(circle at top right, rgba(20,168,152,.08), transparent 70%);
+    pointer-events: none;
+  }
+
+  .tc-icon {
+    width: 40px; height: 40px;
+    color: var(--teal-l, #14a898);
+    margin-bottom: 18px;
+    opacity: .85;
+  }
+
+  .tc-name {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(20px, 2.5vw, 26px);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .tc-status {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    background: rgba(20, 168, 152, .12);
+    color: var(--teal-l, #14a898);
+    padding: 3px 8px;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+
+  .tc-desc {
+    font-size: clamp(13px, 1.4vw, 14px);
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .tc-opportunity {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--mist);
+    line-height: 1.6;
+    border-top: 1px solid rgba(20, 168, 152, .1);
+    padding-top: 14px;
+  }
+  .tc-opportunity strong {
+    color: var(--teal-l, #14a898);
+    font-weight: 500;
+  }
+
+  @media (min-width: 640px)  { .target-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .target-grid { grid-template-columns: repeat(3, 1fr); } }
+</style>
+
+<section class="target-sectors" id="target" aria-labelledby="target-heading">
+
+  <div class="section-header">
+    <div class="section-tag reveal"><div class="line"></div><span>Where We Are Growing</span></div>
+    <h2 class="section-headline reveal" id="target-heading">
+      Equipment Ready.<br>Experience Transferable.
+    </h2>
+    <p class="intro-copy reveal">
+      The equipment we build for cement plants, mines, and food processing operations is
+      the same equipment these sectors need — the material characteristics differ, the
+      engineering principles do not. If your operation handles bulk solids, powders, or
+      granular material, Jayveecons has fabricated something like it before.
+    </p>
+  </div>
+
+  <div class="cards-wrap">
+    <div class="target-grid">
+
+      <!-- Oil & Gas -->
+      <article class="target-card reveal" aria-label="Oil and Gas sector">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        <h3 class="tc-name">Oil &amp; Gas</h3>
+        <div class="tc-status">Diversifying With Proven Equipment</div>
+        <p class="tc-desc">
+          Upstream and midstream oil and gas operations move large volumes of bulk solids —
+          proppants (frac sand), drilling muds, barite, and bentonite in drilling; petroleum
+          coke, catalyst fines, and sulphur in refining. These materials demand enclosed,
+          leak-proof conveying systems and pressure-rated containment vessels.
+        </p>
+        <div class="tc-opportunity">
+          <strong>What we bring:</strong> Enclosed screw conveyors for dusty and hazardous
+          bulk solids; belt and bucket systems for high-volume proppant handling; fabricated
+          pressure vessels and storage systems; abrasion-resistant material selection from
+          our mining work. ASME documentation available where specified.
+        </div>
+      </article>
+
+      <!-- Pharmaceuticals -->
+      <article class="target-card reveal" aria-label="Pharmaceuticals sector">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+        </svg>
+        <h3 class="tc-name">Pharmaceuticals</h3>
+        <div class="tc-status">Diversifying With Proven Equipment</div>
+        <p class="tc-desc">
+          Pharmaceutical bulk handling requires precision, containment, and cleanability
+          above all else. APIs, excipients, and formulation powders must be transferred
+          without contamination, with full material traceability and equipment construction
+          that permits clean-in-place or strip-down cleaning.
+        </p>
+        <div class="tc-opportunity">
+          <strong>What we bring:</strong> Stainless steel screw conveyors and bucket
+          elevators to Ra surface finish requirements; crevice-free weld geometry; contained
+          transfer points; IBC handling systems; full material certification. Our food-grade
+          fabrication experience is the direct foundation for pharma-grade work.
+        </div>
+      </article>
+
+      <!-- Agriculture Processing -->
+      <article class="target-card reveal" aria-label="Agriculture Processing sector">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/>
+          <path d="M12 6v6l4 2"/>
+          <path d="M2 12h4M18 12h4M12 6V2M12 22v-4"/>
+        </svg>
+        <h3 class="tc-name">Agriculture Processing</h3>
+        <div class="tc-status">Diversifying With Proven Equipment</div>
+        <p class="tc-desc">
+          Industrial-scale post-harvest operations — grain reception and storage, oilseed
+          crushing, rice milling, sugar processing, and animal feed compounding — require
+          handling systems that are high-throughput, gentle on product quality, and designed
+          for the seasonal intensity of harvest intake.
+        </p>
+        <div class="tc-opportunity">
+          <strong>What we bring:</strong> High-capacity bucket elevators and belt conveyors
+          for grain intake; flat-bottom and hopper-bottom silos with aeration systems;
+          rotary dryers for harvested grain moisture reduction; screw conveyors and feeders
+          for milling and blending. Food-safe material selection is standard.
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+</section>

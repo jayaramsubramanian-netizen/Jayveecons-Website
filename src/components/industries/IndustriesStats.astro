@@ -1,0 +1,175 @@
+---
+// IndustriesStats.astro
+// 4-up stat bar — white + blue grid background, dark navy gradient cards.
+// Matches the Services delivery overview section (do-section pattern).
+---
+
+<style>
+  /* ── Section shell — white + blue grid, same as do-section ── */
+  .stat-bar {
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 90px 90px;
+    padding-block: clamp(44px, 6vh, 72px);
+    border-bottom: 1px solid rgba(8,56,146,.08);
+  }
+
+  /* ── Container — stepwise, matches do-inner ── */
+  .stat-bar-inner {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 16px;
+    box-sizing: border-box;
+  }
+  @media (min-width: 480px)  { .stat-bar-inner { padding-inline: 20px; } }
+  @media (min-width: 768px)  { .stat-bar-inner { padding-inline: 32px; } }
+  @media (min-width: 1024px) { .stat-bar-inner { padding-inline: 48px; } }
+
+  /* ── Section tag — dark text on light bg, matching do-section ── */
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .section-tag .line {
+    width: 28px;
+    height: 2px;
+    background: var(--crimson);
+    flex-shrink: 0;
+  }
+  .section-tag span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--crimson);
+  }
+
+  /* ── Headline — dark on light bg ── */
+  .stat-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 44px);
+    text-transform: uppercase;
+    line-height: .97;
+    letter-spacing: .01em;
+    color: #1a1d24;
+    margin-bottom: clamp(24px, 4vh, 40px);
+  }
+
+  /* ── Card grid — 2col mobile → 4col desktop ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (min-width: 1024px) {
+    .stat-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
+    }
+  }
+
+  /* ── Stat card — dark navy gradient matching dflow-item ── */
+  .stat-item {
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    border-top: 3px solid transparent;
+    border-radius: 4px;
+    padding: clamp(20px, 2.5vw, 32px);
+    position: relative;
+    transition: border-top-color .3s, box-shadow .3s;
+  }
+  .stat-item:hover {
+    border-top-color: var(--crimson);
+    box-shadow: 0 4px 24px rgba(8,56,146,.25);
+  }
+
+  /* ── Number ── */
+  .stat-num {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(36px, 5vw, 52px);
+    line-height: 1;
+    color: var(--white);
+    letter-spacing: -.02em;
+    margin-bottom: 6px;
+  }
+  .stat-num .u {
+    font-size: .5em;
+    color: var(--crimson-l);
+  }
+
+  /* ── Label ── */
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+    margin-bottom: 6px;
+    opacity: .9;
+  }
+
+  /* ── Detail ── */
+  .stat-detail {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.6;
+  }
+</style>
+
+<div class="stat-bar" aria-label="Key statistics">
+  <div class="stat-bar-inner">
+
+    <div class="section-tag reveal">
+      <div class="line"></div>
+      <span>Our Reach</span>
+    </div>
+    <h2 class="stat-headline reveal">Four Decades.<br>Five Sectors.</h2>
+
+    <div class="stat-grid">
+
+      <div class="stat-item reveal">
+        <div class="stat-num">5<span class="u">+</span></div>
+        <div class="stat-label">Active Industries</div>
+        <div class="stat-detail">Cement · Mining · Food &amp; Agri · Waste · Steel &amp; Fertilizers</div>
+      </div>
+
+      <div class="stat-item reveal">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Growth Sectors</div>
+        <div class="stat-detail">Oil &amp; Gas · Pharmaceuticals · Agriculture Processing</div>
+      </div>
+
+      <div class="stat-item reveal">
+        <div class="stat-num" id="ind-years">39<span class="u">+</span></div>
+        <div class="stat-label">Years Domain Experience</div>
+        <div class="stat-detail">Cross-sector bulk material expertise since 1987</div>
+      </div>
+
+      <div class="stat-item reveal">
+        <div class="stat-num">4</div>
+        <div class="stat-label">VECTOMEC™ Product Lines</div>
+        <div class="stat-detail">Handling · Processing · Ancillary · Parts &amp; Spares</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const el = document.getElementById('ind-years');
+  if (el) {
+    const yr = new Date().getFullYear() - 1987;
+    el.innerHTML = `${yr}<span class="u">+</span>`;
+  }
+</script>

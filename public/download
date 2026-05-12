@@ -1,0 +1,89 @@
+# public/.htaccess — Hostinger Shared Hosting Configuration
+# Place this file in your public/ folder — Astro will copy it to dist/ automatically
+
+# Enable rewrite engine
+RewriteEngine On
+
+# ── HTTPS Redirect (requires SSL to be installed first in hPanel) ──
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# ── www → non-www redirect (choose one or the other, not both) ──
+# Option A: Redirect www → non-www (recommended)
+# RewriteCond %{HTTP_HOST} ^www\.jayveecons\.com [NC]
+# RewriteRule ^ https://jayveecons.com%{REQUEST_URI} [R=301,L]
+
+# Option B: Redirect non-www → www
+# RewriteCond %{HTTP_HOST} !^www\. [NC]
+# RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# ── Security Headers ──
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  # Remove server info
+  Header unset Server
+  Header always unset X-Powered-By
+</IfModule>
+
+# ── Browser Caching (improves Lighthouse score) ──
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # HTML — short cache (content changes)
+  ExpiresByType text/html              "access plus 1 hour"
+
+  # CSS + JS — long cache (filenames include hash)
+  ExpiresByType text/css               "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/javascript        "access plus 1 year"
+
+  # Images
+  ExpiresByType image/jpeg             "access plus 1 year"
+  ExpiresByType image/jpg              "access plus 1 year"
+  ExpiresByType image/png              "access plus 1 year"
+  ExpiresByType image/gif              "access plus 1 year"
+  ExpiresByType image/svg+xml          "access plus 1 year"
+  ExpiresByType image/webp             "access plus 1 year"
+  ExpiresByType image/avif             "access plus 1 year"
+  ExpiresByType image/x-icon           "access plus 1 year"
+
+  # Fonts
+  ExpiresByType font/woff              "access plus 1 year"
+  ExpiresByType font/woff2             "access plus 1 year"
+  ExpiresByType application/font-woff  "access plus 1 year"
+  ExpiresByType application/font-woff2 "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Immutable flag for hashed assets
+  <FilesMatch "\.(css|js|woff2?)$">
+    Header append Cache-Control "public, immutable"
+  </FilesMatch>
+</IfModule>
+
+# ── Gzip Compression ──
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE font/woff
+  AddOutputFilterByType DEFLATE font/woff2
+</IfModule>
+
+# ── Custom Error Pages ──
+ErrorDocument 404 /404.html
+
+# ── Block access to sensitive files ──
+<FilesMatch "\.(env|log|sql|git)$">
+  Order allow,deny
+  Deny from all
+</FilesMatch>

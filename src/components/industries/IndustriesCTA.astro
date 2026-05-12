@@ -1,0 +1,150 @@
+---
+// IndustriesCTA.astro
+// Final CTA band.
+// .btn-primary and .btn-secondary are defined here directly —
+// no external shared CSS file needed.
+---
+
+<style>
+  .cta-band {
+    padding-block: clamp(56px, 9vh, 104px);
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 110%, rgba(192,24,30,.08), transparent 60%),
+      linear-gradient(155deg, var(--navy-deep, #060c1e) 0%, var(--ink, #090c14) 60%);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Top rule */
+  .cta-band::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(192,24,30,.3) 50%, transparent);
+    pointer-events: none;
+  }
+
+  .cta-inner {
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: clamp(18px, 4vw, 48px);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(24px, 4vw, 56px);
+    align-items: center;
+  }
+
+  .cta-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    color: var(--crimson-l);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .cta-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(28px, 5vw, 56px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: var(--white);
+    margin-bottom: 14px;
+  }
+  .cta-headline .accent { color: var(--crimson-l); }
+
+  .cta-sub {
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.65;
+    max-width: 560px;
+  }
+
+  /* Buttons row */
+  .cta-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  /* ── Button styles (self-contained, no external file needed) ── */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--crimson);
+    color: var(--white);
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 13px 30px;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    transition: background .2s, transform .2s;
+    white-space: nowrap;
+  }
+  .btn-primary:hover { background: var(--crimson-l); transform: translateX(2px); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: transparent;
+    color: var(--chrome, #d0d4dc);
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 12px 30px;
+    border: 1px solid rgba(208, 212, 220, .2);
+    transition: color .2s, border-color .2s;
+    white-space: nowrap;
+  }
+  .btn-secondary:hover { color: var(--white); border-color: rgba(208, 212, 220, .5); }
+
+  @media (min-width: 640px) {
+    .cta-actions { flex-direction: row; align-items: center; }
+  }
+
+  @media (min-width: 1024px) {
+    .cta-inner   { grid-template-columns: 1fr auto; }
+    .cta-actions { flex-direction: column; align-items: flex-end; }
+  }
+</style>
+
+<section class="cta-band" aria-labelledby="cta-heading">
+  <div class="cta-inner">
+
+    <div class="reveal">
+      <div class="cta-eyebrow">Let's Talk About Your Industry</div>
+      <h2 class="cta-headline" id="cta-heading">
+        Your Domain.<br>Our <span class="accent">Engineered Solutions.</span>
+      </h2>
+      <p class="cta-sub">
+        Whether you're in an industry we've served for decades or a sector we're entering
+        for the first time — tell us about your material, your capacity, and your challenge.
+        Our engineers will respond within 24 hours.
+      </p>
+    </div>
+
+    <div class="cta-actions reveal">
+      <a href="/contact" class="btn-primary" aria-label="Request a quote from Jayveecons">
+        Request a Quote
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <a href="/products" class="btn-secondary" aria-label="View VECTOMEC product catalogue">
+        View Products →
+      </a>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,518 @@
+---
+// IndustryBlock.astro
+// Reusable split-card for each industry.
+//
+// Props
+// ─────
+// num          string    "01" watermark
+// reverse      boolean   flip image/copy sides (default false = copy left)
+// id           string    anchor id
+// label        string    aria-label for <article>
+// sector       string    eyebrow sector label
+// statusText   string    status badge text
+// headline     string    HTML for <h3> (may include <br> and <span class="sub-hl">)
+// descEm?      string    optional mono emphasis line below headline
+// desc         string[]  body paragraphs (1–2)
+// subsectors?  { icon: string; label: string }[]
+// cementStats? { icon: string; num: string; label: string }[]
+// trustText    string
+// productsTitle string
+// products     string[]
+// ctaHref      string
+// ctaLabel     string
+// ctaText      string
+// imgSrc       string
+// imgAlt       string
+// imgEager?    boolean   loading="eager" (default false)
+// isCement?    boolean   cement flagship overrides
+
+export interface SubSector {
+  icon: string;
+  label: string;
+}
+
+export interface Props {
+  num: string;
+  reverse?: boolean;
+  id: string;
+  label: string;
+  sector: string;
+  statusText: string;
+  headline: string;
+  descEm?: string;
+  desc: string[];
+  subsectors?: SubSector[];
+  cementStats?: { icon: string; num: string; label: string }[];
+  trustText: string;
+  productsTitle: string;
+  products: string[];
+  ctaHref: string;
+  ctaLabel: string;
+  ctaText: string;
+  imgSrc: string;
+  imgAlt: string;
+  imgEager?: boolean;
+  isCement?: boolean;
+}
+
+const {
+  num, reverse = false, id, label, sector, statusText,
+  headline, descEm, desc, subsectors, cementStats,
+  trustText, productsTitle, products,
+  ctaHref, ctaLabel, ctaText,
+  imgSrc, imgAlt, imgEager = false, isCement = false,
+} = Astro.props;
+---
+
+<style>
+  /*
+   ┌─────────────────────────────────────────────────────┐
+   │  IMAGE FIX                                          │
+   │  Mobile:  .ind-visual uses aspect-ratio:16/9 so     │
+   │           the container has intrinsic height.        │
+   │  Desktop: grid with explicit height:560px; both     │
+   │           cells stretch via grid-template-rows:1fr. │
+   │           aspect-ratio is unset and .ind-visual      │
+   │           gets height:100% from the grid cell.       │
+   └─────────────────────────────────────────────────────┘
+  */
+
+  /* ── Block wrapper ──────────────────────────────── */
+  .ind-block {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Cement top accent bar */
+  .ind-block--cement::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--crimson) 0%, rgba(192,24,30,.3) 60%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* ── Visual panel ───────────────────────────────── */
+  .ind-visual {
+    position: relative;
+    overflow: hidden;
+    background: var(--navy-deep);
+    /* KEY: intrinsic height on mobile so absolute img has something to fill */
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  /* Absolute-fill image — inset:0 is safer than top/left/width/height */
+  .ind-visual img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    transition: transform .7s ease, filter .4s;
+    filter: saturate(1.05) contrast(1.05);
+  }
+  .ind-block:hover .ind-visual img { transform: scale(1.03); }
+
+  /* Gradient scrim — bottom-to-top on mobile */
+  .ind-visual::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, transparent 40%, rgba(10,12,18,.6) 100%);
+    pointer-events: none;
+  }
+
+  /* ── Copy panel ─────────────────────────────────── */
+  .ind-copy {
+    background: var(--ink-3, #0d1424);
+    border-left: 4px solid var(--crimson);
+    padding: clamp(20px, 4vw, 36px) clamp(18px, 3.5vw, 36px);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    flex: 1;
+  }
+
+  .ind-copy--cement {
+    background: linear-gradient(160deg, var(--ink-3, #0d1424) 0%, rgba(13,26,58,.5) 100%);
+  }
+
+  /* Watermark number */
+  .ind-copy::before {
+    content: attr(data-num);
+    position: absolute;
+    bottom: -20px; right: -10px;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 180px;
+    line-height: 1;
+    color: rgba(51, 96, 184, .05);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Reverse border side (applied at desktop bp) */
+  .ind-copy--right {
+    border-left: none;
+    border-right: 4px solid var(--crimson);
+  }
+
+  /* ── Sector tag ─────────────────────────────────── */
+  .ind-sector-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+  .ind-sector-line { width: 28px; height: 2px; background: var(--crimson); flex-shrink: 0; }
+  .ind-sector-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+  }
+
+  /* ── Status dot ─────────────────────────────────── */
+  .ind-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+  }
+  .ind-status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--crimson);
+    flex-shrink: 0;
+    box-shadow: 0 0 6px var(--crimson);
+  }
+  .ind-status span {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+  }
+
+  /* ── Headline ───────────────────────────────────── */
+  .ind-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(20px, 3vw, 30px);
+    text-transform: uppercase;
+    line-height: .97;
+    letter-spacing: -.01em;
+    color: var(--white);
+    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+  .ind-headline :global(.sub-hl) { color: var(--chrome-l, #d0d4dc); }
+
+  /* Cement emphasis line */
+  .ind-desc-em {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+    margin-bottom: 12px;
+    margin-top: -6px;
+  }
+
+  /* ── Body copy ──────────────────────────────────── */
+  .ind-desc {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.75;
+    margin-bottom: 10px;
+  }
+
+  /* ── Cement mini-stats ──────────────────────────── */
+  .cement-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    margin-bottom: 14px;
+    background: rgba(51, 96, 184, .1);
+    flex-shrink: 0;
+  }
+  .cement-stat {
+    background: rgba(10, 12, 18, .7);
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    transition: background .25s;
+  }
+  .cement-stat:hover { background: rgba(13, 26, 58, .7); }
+  .cement-stat svg   { width: 16px; height: 16px; color: var(--crimson-l); opacity: .8; flex-shrink: 0; }
+  .cement-stat-num {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(14px, 1.6vw, 18px);
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: .04em;
+  }
+  .cement-stat-label {
+    font-family: var(--font-mono);
+    font-size: 7px;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--mist);
+    line-height: 1.4;
+  }
+
+  /* ── Sub-sector icon row ────────────────────────── */
+  .ind-subsectors {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+    border-top: 1px solid rgba(51, 96, 184, .12);
+    border-bottom: 1px solid rgba(51, 96, 184, .12);
+    padding: 8px 0;
+    flex-wrap: wrap;
+  }
+  .ind-sub {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    min-width: calc(50% - 1px);
+    padding: 5px 4px;
+    border-right: 1px solid rgba(51, 96, 184, .12);
+  }
+  .ind-sub:last-child { border-right: none; }
+  .ind-sub svg { width: 18px; height: 18px; color: #7ab0ff; opacity: .8; }
+  .ind-sub-label {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--mist);
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  /* ── Trust badge ────────────────────────────────── */
+  .ind-trust {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex-shrink: 0;
+    background: rgba(13, 26, 58, .7);
+    border: 1px solid rgba(51, 96, 184, .2);
+    border-left: 3px solid var(--crimson);
+    padding: 9px 12px;
+    margin-bottom: 12px;
+  }
+  .ind-trust svg { width: 16px; height: 16px; color: var(--crimson-l); flex-shrink: 0; margin-top: 1px; }
+  .ind-trust-text {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--fog);
+    line-height: 1.5;
+  }
+
+  /* ── Product tags ───────────────────────────────── */
+  .ind-products-title {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+    margin-bottom: 6px;
+    flex-shrink: 0;
+  }
+  .ind-products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  .ind-product-tag {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    background: rgba(13, 26, 58, .8);
+    border: 1px solid rgba(51, 96, 184, .25);
+    color: #7ab0ff;
+    padding: 2px 7px;
+  }
+
+  /* ── CTA link ───────────────────────────────────── */
+  .ind-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+    text-decoration: none;
+    transition: color .2s;
+    margin-top: auto;
+    flex-shrink: 0;
+    padding-top: 8px;
+  }
+  .ind-cta:hover { color: var(--white); }
+  .ind-cta svg { width: 12px; height: 12px; }
+
+  /* ════════════════════════════════════════════════
+     DESKTOP LAYOUT ≥ 1024px
+     Switch from flex-column to side-by-side grid.
+     Both cells share the same explicit row height,
+     so .ind-visual always has a measured container.
+  ════════════════════════════════════════════════ */
+  @media (min-width: 1024px) {
+    .ind-block {
+      display: grid;
+      grid-template-columns: 38fr 62fr;
+      grid-template-rows: 1fr;
+      height: 560px;
+      flex-direction: unset;
+    }
+
+    .ind-block--reverse {
+      grid-template-columns: 62fr 38fr;
+    }
+    .ind-block--reverse .ind-copy   { order: 2; }
+    .ind-block--reverse .ind-visual { order: 1; }
+
+    /* Visual fills its grid cell height */
+    .ind-visual {
+      aspect-ratio: unset;
+      height: 100%;
+      width: 100%;
+    }
+
+    /* Gradient side matches copy position */
+    .ind-visual::after {
+      background: linear-gradient(270deg, transparent 55%, rgba(10,12,18,.45) 100%);
+    }
+    .ind-block--reverse .ind-visual::after {
+      background: linear-gradient(90deg, transparent 55%, rgba(10,12,18,.45) 100%);
+    }
+
+    /* Copy scrolls within fixed height */
+    .ind-copy {
+      height: 100%;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(192,24,30,.3) transparent;
+      padding: 32px 36px;
+    }
+    .ind-copy::-webkit-scrollbar { width: 3px; }
+    .ind-copy::-webkit-scrollbar-thumb { background: rgba(192,24,30,.3); border-radius: 2px; }
+
+    .ind-copy--right { border-left: none; border-right: 4px solid var(--crimson); }
+    .cement-stats { grid-template-columns: repeat(4, 1fr); }
+    .ind-sub { min-width: unset; }
+  }
+
+  @media (min-width: 1280px) {
+    .ind-block { height: 580px; }
+  }
+</style>
+
+<article
+  class={`ind-block${reverse ? ' ind-block--reverse' : ''}${isCement ? ' ind-block--cement' : ''} reveal`}
+  id={id}
+  aria-label={label}
+>
+  <!-- ── Copy panel ── -->
+  <div
+    class={`ind-copy${isCement ? ' ind-copy--cement' : ''}${reverse ? ' ind-copy--right' : ''}`}
+    data-num={num}
+  >
+    <div class="ind-sector-tag">
+      <div class="ind-sector-line"></div>
+      <span class="ind-sector-label">{sector}</span>
+    </div>
+
+    <div class="ind-status">
+      <div class="ind-status-dot"></div>
+      <span>{statusText}</span>
+    </div>
+
+    <h3 class="ind-headline" set:html={headline} />
+
+    {descEm && <p class="ind-desc-em">{descEm}</p>}
+    {desc.map((p) => <p class="ind-desc">{p}</p>)}
+
+    {cementStats && (
+      <div class="cement-stats" role="list" aria-label="Cement credentials">
+        {cementStats.map((s) => (
+          <div class="cement-stat" role="listitem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" set:html={s.icon} />
+            <div class="cement-stat-num">{s.num}</div>
+            <div class="cement-stat-label" set:html={s.label} />
+          </div>
+        ))}
+      </div>
+    )}
+
+    {subsectors && (
+      <div class="ind-subsectors" role="list" aria-label={`${sector} sub-sectors`}>
+        {subsectors.map((s) => (
+          <div class="ind-sub" role="listitem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" set:html={s.icon} />
+            <span class="ind-sub-label" set:html={s.label} />
+          </div>
+        ))}
+      </div>
+    )}
+
+    <div class="ind-trust" role="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      <span class="ind-trust-text">{trustText}</span>
+    </div>
+
+    <div class="ind-products-title">{productsTitle}</div>
+    <div class="ind-products">
+      {products.map((p) => <span class="ind-product-tag">{p}</span>)}
+    </div>
+
+    <a href={ctaHref} class="ind-cta" aria-label={ctaLabel}>
+      {ctaText}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- ── Visual panel ── -->
+  <div class="ind-visual">
+    <img
+      src={imgSrc}
+      alt={imgAlt}
+      loading={imgEager ? 'eager' : 'lazy'}
+      width="900"
+      height="640"
+    />
+  </div>
+</article>

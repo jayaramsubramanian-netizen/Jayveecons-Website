@@ -1,0 +1,178 @@
+<section class="do-section">
+  <div class="do-inner">
+
+    <div class="section-tag reveal">
+      <div class="line"></div>
+      <span>Our Delivery Model</span>
+    </div>
+    <h2 class="section-headline reveal">One Team. Every Stage.</h2>
+
+    <div class="delivery-flow">
+
+      <div class="dflow-item reveal">
+        <div class="dflow-num">Stage 01</div>
+        <svg class="dflow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        <div class="dflow-name">Engineering Design</div>
+        <div class="dflow-sub">Process design, mechanical engineering, drawings, specifications</div>
+      </div>
+
+      <div class="dflow-item reveal">
+        <div class="dflow-num">Stage 02</div>
+        <svg class="dflow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        <div class="dflow-name">Fabrication</div>
+        <div class="dflow-sub">In-house machining and fabrication, 90,000 sq.ft facility</div>
+      </div>
+
+      <div class="dflow-item reveal">
+        <div class="dflow-num">Stage 03</div>
+        <svg class="dflow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <div class="dflow-name">Erection &amp; Commission</div>
+        <div class="dflow-sub">On-site installation, alignment, testing, and process sign-off</div>
+      </div>
+
+      <div class="dflow-item reveal">
+        <div class="dflow-num">Stage 04</div>
+        <svg class="dflow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <div class="dflow-name">Lifetime Equipment Partnership</div>
+        <div class="dflow-sub">Parts, repairs, and technical support for the life of your equipment — not just the warranty</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ── Section shell — white + blue grid, alternates with dark sections ── */
+  .do-section {
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 90px 90px;
+    padding-block: clamp(52px, 7vh, 88px);
+    border-bottom: 1px solid rgba(8,56,146,.08);
+  }
+
+  /* ── Container token ── */
+  .do-inner {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 16px;
+    box-sizing: border-box;
+  }
+  @media (min-width: 480px)  { .do-inner { padding-inline: 20px; } }
+  @media (min-width: 768px)  { .do-inner { padding-inline: 32px; } }
+  @media (min-width: 1024px) { .do-inner { padding-inline: 48px; } }
+
+  /* ── Section tag — dark text on light bg ── */
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .section-tag .line {
+    width: 28px;
+    height: 2px;
+    background: var(--crimson);
+    flex-shrink: 0;
+  }
+  .section-tag span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--crimson);
+  }
+
+  /* ── Headline — dark on light bg ── */
+  .section-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(32px, 4.5vw, 52px);
+    text-transform: uppercase;
+    line-height: .97;
+    letter-spacing: .01em;
+    color: #1a1d24;
+    margin-bottom: clamp(28px, 4vh, 44px);
+  }
+
+  /* ── Flow grid — mobile: 1col → 2col → 4col with arrow gaps ── */
+  .delivery-flow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 600px)  { .delivery-flow { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
+  @media (min-width: 1024px) {
+    .delivery-flow {
+      /* 4 cards + 3 arrow gaps of 48px each */
+      grid-template-columns: repeat(4, 1fr);
+      gap: 48px;
+    }
+  }
+
+  /* ── Flow card — dark navy gradient matching QuickContactCards ── */
+  .dflow-item {
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    border-top: 3px solid transparent;
+    border-radius: 4px;
+    padding: clamp(22px, 3vw, 36px);
+    position: relative;
+    transition: border-top-color .3s, box-shadow .3s;
+  }
+  .dflow-item:hover {
+    border-top-color: var(--crimson);
+    box-shadow: 0 4px 24px rgba(8,56,146,.25);
+  }
+
+  /* Animated arrow connector — desktop only ── */
+  @media (min-width: 1024px) {
+    .dflow-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: -38px; top: 50%;
+      transform: translateY(-50%);
+      width: 28px; height: 28px;
+      z-index: 2;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cline x1='2' y1='14' x2='18' y2='14' stroke='%23c0181e' stroke-width='3.5' stroke-linecap='round'/%3E%3Cpolyline points='13,6 22,14 13,22' fill='none' stroke='%23c0181e' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+    }
+  }
+
+  .dflow-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+    margin-bottom: 12px;
+    opacity: .8;
+  }
+  .dflow-icon {
+    width: 36px;
+    height: 36px;
+    color: var(--crimson-l);
+    margin-bottom: 14px;
+    opacity: .85;
+  }
+  .dflow-name {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(16px, 1.8vw, 20px);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .dflow-sub {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.6;
+  }
+</style>

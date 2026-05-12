@@ -1,0 +1,9 @@
+<script>
+  const yr = new Date().getFullYear() - 1987;
+
+  const copyYearEl = document.getElementById('copy-year');
+  if (copyYearEl) copyYearEl.textContent = String(new Date().getFullYear());
+
+  const serviceYearsEl = document.getElementById('svc-years');
+  if (serviceYearsEl) serviceYearsEl.innerHTML = `${yr}<span class="u">+</span>`;
+</script>

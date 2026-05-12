@@ -1,0 +1,40 @@
+---
+// IndustriesReveal.astro
+// Client-side island — scroll reveal + dynamic year.
+// BaseLayout already runs a reveal observer on DOMContentLoaded,
+// but it fires before lazy-loaded components paint. This island
+// re-observes any .reveal elements that were missed, ensuring
+// industry cards animate correctly after hydration.
+// Drop at the bottom of industries.astro, after all sections.
+---
+
+<script>
+  (() => {
+    // Re-use the same threshold BaseLayout uses (0.1, -28px rootMargin)
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            obs.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.07, rootMargin: '0px 0px -28px 0px' }
+    );
+
+    // Observe all reveals that BaseLayout may have missed
+    document.querySelectorAll('.reveal:not(.visible)').forEach((el) => obs.observe(el));
+
+    // Dynamic founding-year counter
+    const yr = document.getElementById('ind-years');
+    if (yr) {
+      const count = new Date().getFullYear() - 1987;
+      yr.innerHTML = `${count}<span class="u">+</span>`;
+    }
+
+    // Footer copy-year helper (if present)
+    const cy = document.getElementById('copy-year');
+    if (cy) cy.textContent = String(new Date().getFullYear());
+  })();
+</script>

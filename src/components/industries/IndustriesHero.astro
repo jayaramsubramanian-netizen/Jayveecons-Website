@@ -1,41 +1,25 @@
-<section class="sph-section">
-  <div class="sph-inner">
-
-    <div class="breadcrumb">
-      <a href="/">Home</a>
-      <span class="sep">/</span>
-      <span class="current">Contact Us</span>
-    </div>
-
-    <div class="page-eyebrow">
-      <div class="page-eyebrow-line"></div>
-      <span>Get in Touch</span>
-    </div>
-
-    <h1 class="page-title">
-      Let's Talk<br>
-      <span class="accent">Engineering</span>
-    </h1>
-
-    <p class="page-sub">
-      Whether you have a project brief, a technical question, or just want to explore
-      what's possible — our engineering team is ready to respond.
-    </p>
-
-  </div>
-</section>
+---
+// IndustriesHero.astro
+// Full-bleed hero — matches ServicesPageHero pattern exactly.
+// padding-block-start = nav height (70px) + breathing room via clamp
+---
 
 <style>
-  /* ── Section shell — full-bleed dark gradient, matches Services hero ── */
+  /* ── Section shell ── */
   .sph-section {
     background:
       radial-gradient(ellipse 90% 70% at 65% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
       radial-gradient(ellipse 50% 60% at 5%  90%, rgba(192,24,30,.07) 0%, transparent 50%),
       linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
-    padding-block: clamp(100px, 14vh, 140px) clamp(48px, 7vh, 80px);
+    /*
+      Top padding = nav clearance (70px fixed) + content breathing room.
+      clamp floor is 110px so content never sits behind the nav bar.
+    */
+    padding-top: clamp(110px, 15vh, 150px);
+    padding-bottom: clamp(48px, 7vh, 80px);
   }
 
-  /* ── Inner container — stepwise breakpoints, same token as Services ── */
+  /* ── Inner container — stepwise breakpoints ── */
   .sph-inner {
     width: 100%;
     max-width: 1440px;
@@ -97,9 +81,7 @@
     margin-bottom: 20px;
     animation: fadeUp .7s ease .2s both;
   }
-  .page-title .accent {
-    color: var(--crimson-l);
-  }
+  .page-title .accent { color: var(--crimson-l); }
   .page-title .chrome {
     background: linear-gradient(135deg, var(--chrome-l), var(--chrome));
     -webkit-background-clip: text;
@@ -118,3 +100,33 @@
     animation: fadeUp .7s ease .3s both;
   }
 </style>
+
+<header class="sph-section" role="banner">
+  <div class="sph-inner">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="sep" aria-hidden="true">/</span>
+      <span class="current" aria-current="page">Industries</span>
+    </nav>
+
+    <div class="page-eyebrow">
+      <div class="page-eyebrow-line"></div>
+      <span>Markets We Serve</span>
+    </div>
+
+    <h1 class="page-title">
+      Decades of<br>
+      <span class="accent">Process</span> &amp;<br>
+      <span class="chrome">Domain Depth</span>
+    </h1>
+
+    <p class="page-sub">
+      The Jayveecons Group has built domain knowledge across five industrial sectors — each
+      with its own material characteristics, operating conditions, and engineering demands.
+      That breadth of cross-sector experience is what makes our VECTOMEC™ solutions better,
+      not just broader.
+    </p>
+
+  </div>
+</header>

@@ -1,28 +1,35 @@
 ---
 /**
  * BaseLayout.astro
- * 
+ *
  * This is the "wrapper" that every page uses.
  * It provides:
  *   · The <html>, <head>, and <body> tags
  *   · Google Fonts
- *   · Global CSS (brand colours, nav, footer styles)
+ *   · Global CSS (brand colours, page-container token, reveal animation)
  *   · The Nav and Footer components
  *   · The scroll-reveal JavaScript
- * 
+ *
  * HOW TO USE IN A PAGE:
- * 
+ *
  *   ---
  *   import BaseLayout from '../layouts/BaseLayout.astro';
  *   ---
- *   <BaseLayout title="Page Title" description="Page description" currentPath="/about">
+ *   <BaseLayout
+ *     title="Page Title"
+ *     description="Page description"
+ *     keywords="comma, separated, keywords"
+ *     currentPath="/about"
+ *   >
  *     <!-- Your page content goes here -->
  *   </BaseLayout>
- * 
+ *
  * Props:
- *   title       (string)  — text shown in the browser tab
- *   description (string)  — text used by Google for search results
- *   currentPath (string)  — current URL path, used to highlight the active nav link
+ *   title       (string)           — browser tab text
+ *   description (string)           — Google search snippet
+ *   keywords    (string, optional) — meta keywords
+ *   currentPath (string, optional) — active nav link highlight
+ *   ogImage     (string, optional) — absolute URL for social share image
  */
 
 import Nav    from '../components/Nav.astro';
@@ -30,16 +37,26 @@ import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 
 interface Props {
-  title:       string;
-  description: string;
+  title:        string;
+  description:  string;
+  keywords?:    string;
   currentPath?: string;
+  ogImage?:     string;
 }
 
 const {
   title,
   description,
+  keywords,
   currentPath = '/',
+  ogImage     = 'https://www.jayveecons.com/images/og-default.jpg',
 } = Astro.props;
+
+// Canonical URL — strip trailing slash except for root
+const canonicalURL = new URL(
+  currentPath === '/' ? '/' : currentPath.replace(/\/$/, ''),
+  'https://www.jayveecons.com'
+).href;
 ---
 
 <!doctype html>
@@ -47,14 +64,36 @@ const {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary SEO -->
+  <title>{title}</title>
   <meta name="description" content={description} />
+  {keywords && <meta name="keywords" content={keywords} />}
+  <meta name="robots"      content="index, follow" />
+  <meta name="author"      content="Jayveecons Group" />
+  <link rel="canonical"    href={canonicalURL} />
 
   <!-- Open Graph (social sharing previews) -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:site_name"   content="Jayveecons Group" />
   <meta property="og:title"       content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content={canonicalURL} />
+  <meta property="og:image"       content={ogImage} />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale"      content="en_IN" />
 
-  <title>{title}</title>
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image"       content={ogImage} />
+
+  <!-- Favicon -->
+  <link rel="icon"             type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon"             type="image/png"     href="/favicon.png" />
+  <link rel="apple-touch-icon"                      href="/apple-touch-icon.png" />
 
   <!-- Google Fonts — loaded once here, shared by all pages -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -64,6 +103,7 @@ const {
     rel="stylesheet"
   />
 </head>
+
 <body>
 
   <!-- Navigation bar (fixed at top) -->
@@ -98,3 +138,63 @@ const {
 
 </body>
 </html>
+
+<style is:global>
+/* ══════════════════════════════════════════════════
+   PAGE CONTAINER TOKEN
+   Single source of truth for max-width + padding.
+   Use class="page-container" on any inner wrapper
+   div across all pages and components.
+
+   Breakpoints (mobile-first):
+     base  (all)  : full width, 16px sides
+     sm  ≥ 480px  : 20px sides
+     md  ≥ 768px  : 32px sides
+     lg  ≥ 1024px : 48px sides
+     xl  ≥ 1440px : caps at 1440px, 48px sides
+   ══════════════════════════════════════════════════ */
+.page-container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 16px;
+  box-sizing: border-box;
+}
+@media (min-width: 480px)  { .page-container { padding-inline: 20px; } }
+@media (min-width: 768px)  { .page-container { padding-inline: 32px; } }
+@media (min-width: 1024px) { .page-container { padding-inline: 48px; } }
+@media (min-width: 1440px) {
+  .page-container {
+    max-width: 1440px;
+    padding-inline: 48px;
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   SCROLL REVEAL
+   ══════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════════════════════
+   REDUCED MOTION
+   ══════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+</style>

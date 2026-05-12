@@ -1,0 +1,12 @@
+# robots.txt — Jayveecons Group
+# https://www.jayveecons.com/robots.txt
+
+User-agent: *
+Allow: /
+
+# Disallow utility pages from indexing
+Disallow: /thank-you
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://www.jayveecons.com/sitemap-index.xml

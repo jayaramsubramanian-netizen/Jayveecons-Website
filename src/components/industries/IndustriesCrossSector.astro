@@ -1,0 +1,200 @@
+---
+// IndustriesCrossSector.astro
+// "The Same Engineering. Every Sector." two-column section.
+// Uses page-container token. No props.
+---
+
+<style>
+  .cross-sector {
+    padding-block: clamp(48px, 8vh, 96px);
+    background: var(--navy-deep, #060c1e);
+  }
+
+  .cross-inner {
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: clamp(18px, 4vw, 48px);
+  }
+
+  /* Stack on mobile, side-by-side at 1024px */
+  .cross-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(32px, 5vw, 80px);
+    align-items: start;
+  }
+
+  /* ── Section tag + headline ── */
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .section-tag .line { width: 28px; height: 2px; background: var(--crimson); flex-shrink: 0; }
+  .section-tag span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+  }
+
+  .section-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(28px, 5vw, 52px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+
+  /* ── Left copy ── */
+  .cross-copy p {
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .cross-copy p strong { color: var(--white); font-weight: 500; }
+
+  /* ── Right points ── */
+  .cross-points {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .cross-point {
+    background: rgba(10, 12, 18, .7);
+    padding: clamp(14px, 2vw, 22px);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    border-left: 3px solid transparent;
+    transition: border-left-color .25s, background .25s;
+  }
+  .cross-point:hover {
+    background: rgba(13, 26, 58, .5);
+    border-left-color: var(--crimson);
+  }
+
+  .cp-icon {
+    width: 36px; height: 36px;
+    background: rgba(192, 24, 30, .12);
+    border: 1px solid rgba(192, 24, 30, .25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--crimson-l);
+  }
+  .cp-icon svg { width: 18px; height: 18px; }
+
+  .cp-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(14px, 1.4vw, 16px);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--chrome, #d0d4dc);
+    margin-bottom: 4px;
+  }
+  .cp-desc {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.6;
+  }
+
+  @media (min-width: 1024px) {
+    .cross-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<section class="cross-sector" aria-labelledby="cross-heading">
+  <div class="cross-inner">
+    <div class="cross-grid">
+
+      <!-- Left: copy -->
+      <div class="cross-copy reveal">
+        <div class="section-tag"><div class="line"></div><span>Why Jayveecons</span></div>
+        <h2 class="section-headline" id="cross-heading">
+          The Same Engineering.<br>Every Sector.
+        </h2>
+        <p>
+          What makes Jayveecons different isn't that we serve many industries — it's that
+          <strong>the same engineering rigour</strong> we developed building VSK kilns in 1987
+          underpins everything we fabricate today. Whether the material is cement raw meal or
+          grain, clinker or pharmaceutical powder, the first-principles engineering is identical.
+        </p>
+        <p>
+          Our cross-sector experience means we don't re-learn material behaviour from scratch
+          on every project. We draw on decades of data from abrasive mineral handling and apply
+          it to wear-lining a food-grade screw. We apply our pressure vessel experience from
+          pneumatic conveying to oil &amp; gas containment requirements.
+          <strong>Cross-sector knowledge is not a marketing claim — it's our fabrication advantage.</strong>
+        </p>
+      </div>
+
+      <!-- Right: feature points -->
+      <div class="cross-points reveal">
+
+        <div class="cross-point">
+          <div class="cp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="cp-title">In-House Fabrication</div>
+            <div class="cp-desc">Every component machined, rolled, welded, and balanced in our own facility — no sub-contractors for critical parts.</div>
+          </div>
+        </div>
+
+        <div class="cross-point">
+          <div class="cp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/>
+            </svg>
+          </div>
+          <div>
+            <div class="cp-title">Material-First Design</div>
+            <div class="cp-desc">We begin every enquiry with material properties — bulk density, abrasiveness, moisture, temperature — before selecting equipment type.</div>
+          </div>
+        </div>
+
+        <div class="cross-point">
+          <div class="cp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+          </div>
+          <div>
+            <div class="cp-title">Complete Documentation</div>
+            <div class="cp-desc">GA drawings, material certificates, weld maps, hydrostatic test records — supplied as standard, not as an extra.</div>
+          </div>
+        </div>
+
+        <div class="cross-point">
+          <div class="cp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+          </div>
+          <div>
+            <div class="cp-title">Engineering Support</div>
+            <div class="cp-desc">Our engineers respond to technical enquiries within 24 hours and can visit site for assessment anywhere in India.</div>
+          </div>
+        </div>
+
+      </div><!-- /cross-points -->
+    </div><!-- /cross-grid -->
+  </div>
+</section>
