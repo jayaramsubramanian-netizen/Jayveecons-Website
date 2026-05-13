@@ -1,0 +1,170 @@
+---
+/**
+ * ExploreBand.astro
+ * Background: WHITE + blue square grid
+ * Max-width: 1440px
+ *
+ * Stripped to bare CSS — no z-index, no isolation, no contain,
+ * no transform, no animation on cards. DOM order + overflow:hidden
+ * is the only reliable way to prevent cross-section paint bleed.
+ */
+import { exploreLinks } from '../../data/careers.ts';
+---
+
+<div class="explore-band">
+  <div class="explore-inner">
+
+    <div class="section-tag reveal">
+      <div class="tag-line"></div>
+      <span>Before You Apply</span>
+    </div>
+
+    <h2 class="section-headline reveal">
+  Explore What <span class="accent">We Do</span>
+</h2>
+
+    <div class="explore-grid">
+      {exploreLinks.map(link => (
+        <a href={link.href} class="explore-card">
+          <span class="ec-label">{link.label}</span>
+          <span class="ec-title">{link.title}</span>
+          <p class="ec-desc">{link.desc}</p>
+        </a>
+      ))}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /*
+    Using <div> not <section> — some browsers treat sectioning elements
+    differently in paint order calculations.
+
+    NO z-index on anything.
+    NO isolation.
+    NO contain.
+    NO transform anywhere.
+    NO animation on cards.
+    overflow: hidden — the only reliable way to clip children.
+  */
+
+  .explore-band {
+    padding: clamp(64px, 8vh, 100px) 0;
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.07) 1px, transparent 1px);
+    background-size: 40px 40px;
+    overflow: hidden;
+    /* Deliberately NO: z-index, position, isolation, contain, transform */
+  }
+
+  .explore-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 48px);
+  }
+
+  /* Section tag */
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .tag-line { width: 28px; height: 2px; background: #c0181e; }
+  .section-tag span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #c0181e;
+  }
+
+  /* Headline */
+  .section-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(30px, 4vw, 48px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: rgba(8,56,146,.9);
+    margin-bottom: clamp(28px, 4vh, 48px);
+  }
+.accent { color: #c0181e; }
+  /* Grid */
+  .explore-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  @media (min-width: 600px)  { .explore-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .explore-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
+
+  /* Card — static block, no stacking context properties */
+  .explore-card {
+    display: block;
+    text-decoration: none;
+    padding: clamp(22px, 2.5vw, 30px);
+    border-radius: 12px;
+    border-bottom: 2px solid transparent;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.14);
+    transition: border-bottom-color .25s, box-shadow .25s;
+    background-color: #0d1a3a;
+    background-image:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%);
+    /* NO transform, NO z-index, NO will-change, NO animation */
+  }
+  .explore-card:hover {
+    border-bottom-color: #c0181e;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.24);
+  }
+  .explore-card:focus-visible {
+    outline: 2px solid #c0181e;
+    outline-offset: 2px;
+  }
+
+  .ec-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #ff7070;
+    margin-bottom: 8px;
+  }
+  .ec-title {
+    display: block;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(15px, 1.8vw, 18px);
+    text-transform: uppercase;
+    color: #ffffff;
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+  .ec-desc {
+    font-size: clamp(12px, 1.2vw, 14px);
+    font-weight: 300;
+    color: #9aabcc;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* .reveal — heading and tag only */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity .65s ease, transform .65s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>

@@ -1,0 +1,229 @@
+---
+/**
+ * RolesGrid.astro
+ * Background: NAVY GRADIENT (alternating dark section)
+ * Max-width: 1440px
+ */
+import type { Role } from '../../data/careers.ts';
+
+interface Props {
+  roles: Role[];
+}
+const { roles } = Astro.props;
+---
+
+<section class="roles-section" aria-labelledby="roles-heading">
+  <div class="roles-inner">
+
+    <div class="section-tag reveal">
+      <div class="tag-line"></div>
+      <span>Roles We Hire For</span>
+    </div>
+
+    <h2 class="section-headline reveal" id="roles-heading">
+  Current Openings &amp; <span class="accent">Ongoing Interest</span>
+</h2>
+    <p class="roles-intro reveal">
+      We do not always have positions advertised, but we are continuously interested
+      in strong candidates in these areas. If your background matches, send your CV
+      regardless of whether a specific vacancy is listed.
+    </p>
+
+    <ul class="roles-grid" role="list">
+      {roles.map(role => (
+        <li role="listitem" class="role-card reveal" id={role.id}>
+
+          <div class="role-dept">{role.dept}</div>
+
+          <h3 class="role-title">{role.title}</h3>
+
+          <p class="role-desc">{role.desc}</p>
+
+          <ul class="role-skills" aria-label={`Skills for ${role.title}`}>
+            {role.skills.map(skill => (
+              <li class="role-skill">{skill}</li>
+            ))}
+          </ul>
+
+          <a
+            href={`mailto:hr@jayveecons.com?subject=Application — ${role.title}`}
+            class="role-cta"
+            aria-label={`Apply for ${role.title} at Jayveecons`}
+          >
+            Apply for this role →
+          </a>
+
+        </li>
+      ))}
+    </ul>
+
+  </div>
+</section>
+
+<style>
+  /* ── NAVY GRADIENT BACKGROUND ── */
+  .roles-section {
+    padding: clamp(52px, 7vh, 84px) 0;
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .roles-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 48px);
+  }
+
+  /* Section tag */
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .tag-line { width: 28px; height: 2px; background: var(--crimson); flex-shrink: 0; }
+  .section-tag span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #ff7070;
+  }
+.accent { color: var(--crimson-l); }
+
+  /* Headline */
+  .section-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(30px, 4vw, 48px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: var(--white);
+    margin-bottom: 14px;
+  }
+
+  /* Intro */
+  .roles-intro {
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.75;
+    max-width: 680px;
+    margin-bottom: clamp(20px, 3vh, 32px);
+  }
+
+  /* Grid — mobile-first */
+  .roles-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  @media (min-width: 640px) {
+    .roles-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  }
+  @media (min-width: 1024px) {
+    .roles-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  }
+
+  /* Role card — WHITE card on navy gradient section */
+  .role-card {
+    background: #ffffff;
+    padding: clamp(20px, 2.8vw, 32px);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    border-top: 3px solid transparent;
+    transition: border-top-color .25s, box-shadow .25s;
+    display: flex;
+    flex-direction: column;
+  }
+  .role-card:hover {
+    border-top-color: #c0181e;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.28);
+  }
+
+  /* Dept label */
+  .role-dept {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #c0181e;
+    margin-bottom: 8px;
+  }
+
+  /* H3 */
+  .role-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(16px, 2vw, 20px);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: rgba(8,56,146,.9);
+    margin-bottom: 10px;
+    line-height: 1.1;
+  }
+
+  /* Description */
+  .role-desc {
+    font-size: 13px;
+    font-weight: 400;
+    color: #3a4560;
+    line-height: 1.65;
+    margin-bottom: 14px;
+    flex: 1;
+  }
+
+  /* Skills tags */
+  .role-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 14px;
+  }
+  .role-skill {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    background: rgba(8,56,146,.07);
+    border: 1px solid rgba(8,56,146,.2);
+    color: rgba(8,56,146,.8);
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  /* CTA link */
+  .role-cta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #0d7a6e;
+    text-decoration: none;
+    transition: color .2s;
+    margin-top: auto;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .role-cta:hover { color: #c0181e; }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>

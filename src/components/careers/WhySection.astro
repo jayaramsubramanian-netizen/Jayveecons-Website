@@ -1,0 +1,252 @@
+---
+/**
+ * WhySection.astro
+ * Background: WHITE + blue square grid (alternating light section)
+ */
+import type { Role } from '../../data/careers.ts';
+import { whyBullets, whyPoints } from '../../data/careers.ts';
+
+const icons = [
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>`,
+];
+---
+
+<section class="why-section" aria-labelledby="why-heading">
+  <div class="why-inner">
+
+    <div class="section-tag reveal">
+      <div class="tag-line"></div>
+      <span>Why Jayveecons</span>
+    </div>
+
+    <h2 class="section-headline reveal" id="why-heading">
+  Build a Career That Creates <br><span class="accent">Real Industrial Impact</span>
+</h2>
+
+    <div class="why-grid">
+
+      <div class="why-copy reveal">
+        <p>
+          Jayveecons is a company built around designing, manufacturing, and delivering industrial systems that keep essential industries moving. From our Malur manufacturing facility, we work across cement, mining, food processing, waste management, and bulk material handling sectors — combining engineering, fabrication, project execution, operations, and customer support under one organization.
+
+          <br><br>We believe career growth comes from meaningful responsibility, hands-on learning, and being part of a team where your contribution is visible. Whether you work in engineering, production, quality, procurement, administration, sales, accounts, operations, logistics, or project management, you will gain exposure to real industrial projects and the opportunity to grow alongside experienced professionals.
+
+          <br><br>Unlike large corporations with rigid hierarchies, Jayveecons operates with a collaborative and execution-focused culture where ideas move quickly and problems are solved together. Team members have direct access to leadership, opportunities to take ownership early, and the ability to build long-term careers across multiple disciplines within the organization.
+        </p>
+
+        <ul class="why-list" aria-label="Reasons to work at Jayveecons">
+          {whyBullets.map(bullet => (
+            <li set:html={bullet} />
+          ))}
+        </ul>
+
+        <p>
+          <strong>Read more about <a href="/about#team">our team and leadership</a>.</strong>
+        </p>
+      </div>
+
+      <div class="why-points reveal">
+        {whyPoints.map((point, i) => (
+          <div class="why-point">
+            <div class="wp-icon" aria-hidden="true">
+              <Fragment set:html={icons[i]} />
+            </div>
+            <div>
+              <div class="wp-title">{point.title}</div>
+              <p class="wp-desc">
+                {point.desc}
+                {point.link && (
+                  <> See our <a href={point.link.href}>{point.link.text}</a>.</>
+                )}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ── WHITE + BLUE GRID BACKGROUND ── */
+  .why-section {
+    padding: clamp(52px, 7vh, 84px) 0;
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .why-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 48px);
+  }
+
+  /* Section tag — crimson on light bg */
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .tag-line {
+    width: 28px; height: 2px;
+    background: #c0181e;
+    flex-shrink: 0;
+  }
+  .section-tag span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #c0181e;
+  }
+
+  /* Headline — navy on light bg */
+  .section-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(30px, 4vw, 48px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: rgba(8,56,146,.9);
+    margin-bottom: clamp(24px, 4vh, 40px);
+  }
+.accent { color: #c0181e; }
+
+  /* Grid: 1 col mobile → 2 col desktop */
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .why-grid { grid-template-columns: 1.4fr 1fr; }   /* wider left = less wrapping = closer to card stack height */
+  }
+
+  /* Left copy — dark text on light bg */
+  .why-copy p {
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-weight: 400;
+    color: #2a3550;
+    line-height: 1.85;
+    margin-bottom: 16px;
+  }
+  .why-copy p strong { color: #0d1a3a; font-weight: 600; }
+  .why-copy a {
+    color: #0d7a6e;
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .why-copy a:hover { color: #0a0c12; }
+
+  /* Bullet list */
+  .why-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 16px 0;
+    padding: 0;
+  }
+  .why-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: clamp(14px, 1.4vw, 15px);
+    font-weight: 400;
+    color: #2a3550;
+    line-height: 1.65;
+  }
+  .why-list li::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: #c0181e;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  /* Links inside set:html bullets */
+  .why-list :global(a) {
+    color: #0d7a6e;
+    text-decoration: none;
+  }
+  .why-list :global(a:hover) { color: #0a0c12; }
+
+  /* Feature point cards — navy gradient matching QuickContactCards */
+  .why-points {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .why-point {
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    padding: clamp(16px, 2vw, 24px);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    transition: transform .3s ease;
+  }
+  .why-point:hover { transform: translateY(-4px); }
+
+  /* Icon — crimson on navy card */
+  .wp-icon {
+    width: 34px; height: 34px;
+    background: rgba(192,24,30,.1);
+    border: 1px solid rgba(192,24,30,.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--crimson-l);
+    border-radius: 4px;
+  }
+  .wp-icon :global(svg) { width: 16px; height: 16px; }
+
+  /* Card text — white/fog on navy */
+  .wp-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--chrome);
+    margin-bottom: 4px;
+  }
+  .wp-desc {
+    font-size: 13px;
+    font-weight: 300;
+    color: #8898b0;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .wp-desc a {
+    color: var(--teal-l);
+    text-decoration: none;
+  }
+  .wp-desc a:hover { color: var(--white); }
+
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>

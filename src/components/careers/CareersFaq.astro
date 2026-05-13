@@ -1,0 +1,191 @@
+---
+/**
+ * CareersFaq.astro
+ * Background: NAVY GRADIENT (alternating dark section)
+ * Max-width: 1440px
+ *
+ * Uses native <details>/<summary> — zero JS, accessible,
+ * crawlable. Each question mirrors the FAQPage JSON-LD schema.
+ */
+import type { FaqItem } from '../../data/careers.ts';
+
+interface Props {
+  faqs: FaqItem[];
+}
+const { faqs } = Astro.props;
+---
+
+<section class="faq-section" aria-labelledby="faq-heading">
+  <div class="faq-inner">
+
+    <div class="section-tag reveal">
+      <div class="tag-line"></div>
+      <span>Frequently Asked</span>
+    </div>
+
+    <h2 class="section-headline reveal" id="faq-heading">
+  Common <span class="accent">Questions</span>
+</h2>
+
+    <div class="faq-grid" role="list">
+      {faqs.map((faq, i) => (
+        <details
+          class="faq-item card-animate"
+          role="listitem"
+          style={`animation-delay: ${i * 80}ms`}
+        >
+          <summary class="faq-q">
+            {faq.question}
+            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </summary>
+          <div class="faq-a">
+            <Fragment set:html={faq.answerHtml} />
+          </div>
+        </details>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ── NAVY GRADIENT BACKGROUND ── */
+  .faq-section {
+    padding: clamp(52px, 7vh, 84px) 0;
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .faq-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 48px);
+  }
+
+  /* Section tag */
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .tag-line { width: 28px; height: 2px; background: var(--crimson); flex-shrink: 0; }
+  .section-tag span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #ff7070;
+  }
+.accent { color: var(--crimson-l); }
+
+  /* Headline */
+  .section-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(30px, 4vw, 48px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: var(--white);
+    margin-bottom: clamp(20px, 3vh, 32px);
+  }
+
+  /* CSS keyframe entrance — consistent with ExploreBand cards */
+  @keyframes cardIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .card-animate {
+    animation: cardIn .55s ease both;
+  }
+
+  /* FAQ list */
+  .faq-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Each FAQ item — WHITE card on navy gradient section */
+  .faq-item {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.14);
+    border-left: 3px solid transparent;
+    transition: border-left-color .25s, box-shadow .25s;
+    overflow: hidden;
+  }
+  .faq-item:hover  { border-left-color: rgba(192,24,30,.4); box-shadow: 0 8px 28px rgba(0,0,0,0.22); }
+  .faq-item[open]  { border-left-color: #c0181e; }
+
+  /* Summary (question) */
+  .faq-q {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(15px, 1.9vw, 19px);
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: rgba(8,56,146,.9);
+    padding: clamp(18px, 2vw, 24px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    list-style: none;
+    user-select: none;
+    min-height: 44px;
+  }
+  .faq-q::-webkit-details-marker { display: none; }
+  .faq-q::marker { display: none; }
+  .faq-q:focus-visible {
+    outline: 2px solid #c0181e;
+    outline-offset: -2px;
+  }
+
+  /* Chevron */
+  .faq-chevron {
+    width: 18px; height: 18px;
+    color: #c0181e;
+    flex-shrink: 0;
+    transition: transform .25s ease;
+  }
+  details[open] .faq-chevron { transform: rotate(180deg); }
+
+  /* Answer */
+  .faq-a {
+    padding: clamp(16px, 2vw, 22px) clamp(18px, 2.5vw, 28px) clamp(20px, 2.5vw, 28px);
+    font-size: clamp(14px, 1.5vw, 16px);    /* was 14px fixed — now scales */
+    font-weight: 400;
+    color: #2a3550;
+    line-height: 1.85;
+    border-top: 2px solid rgba(8,56,146,.1);
+    background: rgba(8,56,146,.03);        /* very subtle tint to distinguish from question */
+  }
+  .faq-a :global(a) {
+    color: #0d7a6e;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color .2s;
+  }
+  .faq-a :global(a:hover) { color: rgba(8,56,146,.9); }
+
+  /* .reveal for heading/tag */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal  { opacity: 1; transform: none; transition: none; }
+    .card-animate { animation: none; }
+    .faq-chevron  { transition: none; }
+  }
+</style>

@@ -1,0 +1,207 @@
+---
+/**
+ * CareersHero.astro
+ *
+ * Page header for /careers.
+ * Contains: breadcrumb, eyebrow, H1, intro paragraph, answer-box.
+ *
+ * SEO role:
+ *  - H1 with primary keyword ("Careers That Move the World Ahead")
+ *  - Direct-answer box targeting featured snippet / AI Overview
+ *  - First paragraph contains primary + secondary keywords within ~100 words
+ *
+ * Props: none (all content is static for this page)
+ */
+---
+
+<div class="careers-hero">
+  <div class="ch-inner">
+
+    <!-- Breadcrumb — mirrors BreadcrumbList schema in careers.astro -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="sep" aria-hidden="true">/</span>
+      <span class="current" aria-current="page">Join Us</span>
+    </nav>
+
+    <!-- Eyebrow -->
+    <div class="page-eyebrow">
+      <div class="page-eyebrow-line"></div>
+      <span>Careers at Jayveecons Group</span>
+    </div>
+
+    <!-- H1 — primary keyword near start -->
+    <h1 class="page-title">
+      Careers That<br><span class="accent">Move the World Ahead</span>
+    </h1>
+
+    <!-- Intro — primary + secondary keywords within first ~80 words -->
+    <p class="page-sub">
+      The Jayveecons Group is building the systems that keep industries moving — from cement plants and mining operations to food processing and waste recovery facilities across India. From our manufacturing facility in Malur, we design, fabricate, assemble, and deliver bulk material handling and process equipment engineered for demanding industrial applications.
+
+<br><br>We are always looking for talented people across engineering, manufacturing, operations, sales, administration, procurement, quality control, project management, service, and support functions. Whether you work on the shop floor, in design, in planning, or in customer-facing roles, every team member contributes to building reliable industrial systems that power critical industries.
+
+<br><br>If you are passionate about engineering, manufacturing, problem-solving, or industrial growth, we invite you to be part of a company built on process, performance, and long-term impact.
+      
+    </p>
+
+    <!--
+      Answer box — targets featured snippet / AI Overview.
+      Front-loads the most actionable answer to "how do I apply".
+    -->
+    <div class="answer-box" role="note" aria-label="Quick apply information">
+      <p>
+        <strong>Open to applications across all roles.</strong>
+        Send your CV to <strong><a href="mailto:hr@jayveecons.com">hr@jayveecons.com</a></strong>.
+        We review every application against current and upcoming requirements —
+        you do not need to wait for a specific vacancy to be listed.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /* Scoped to this component — no global leakage */
+
+  .careers-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    z-index: 2;
+    padding: clamp(110px, 16vh, 156px) 0 clamp(52px, 8vh, 80px);
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 90% 70% at 65% 40%, rgba(8,56,146,.85) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 5%  90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+  }
+
+  /* Bottom rule */
+  .careers-hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(192,24,30,.3) 50%, transparent);
+  }
+
+  .ch-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 48px);
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .breadcrumb a {
+    color: #7a8499;
+    text-decoration: none;
+    transition: color .2s;
+    min-height: 44px;            /* touch target */
+    display: flex;
+    align-items: center;
+  }
+  .breadcrumb a:hover  { color: var(--fog); }
+  .breadcrumb .sep     { color: #3a4255; }
+  .breadcrumb .current { color: #ff7070; }
+
+  /* Eyebrow */
+  .page-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    animation: fadeUp .7s ease .1s both;
+  }
+  .page-eyebrow-line {
+    width: 40px; height: 2px;
+    background: var(--crimson);
+    flex-shrink: 0;
+  }
+  .page-eyebrow span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #ff7070;
+  }
+
+  /* H1 */
+  .page-title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(40px, 7vw, 84px);
+    text-transform: uppercase;
+    line-height: .93;
+    letter-spacing: -.01em;
+    margin-bottom: 22px;
+    animation: fadeUp .7s ease .2s both;
+  }
+  .page-title .accent { color: var(--crimson-l); }
+
+  /* Intro para */
+  .page-sub {
+    font-size: clamp(14px, 1.7vw, 17px);
+    font-weight: 300;
+    color: var(--fog);
+    max-width: 1280px;
+    line-height: 1.75;
+    animation: fadeUp .7s ease .3s both;
+  }
+  .page-sub a {
+    color: var(--teal-l);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .page-sub a:hover { color: var(--white); }
+
+  /* Answer box */
+  .answer-box {
+    margin-top: 24px;
+    background: rgba(13,26,58,.5);
+    border: 1px solid rgba(51,96,184,.25);
+    border-left: 3px solid var(--crimson);
+    padding: 14px 20px;
+    max-width: 980px;
+    animation: fadeUp .7s ease .4s both;
+  }
+  .answer-box p {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.7;
+  }
+  .answer-box strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+  .answer-box a {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(26px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-eyebrow,
+    .page-title,
+    .page-sub,
+    .answer-box { animation: none; }
+  }
+</style>
