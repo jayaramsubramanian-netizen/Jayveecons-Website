@@ -1,0 +1,156 @@
+---
+/**
+ * TrackRecord.astro — LIGHT white + blue grid
+ * Cards: navy gradient on light section
+ * Mobile-first: 2 col → 4 col at 768px
+ */
+interface Props { yearsOld: number; }
+const { yearsOld } = Astro.props;
+
+const stats = [
+  { num: yearsOld, unit: '+', metric: 'Years in Operation',        desc: 'Continuously operating since 1987 — through industry cycles, recessions, and technological shifts.' },
+  { num: 90,       unit: 'K', metric: 'Sq.ft Manufacturing Floor', desc: 'Fully equipped machining and fabrication facility capable of handling large-scale, custom industrial builds.' },
+  { num: 4,        unit: '+', metric: 'Core Industries',           desc: 'Deep domain knowledge across cement, mining, food processing and waste management verticals.' },
+  { num: 100,      unit: '%', metric: 'In-House Engineering',      desc: 'Design, fabrication, erection and commissioning all under one roof — no outsourced accountability gaps.' },
+];
+---
+
+<section class="track-section" aria-labelledby="track-heading">
+  <div class="track-inner">
+
+    <div class="track-header">
+      <div>
+        <div class="section-tag reveal">
+          <div class="tag-line"></div>
+          <span>Our Track Record</span>
+        </div>
+        <h2 class="section-headline reveal" id="track-heading">
+          Proven in <span class="accent">the Field</span>
+        </h2>
+        <p class="section-sub reveal">
+          Numbers that come from decades of delivering real projects to real plants — not marketing estimates.
+        </p>
+      </div>
+    </div>
+
+    <!-- Mobile: 2 col → desktop: 4 col -->
+    <div class="track-grid" role="list">
+      {stats.map(stat => (
+        <div class="track-card reveal" role="listitem">
+          <div class="track-number">
+            {stat.num}<span class="t-unit">{stat.unit}</span>
+          </div>
+          <div class="track-metric">{stat.metric}</div>
+          <p class="track-desc">{stat.desc}</p>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ── WHITE + BLUE GRID BACKGROUND ── */
+  .track-section {
+    padding: clamp(56px,7vh,88px) 0;
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 90px 90px;
+    border-bottom: 1px solid rgba(8,56,146,.08);
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .track-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 clamp(16px,4vw,48px);
+  }
+
+  .track-header { margin-bottom: clamp(28px,4vh,48px); }
+
+  /* Section tag — crimson on light bg */
+  .section-tag { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .tag-line    { width: 28px; height: 2px; background: #c0181e; flex-shrink: 0; }
+  .section-tag span { font-family: var(--font-mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: #c0181e; }
+
+  /* Headline — navy + red accent (light section) */
+  .section-headline { font-family: var(--font-head); font-weight: 800; font-size: clamp(30px,4vw,52px); text-transform: uppercase; line-height: .97; color: rgba(8,56,146,.9); margin-bottom: 14px; }
+  .accent { color: #c0181e; }
+  .section-sub { font-size: clamp(13px,1.4vw,15px); font-weight: 400; color: #2a3550; line-height: 1.75; max-width: 580px; }
+
+  /* Grid — mobile: 2 col, desktop: 4 col */
+  .track-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);   /* mobile default: 2 col */
+    gap: 16px;
+    list-style: none;
+    padding: 0;
+  }
+  @media (min-width: 768px) { .track-grid { grid-template-columns: repeat(4,1fr); gap: 20px; } }
+
+  /* Card — navy gradient on light section */
+  .track-card {
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    padding: clamp(20px,2.5vw,32px) clamp(18px,2vw,26px);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.14);
+    border-top: 3px solid transparent;
+    transition: border-top-color .25s, box-shadow .25s, transform .25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .track-card:hover {
+    border-top-color: var(--crimson);
+    box-shadow: 0 12px 32px rgba(0,0,0,.22);
+    transform: translateY(-3px);
+  }
+  .track-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 50px; height: 50px;
+    background: radial-gradient(circle at bottom right, rgba(192,24,30,.06), transparent 70%);
+    pointer-events: none;
+  }
+
+  .track-number {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(34px,4.5vw,52px);
+    line-height: 1;
+    letter-spacing: -.02em;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .t-unit { font-size: .5em; color: var(--crimson-l); font-weight: 700; }
+
+  .track-metric {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+    margin-bottom: 8px;
+    opacity: .85;
+  }
+  .track-desc {
+    font-size: clamp(12px,1.2vw,13px);
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+</style>

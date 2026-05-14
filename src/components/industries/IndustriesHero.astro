@@ -1,108 +1,10 @@
 ---
 // IndustriesHero.astro
-// Full-bleed hero — matches ServicesPageHero pattern exactly.
-// padding-block-start = nav height (70px) + breathing room via clamp
+// Styled to exactly match CareersHero.astro pattern.
 ---
 
-<style>
-  /* ── Section shell ── */
-  .sph-section {
-    background:
-      radial-gradient(ellipse 90% 70% at 65% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 60% at 5%  90%, rgba(192,24,30,.07) 0%, transparent 50%),
-      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
-    /*
-      Top padding = nav clearance (70px fixed) + content breathing room.
-      clamp floor is 110px so content never sits behind the nav bar.
-    */
-    padding-top: clamp(110px, 15vh, 150px);
-    padding-bottom: clamp(48px, 7vh, 80px);
-  }
-
-  /* ── Inner container — stepwise breakpoints ── */
-  .sph-inner {
-    width: 100%;
-    max-width: 1440px;
-    margin-inline: auto;
-    padding-inline: 16px;
-    box-sizing: border-box;
-  }
-  @media (min-width: 480px)  { .sph-inner { padding-inline: 20px; } }
-  @media (min-width: 768px)  { .sph-inner { padding-inline: 32px; } }
-  @media (min-width: 1024px) { .sph-inner { padding-inline: 48px; } }
-
-  /* ── Breadcrumb ── */
-  .breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 28px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-  }
-  .breadcrumb a       { color: var(--mist); text-decoration: none; transition: color .2s; }
-  .breadcrumb a:hover { color: var(--white); }
-  .breadcrumb .sep    { color: var(--crimson); opacity: .6; }
-  .breadcrumb .current { color: var(--crimson-l); }
-
-  /* ── Eyebrow ── */
-  .page-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-    animation: fadeUp .7s ease .1s both;
-  }
-  .page-eyebrow-line {
-    width: 30px;
-    height: 2px;
-    background: var(--crimson);
-    flex-shrink: 0;
-  }
-  .page-eyebrow span {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--crimson-l);
-  }
-
-  /* ── Headline ── */
-  .page-title {
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: clamp(44px, 6.5vw, 84px);
-    text-transform: uppercase;
-    line-height: .93;
-    letter-spacing: -.01em;
-    color: var(--white);
-    margin-bottom: 20px;
-    animation: fadeUp .7s ease .2s both;
-  }
-  .page-title .accent { color: var(--crimson-l); }
-  .page-title .chrome {
-    background: linear-gradient(135deg, var(--chrome-l), var(--chrome));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* ── Sub copy ── */
-  .page-sub {
-    font-family: var(--font-body);
-    font-size: clamp(14px, 1.7vw, 17px);
-    font-weight: 300;
-    color: var(--fog);
-    max-width: 640px;
-    line-height: 1.75;
-    animation: fadeUp .7s ease .3s both;
-  }
-</style>
-
-<header class="sph-section" role="banner">
-  <div class="sph-inner">
+<header class="industries-hero">
+  <div class="ih-inner">
 
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="/">Home</a>
@@ -122,11 +24,131 @@
     </h1>
 
     <p class="page-sub">
-      The Jayveecons Group has built domain knowledge across five industrial sectors — each
-      with its own material characteristics, operating conditions, and engineering demands.
-      That breadth of cross-sector experience is what makes our VECTOMEC™ solutions better,
-      not just broader.
+      The Jayveecons Group has built domain knowledge across five industrial sectors —
+      each with its own material characteristics, operating conditions, and engineering
+      demands. That breadth of cross-sector experience is what makes our VECTOMEC™
+      solutions better, not just broader.
     </p>
 
   </div>
 </header>
+
+<style>
+  /* ── Section shell — mirrors CareersHero exactly ── */
+  .industries-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    z-index: 2;
+    padding: clamp(110px, 16vh, 156px) 0 clamp(52px, 8vh, 80px);
+    background:
+      radial-gradient(ellipse 90% 70% at 65% 40%, rgba(8,56,146,.85) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 5%  90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+  }
+
+  /* Bottom rule — same as CareersHero::after */
+  .industries-hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(192,24,30,.3) 50%, transparent);
+  }
+
+  /* ── Inner container — same as ch-inner ── */
+  .ih-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 48px);
+  }
+
+  /* ── Breadcrumb — exact match to CareersHero ── */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .breadcrumb a {
+    color: #7a8499;
+    text-decoration: none;
+    transition: color .2s;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .breadcrumb a:hover  { color: var(--fog); }
+  .breadcrumb .sep     { color: #3a4255; }
+  .breadcrumb .current { color: #ff7070; }
+
+  /* ── Eyebrow — 40px line, #ff7070, same as CareersHero ── */
+  .page-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    animation: fadeUp .7s ease .1s both;
+  }
+  .page-eyebrow-line {
+    width: 40px; height: 2px;
+    background: var(--crimson);
+    flex-shrink: 0;
+  }
+  .page-eyebrow span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #ff7070;
+  }
+
+  /* ── H1 — same size, line-height, letter-spacing as CareersHero ── */
+  .page-title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(40px, 7vw, 84px);
+    text-transform: uppercase;
+    line-height: .93;
+    letter-spacing: -.01em;
+    margin-bottom: 22px;
+    animation: fadeUp .7s ease .2s both;
+  }
+  .page-title .accent { color: var(--crimson-l); }
+  /* Chrome gradient — additional to CareersHero, safe addition */
+  .page-title .chrome {
+    background: linear-gradient(135deg, var(--chrome-l, #e8eaec), var(--chrome, #d0d4dc));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Sub copy — same as CareersHero.page-sub ── */
+  .page-sub {
+    font-size: clamp(14px, 1.7vw, 17px);
+    font-weight: 300;
+    color: var(--fog);
+    max-width: 800px;
+    line-height: 1.75;
+    animation: fadeUp .7s ease .3s both;
+  }
+
+  /* ── fadeUp — defined locally, same values as CareersHero ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(26px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-eyebrow,
+    .page-title,
+    .page-sub { animation: none; }
+  }
+</style>

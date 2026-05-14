@@ -1,0 +1,154 @@
+---
+/**
+ * CtaBand.astro — LIGHT white + blue grid
+ * Full-width CTA band. Zero props needed.
+ * Mobile: stacked buttons. Desktop: side-by-side.
+ */
+---
+
+<section class="cta-section" id="contact" aria-labelledby="cta-heading">
+  <div class="cta-bg" aria-hidden="true"></div>
+  <div class="cta-inner">
+
+    <div class="cta-eyebrow reveal">Start a Conversation</div>
+
+    <h2 class="cta-headline reveal" id="cta-heading">
+      Ready to <br>
+      <span class="accent">Move Your World Ahead?</span> 
+    </h2>
+
+    <p class="cta-sub reveal">
+      Tell us about your project. Our engineers will respond with a best-in-class solution.
+    </p>
+
+    <div class="cta-actions reveal">
+      <a href="/contact" class="btn-primary" aria-label="Request a project quote from Jayveecons">
+        Request a Quote
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <a href="/brochure" class="btn-secondary">Download Brochure</a>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ── WHITE + BLUE GRID BACKGROUND ── */
+  .cta-section {
+    padding: clamp(64px,10vh,112px) 0;
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    border-top: 1px solid rgba(8,56,146,.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* no-op placeholder — keeps .cta-inner z-index valid */
+  .cta-bg { display: none; }
+
+  .cta-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 clamp(16px,4vw,48px);
+    text-align: center;
+    position: relative;
+  }
+
+  .cta-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    color: #c0181e;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .cta-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(34px,5.5vw,70px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: rgba(8,56,146,.9);
+    margin-bottom: 16px;
+  }
+  .accent { color: #c0181e; }
+  /* chrome-grad → navy gradient on light bg */
+  .chrome-grad {
+    background: linear-gradient(135deg, rgba(8,56,146,.7), rgba(8,56,146,.95));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .cta-sub {
+    font-size: clamp(14px,1.5vw,16px);
+    font-weight: 400;
+    color: #2a3550;
+    margin-bottom: clamp(28px,4vh,40px);
+    line-height: 1.65;
+  }
+
+  /* CTA buttons — stacked on mobile, side-by-side on tablet+ */
+  .cta-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  @media (min-width: 480px) {
+    .cta-actions { flex-direction: row; justify-content: center; }
+  }
+
+  /* Primary button */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--crimson);
+    color: var(--white);
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(14px,1.5vw,16px);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: clamp(14px,2vh,18px) clamp(28px,3vw,48px);
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    transition: background .2s, transform .2s;
+    white-space: nowrap;
+    min-height: 52px;
+  }
+  .btn-primary:hover { background: var(--crimson-l); transform: translateX(3px); }
+
+  /* Secondary button — navy border on light bg */
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: transparent;
+    color: rgba(8,56,146,.9);
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: clamp(14px,1.5vw,16px);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: clamp(14px,2vh,17px) clamp(28px,3vw,48px);
+    border: 1px solid rgba(8,56,146,.25);
+    transition: color .2s, border-color .2s, background .2s;
+    white-space: nowrap;
+    min-height: 52px;
+  }
+  .btn-secondary:hover { background: rgba(8,56,146,.06); color: rgba(8,56,146,1); border-color: rgba(8,56,146,.4); }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+</style>

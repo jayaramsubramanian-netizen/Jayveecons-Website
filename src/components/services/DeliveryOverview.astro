@@ -5,7 +5,7 @@
       <div class="line"></div>
       <span>Our Delivery Model</span>
     </div>
-    <h2 class="section-headline reveal">One Team. Every Stage.</h2>
+    <h2 class="section-headline reveal">One Team at <span class='accent'> Every Stage.</span></h2>
 
     <div class="delivery-flow">
 
@@ -94,10 +94,12 @@
     text-transform: uppercase;
     line-height: .97;
     letter-spacing: .01em;
-    color: #1a1d24;
+    color: rgba(8, 56, 146, 0.9);  
     margin-bottom: clamp(28px, 4vh, 44px);
   }
-
+.section-headline .accent{
+  color: var(--crimson-l)
+}
   /* ── Flow grid — mobile: 1col → 2col → 4col with arrow gaps ── */
   .delivery-flow {
     display: grid;

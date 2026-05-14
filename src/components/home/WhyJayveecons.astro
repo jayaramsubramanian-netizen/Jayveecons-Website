@@ -1,0 +1,140 @@
+---
+/**
+ * WhyJayveecons.astro — DARK navy gradient
+ * Cards: white background on dark section
+ * Mobile-first: 1 col → 2 col at 768px
+ */
+interface Props { yearsOld: number; }
+const { yearsOld } = Astro.props;
+
+const cards = [
+  {
+    num: '01',
+    iconPath: 'M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z M9 22V12h6v10',
+    title: 'End-to-End Capability',
+    text:  'From first engineering sketch to on-site commissioning and long-term parts support — we own every stage. One team, one point of accountability, one standard of quality throughout.',
+    
+  },
+  {
+    num: '02',
+    title: 'Customer-Driven Design',
+    text:  'Three decades of customer feedback is baked into every machine we build. Designs that evolve from real operational experience — resulting in equipment with enhanced durability and lower maintenance costs.',
+    iconPath: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z',
+  },
+  {
+    num: '03',
+    title: 'Built Green from the Start',
+    text:  'Lean, energy-efficient equipment design has been our philosophy since before sustainability was an industry buzzword. Our machines do more with less — lower power consumption, longer service life, reduced waste.',
+    iconPath: 'M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z M12 9a3 3 0 100 6 3 3 0 000-6z',
+  },
+  {
+    num: '04',
+    title: `${yearsOld} Years. Still Building.`,
+    text:  `Founded in 1987 by K.R. Subramanian to serve India's small-scale cement sector, The Jayveecons Group has grown into a self-sustained manufacturing company with a 90,000 sq.ft facility. That longevity isn't luck — it's proof.`,
+    iconPath: 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z',
+  },
+];
+---
+
+<section class="why-section" id="services" aria-labelledby="why-heading">
+  <div class="why-inner">
+
+    <div class="section-tag reveal">
+      <div class="tag-line"></div>
+      <span>Our Advantage</span>
+    </div>
+
+    <h2 class="section-headline reveal" id="why-heading">
+      Why <span class="accent">Jayveecons</span>
+    </h2>
+
+    <!-- Mobile: 1 col → desktop: 2 col -->
+    <div class="why-grid">
+      {cards.map(card => (
+        <div class="why-card reveal">
+          <div class="why-num">{card.num}</div>
+          <svg class="why-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d={card.iconPath}/>
+          </svg>
+          <h3 class="why-title">{card.title}</h3>
+          <p class="why-text">{card.text}</p>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ── DARK navy gradient ── */
+  .why-section {
+    padding: clamp(56px,8vh,96px) 0;
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .why-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 clamp(16px,4vw,48px);
+  }
+
+  /* Section tag — crimson on dark bg */
+  .section-tag { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .tag-line    { width: 28px; height: 2px; background: var(--crimson); flex-shrink: 0; }
+  .section-tag span { font-family: var(--font-mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--crimson-l); }
+
+  /* Headline — white + red accent (dark section) */
+  .section-headline { font-family: var(--font-head); font-weight: 800; font-size:clamp(32px,4.5vw,56px); text-transform: uppercase; line-height: .97; color: var(--white); margin-bottom: clamp(24px,4vh,40px); }
+  .accent { color: var(--crimson-l); }
+
+  /* Grid — mobile: 1 col → desktop: 2×2 */
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 640px)  { .why-grid { grid-template-columns: repeat(2,1fr); gap: 20px; } }
+  @media (min-width: 1024px) { .why-grid { gap: 24px; } }
+
+  /* Card — white on dark section */
+  .why-card {
+    background: #ffffff;
+    padding: clamp(22px,3vw,36px) clamp(20px,2.5vw,32px);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    border-top: 3px solid transparent;
+    transition: border-top-color .25s, box-shadow .25s, transform .25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .why-card:hover {
+    border-top-color: #c0181e;
+    box-shadow: 0 12px 36px rgba(0,0,0,.35);
+    transform: translateY(-3px);
+  }
+  .why-card::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 90px; height: 90px;
+    background: radial-gradient(circle at top right, rgba(8,56,146,.04), transparent 70%);
+    pointer-events: none;
+  }
+
+  .why-num  { font-family: var(--font-mono); font-size: 11px; letter-spacing: .15em; color: rgba(192,24,30,.3); margin-bottom: 14px; }
+  .why-icon { width: 38px; height: 38px; color: #c0181e; margin-bottom: 14px; }
+  .why-title { font-family: var(--font-head); font-weight: 700; font-size: clamp(17px,2vw,22px); text-transform: uppercase; letter-spacing: .04em; color: rgba(8,56,146,.9); margin-bottom: 10px; line-height: 1.1; }
+  .why-text  { font-size: clamp(13px,1.3vw,14px); font-weight: 400; color: #3a4560; line-height: 1.8; margin: 0; }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+</style>

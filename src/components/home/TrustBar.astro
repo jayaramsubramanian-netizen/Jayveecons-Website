@@ -1,0 +1,82 @@
+---
+/**
+ * TrustBar.astro — Crimson trust band
+ * Mobile: wraps to 2 col. Desktop: single row.
+ */
+interface Props { yearsOld: number; }
+const { yearsOld } = Astro.props;
+
+const items = [
+  { label: 'VECTRIX™ Design Platform',  icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
+  { label: 'VECTOMEC™ Equipment',       icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
+  { label: '90,000 sq.ft Facility',     icon: 'M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z' },
+  { label: `${yearsOld}+ Years · Est. 1987`, icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z' },
+  { label: 'End-to-End Engineering',    icon: 'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2 M9 7a4 4 0 100 8 4 4 0 000-8z' },
+  { label: 'Proven On-Site Delivery',   icon: 'M20 6L9 17l-5-5' },
+];
+---
+
+<div class="trust-bar" role="list" aria-label="Key company credentials">
+  <div class="trust-inner">
+    {items.map(item => (
+      <div class="trust-item" role="listitem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d={item.icon} />
+        </svg>
+        <span>{item.label}</span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .trust-bar {
+    background: var(--crimson);
+    overflow: hidden;
+    position: relative;
+  }
+  .trust-bar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,.06) 50%, transparent 70%);
+    background-size: 200% 100%;
+    animation: shimmer 5s linear infinite;
+    pointer-events: none;
+  }
+
+  .trust-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 clamp(16px,4vw,48px);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;             /* wraps on mobile */
+    min-height: 52px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: clamp(10px,1.5vh,13px) clamp(10px,2vw,22px);
+    border-right: 1px solid rgba(255,255,255,.18);
+    white-space: nowrap;
+    min-height: 44px;            /* touch target */
+  }
+  .trust-item:last-child { border-right: none; }
+
+  /* On very small screens show 2 per row */
+  @media (max-width: 480px) {
+    .trust-item { flex: 1 1 50%; border-right: none; border-bottom: 1px solid rgba(255,255,255,.12); }
+    .trust-item:nth-last-child(-n+2) { border-bottom: none; }
+  }
+
+  .trust-item svg  { width: 14px; height: 14px; flex-shrink: 0; opacity: .85; }
+  .trust-item span { font-family: var(--font-body); font-weight: 600; font-size: 12px; letter-spacing: .05em; color: var(--white); text-transform: uppercase; }
+
+  @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+  @media (prefers-reduced-motion: reduce) { .trust-bar::before { animation: none; } }
+</style>

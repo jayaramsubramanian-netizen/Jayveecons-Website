@@ -1,34 +1,38 @@
 ---
-// IndustryBlock.astro
-// Reusable split-card for each industry.
-//
-// Props
-// ─────
-// num          string    "01" watermark
-// reverse      boolean   flip image/copy sides (default false = copy left)
-// id           string    anchor id
-// label        string    aria-label for <article>
-// sector       string    eyebrow sector label
-// statusText   string    status badge text
-// headline     string    HTML for <h3> (may include <br> and <span class="sub-hl">)
-// descEm?      string    optional mono emphasis line below headline
-// desc         string[]  body paragraphs (1–2)
-// subsectors?  { icon: string; label: string }[]
-// cementStats? { icon: string; num: string; label: string }[]
-// trustText    string
-// productsTitle string
-// products     string[]
-// ctaHref      string
-// ctaLabel     string
-// ctaText      string
-// imgSrc       string
-// imgAlt       string
-// imgEager?    boolean   loading="eager" (default false)
-// isCement?    boolean   cement flagship overrides
+/**
+ * IndustryBlock.astro
+ * Reusable industry card — two layout modes:
+ *
+ * MODE A — Standard (default):
+ *   Left: copy panel | Right: full-bleed image
+ *   Used for: Mining, Food, Waste, Steel
+ *
+ * MODE B — Product Grid (productGrid prop):
+ *   Left: copy panel | Right: 4-col photo+name+desc product grid
+ *   Matches the cement brochure layout exactly.
+ *   Used for: Cement (isCement + productGrid)
+ *
+ * All props unchanged from previous version PLUS:
+ *   productGrid?  ProductItem[]   — switches to brochure grid mode
+ *
+ * interface ProductItem {
+ *   imgSrc:  string   product photo path
+ *   imgAlt:  string
+ *   name:    string   product name (uppercase in grid)
+ *   desc:    string   one-line description
+ * }
+ */
 
 export interface SubSector {
   icon: string;
   label: string;
+}
+
+export interface ProductItem {
+  imgSrc: string;
+  imgAlt: string;
+  name: string;
+  desc: string;
 }
 
 export interface Props {
@@ -43,14 +47,15 @@ export interface Props {
   desc: string[];
   subsectors?: SubSector[];
   cementStats?: { icon: string; num: string; label: string }[];
+  productGrid?: ProductItem[];
   trustText: string;
   productsTitle: string;
   products: string[];
   ctaHref: string;
   ctaLabel: string;
   ctaText: string;
-  imgSrc: string;
-  imgAlt: string;
+  imgSrc?: string;
+  imgAlt?: string;
   imgEager?: boolean;
   isCement?: boolean;
 }
@@ -58,26 +63,19 @@ export interface Props {
 const {
   num, reverse = false, id, label, sector, statusText,
   headline, descEm, desc, subsectors, cementStats,
+  productGrid,
   trustText, productsTitle, products,
   ctaHref, ctaLabel, ctaText,
-  imgSrc, imgAlt, imgEager = false, isCement = false,
+  imgSrc = '', imgAlt = '', imgEager = false, isCement = false,
 } = Astro.props;
+
+const hasProductGrid = productGrid && productGrid.length > 0;
 ---
 
 <style>
-  /*
-   ┌─────────────────────────────────────────────────────┐
-   │  IMAGE FIX                                          │
-   │  Mobile:  .ind-visual uses aspect-ratio:16/9 so     │
-   │           the container has intrinsic height.        │
-   │  Desktop: grid with explicit height:560px; both     │
-   │           cells stretch via grid-template-rows:1fr. │
-   │           aspect-ratio is unset and .ind-visual      │
-   │           gets height:100% from the grid cell.       │
-   └─────────────────────────────────────────────────────┘
-  */
-
-  /* ── Block wrapper ──────────────────────────────── */
+  /* ═══════════════════════════════════════════════════
+     BLOCK WRAPPER
+  ═══════════════════════════════════════════════════ */
   .ind-block {
     position: relative;
     display: flex;
@@ -85,7 +83,7 @@ const {
     overflow: hidden;
   }
 
-  /* Cement top accent bar */
+  /* Cement flagship top accent */
   .ind-block--cement::before {
     content: '';
     position: absolute;
@@ -96,23 +94,21 @@ const {
     pointer-events: none;
   }
 
-  /* ── Visual panel ───────────────────────────────── */
+  /* ═══════════════════════════════════════════════════
+     MODE A — STANDARD IMAGE PANEL
+  ═══════════════════════════════════════════════════ */
   .ind-visual {
     position: relative;
     overflow: hidden;
     background: var(--navy-deep);
-    /* KEY: intrinsic height on mobile so absolute img has something to fill */
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 16 / 9;   /* intrinsic height on mobile */
     width: 100%;
     flex-shrink: 0;
   }
-
-  /* Absolute-fill image — inset:0 is safer than top/left/width/height */
   .ind-visual img {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: cover;
     object-position: center center;
     display: block;
@@ -120,18 +116,118 @@ const {
     filter: saturate(1.05) contrast(1.05);
   }
   .ind-block:hover .ind-visual img { transform: scale(1.03); }
-
-  /* Gradient scrim — bottom-to-top on mobile */
   .ind-visual::after {
     content: '';
     position: absolute;
-    inset: 0;
-    z-index: 1;
+    inset: 0; z-index: 1;
     background: linear-gradient(180deg, transparent 40%, rgba(10,12,18,.6) 100%);
     pointer-events: none;
   }
 
-  /* ── Copy panel ─────────────────────────────────── */
+  /* ═══════════════════════════════════════════════════
+     MODE B — PRODUCT GRID PANEL
+     Matches brochure: white bg, 4-col photo+name+desc
+  ═══════════════════════════════════════════════════ */
+  .ind-product-grid-panel {
+    background: #f0f4f8;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  /* Grid header bar — "VECTOMEC™ EQUIPMENT FOR CEMENT ————●" */
+  .pgp-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid rgba(8,56,146,.1);
+  }
+  .pgp-header-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--navy-deep, #060c1e);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .pgp-header-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(8,56,146,.3) 0%, rgba(8,56,146,.7) 80%, var(--crimson) 100%);
+    position: relative;
+  }
+  .pgp-header-line::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--crimson);
+  }
+
+  /* The actual product grid — 4 columns */
+  .pgp-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);   /* 2-col on small */
+    gap: 1px;
+    background: rgba(8,56,146,.08);
+  }
+
+  .pgp-item {
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    transition: background .2s;
+  }
+  .pgp-item:hover { background: #f8fafc; }
+
+  /* Product photo */
+  .pgp-photo {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    filter: saturate(1.05);
+    transition: transform .5s ease;
+  }
+  .pgp-item:hover .pgp-photo { transform: scale(1.03); }
+
+  /* Product info below photo */
+  .pgp-info {
+    padding: 10px 12px 12px;
+    border-top: 2px solid rgba(8,56,146,.1);
+    flex: 1;
+  }
+  .pgp-icon {
+    width: 22px; height: 22px;
+    color: rgba(8,56,146,.5);
+    margin-bottom: 5px;
+    display: block;
+  }
+  .pgp-name {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--navy-deep, #060c1e);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .pgp-desc {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 300;
+    color: #4a5568;
+    line-height: 1.5;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     COPY PANEL (shared by both modes)
+  ═══════════════════════════════════════════════════ */
   .ind-copy {
     background: var(--ink-3, #0d1424);
     border-left: 4px solid var(--crimson);
@@ -141,12 +237,9 @@ const {
     position: relative;
     flex: 1;
   }
-
   .ind-copy--cement {
     background: linear-gradient(160deg, var(--ink-3, #0d1424) 0%, rgba(13,26,58,.5) 100%);
   }
-
-  /* Watermark number */
   .ind-copy::before {
     content: attr(data-num);
     position: absolute;
@@ -159,14 +252,9 @@ const {
     pointer-events: none;
     user-select: none;
   }
+  .ind-copy--right { border-left: none; border-right: 4px solid var(--crimson); }
 
-  /* Reverse border side (applied at desktop bp) */
-  .ind-copy--right {
-    border-left: none;
-    border-right: 4px solid var(--crimson);
-  }
-
-  /* ── Sector tag ─────────────────────────────────── */
+  /* ── Sector tag ── */
   .ind-sector-tag {
     display: inline-flex;
     align-items: center;
@@ -183,7 +271,7 @@ const {
     color: var(--crimson-l);
   }
 
-  /* ── Status dot ─────────────────────────────────── */
+  /* ── Status dot ── */
   .ind-status {
     display: inline-flex;
     align-items: center;
@@ -206,7 +294,7 @@ const {
     color: var(--crimson-l);
   }
 
-  /* ── Headline ───────────────────────────────────── */
+  /* ── Headline ── */
   .ind-headline {
     font-family: var(--font-head);
     font-weight: 800;
@@ -220,7 +308,6 @@ const {
   }
   .ind-headline :global(.sub-hl) { color: var(--chrome-l, #d0d4dc); }
 
-  /* Cement emphasis line */
   .ind-desc-em {
     font-family: var(--font-mono);
     font-size: 11px;
@@ -231,7 +318,6 @@ const {
     margin-top: -6px;
   }
 
-  /* ── Body copy ──────────────────────────────────── */
   .ind-desc {
     font-size: 13px;
     font-weight: 300;
@@ -240,7 +326,7 @@ const {
     margin-bottom: 10px;
   }
 
-  /* ── Cement mini-stats ──────────────────────────── */
+  /* ── Cement mini-stats ── */
   .cement-stats {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -278,7 +364,7 @@ const {
     line-height: 1.4;
   }
 
-  /* ── Sub-sector icon row ────────────────────────── */
+  /* ── Sub-sector icons ── */
   .ind-subsectors {
     display: flex;
     align-items: flex-start;
@@ -312,7 +398,7 @@ const {
     line-height: 1.3;
   }
 
-  /* ── Trust badge ────────────────────────────────── */
+  /* ── Trust badge ── */
   .ind-trust {
     display: flex;
     align-items: flex-start;
@@ -334,7 +420,7 @@ const {
     line-height: 1.5;
   }
 
-  /* ── Product tags ───────────────────────────────── */
+  /* ── Product tags (copy panel) ── */
   .ind-products-title {
     font-family: var(--font-mono);
     font-size: 9px;
@@ -361,7 +447,7 @@ const {
     padding: 2px 7px;
   }
 
-  /* ── CTA link ───────────────────────────────────── */
+  /* ── CTA ── */
   .ind-cta {
     display: inline-flex;
     align-items: center;
@@ -380,13 +466,14 @@ const {
   .ind-cta:hover { color: var(--white); }
   .ind-cta svg { width: 12px; height: 12px; }
 
-  /* ════════════════════════════════════════════════
-     DESKTOP LAYOUT ≥ 1024px
-     Switch from flex-column to side-by-side grid.
-     Both cells share the same explicit row height,
-     so .ind-visual always has a measured container.
-  ════════════════════════════════════════════════ */
+  /* ═══════════════════════════════════════════════════
+     DESKTOP ≥ 1024px — side-by-side grid
+     Both modes: copy 38% | right panel 62%
+     Cement grid mode: right panel is taller, auto height
+  ═══════════════════════════════════════════════════ */
   @media (min-width: 1024px) {
+
+    /* Standard mode — fixed height, image fills panel */
     .ind-block {
       display: grid;
       grid-template-columns: 38fr 62fr;
@@ -395,20 +482,25 @@ const {
       flex-direction: unset;
     }
 
+    /* Product grid mode — auto height to fit all product cards */
+    .ind-block--grid-mode {
+      height: auto;
+      align-items: stretch;
+    }
+
     .ind-block--reverse {
       grid-template-columns: 62fr 38fr;
     }
-    .ind-block--reverse .ind-copy   { order: 2; }
-    .ind-block--reverse .ind-visual { order: 1; }
+    .ind-block--reverse .ind-copy         { order: 2; }
+    .ind-block--reverse .ind-visual        { order: 1; }
+    .ind-block--reverse .ind-product-grid-panel { order: 1; }
 
-    /* Visual fills its grid cell height */
+    /* Image panel fills grid cell */
     .ind-visual {
       aspect-ratio: unset;
       height: 100%;
       width: 100%;
     }
-
-    /* Gradient side matches copy position */
     .ind-visual::after {
       background: linear-gradient(270deg, transparent 55%, rgba(10,12,18,.45) 100%);
     }
@@ -416,13 +508,29 @@ const {
       background: linear-gradient(90deg, transparent 55%, rgba(10,12,18,.45) 100%);
     }
 
-    /* Copy scrolls within fixed height */
+    /* Product grid panel fills its cell */
+    .ind-product-grid-panel {
+      overflow-y: auto;
+    }
+
+    /* 4-col grid on desktop */
+    .pgp-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* Copy panel */
     .ind-copy {
       height: 100%;
       overflow-y: auto;
       scrollbar-width: thin;
       scrollbar-color: rgba(192,24,30,.3) transparent;
       padding: 32px 36px;
+    }
+    .ind-copy--grid-mode {
+      /* In grid mode copy panel matches the taller right panel */
+      height: auto;
+      min-height: 100%;
+      overflow-y: visible;
     }
     .ind-copy::-webkit-scrollbar { width: 3px; }
     .ind-copy::-webkit-scrollbar-thumb { background: rgba(192,24,30,.3); border-radius: 2px; }
@@ -433,18 +541,31 @@ const {
   }
 
   @media (min-width: 1280px) {
-    .ind-block { height: 580px; }
+    /* Only apply fixed height to standard (non-grid) blocks */
+    .ind-block:not(.ind-block--grid-mode) { height: 580px; }
   }
 </style>
 
 <article
-  class={`ind-block${reverse ? ' ind-block--reverse' : ''}${isCement ? ' ind-block--cement' : ''} reveal`}
+  class={[
+    'ind-block',
+    reverse       ? 'ind-block--reverse'   : '',
+    isCement      ? 'ind-block--cement'    : '',
+    hasProductGrid ? 'ind-block--grid-mode' : '',
+    'reveal',
+  ].filter(Boolean).join(' ')}
   id={id}
   aria-label={label}
 >
-  <!-- ── Copy panel ── -->
+
+  <!-- ══ COPY PANEL ══ -->
   <div
-    class={`ind-copy${isCement ? ' ind-copy--cement' : ''}${reverse ? ' ind-copy--right' : ''}`}
+    class={[
+      'ind-copy',
+      isCement       ? 'ind-copy--cement'    : '',
+      reverse        ? 'ind-copy--right'     : '',
+      hasProductGrid ? 'ind-copy--grid-mode' : '',
+    ].filter(Boolean).join(' ')}
     data-num={num}
   >
     <div class="ind-sector-tag">
@@ -492,10 +613,14 @@ const {
       <span class="ind-trust-text">{trustText}</span>
     </div>
 
-    <div class="ind-products-title">{productsTitle}</div>
-    <div class="ind-products">
-      {products.map((p) => <span class="ind-product-tag">{p}</span>)}
-    </div>
+    {!hasProductGrid && (
+      <>
+        <div class="ind-products-title">{productsTitle}</div>
+        <div class="ind-products">
+          {products.map((p) => <span class="ind-product-tag">{p}</span>)}
+        </div>
+      </>
+    )}
 
     <a href={ctaHref} class="ind-cta" aria-label={ctaLabel}>
       {ctaText}
@@ -505,14 +630,48 @@ const {
     </a>
   </div>
 
-  <!-- ── Visual panel ── -->
-  <div class="ind-visual">
-    <img
-      src={imgSrc}
-      alt={imgAlt}
-      loading={imgEager ? 'eager' : 'lazy'}
-      width="900"
-      height="640"
-    />
-  </div>
+  <!-- ══ MODE A: IMAGE PANEL ══ -->
+  {!hasProductGrid && imgSrc && (
+    <div class="ind-visual">
+      <img
+        src={imgSrc}
+        alt={imgAlt}
+        loading={imgEager ? 'eager' : 'lazy'}
+        width="900"
+        height="640"
+      />
+    </div>
+  )}
+
+  <!-- ══ MODE B: PRODUCT GRID PANEL ══ -->
+  {hasProductGrid && (
+    <div class="ind-product-grid-panel">
+      <div class="pgp-header">
+        <span class="pgp-header-title">{productsTitle}</span>
+        <div class="pgp-header-line"></div>
+      </div>
+      <div class="pgp-grid">
+        {productGrid!.map((item) => (
+          <div class="pgp-item">
+            <img
+              class="pgp-photo"
+              src={item.imgSrc}
+              alt={item.imgAlt}
+              loading="lazy"
+              width="400"
+              height="300"
+            />
+            <div class="pgp-info">
+              <svg class="pgp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/>
+              </svg>
+              <div class="pgp-name">{item.name}</div>
+              <div class="pgp-desc">{item.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
 </article>

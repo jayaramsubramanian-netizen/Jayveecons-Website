@@ -1,0 +1,291 @@
+---
+/**
+ * HeroSection.astro — DARK navy gradient
+ * Mobile-first: single column → 2-col at 900px
+ * yearsOld passed from index.astro frontmatter — zero client JS
+ */
+interface Props { yearsOld: number; }
+const { yearsOld } = Astro.props;
+---
+
+<section class="hero" aria-label="Jayveecons Group introduction">
+  <div class="hero-bg" aria-hidden="true"></div>
+
+  <div class="hero-inner">
+
+    <!-- Left: headline + copy + CTAs -->
+    <div class="hero-copy">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-line"></div>
+        <span>Bengaluru, India · Est. 1987</span>
+      </div>
+
+      <h1 class="hero-headline">
+        <span class="h-block">Engineering</span>
+        <span class="h-block chrome-grad">High-Performance</span>
+        <span class="h-block accent">Bulk Flow Systems</span>
+      </h1>
+
+      <p class="hero-sub">
+        Jayveecons engineers high-performance material handling systems — from screw conveyors
+        to bucket elevators — alongside integrated processing systems including crushers, kilns,
+        grinding mills, and air classifiers. Designed for the world's most demanding bulk
+        processing environments. Introducing <strong>VECTOMEC™</strong>, our next-generation
+        equipment line.
+      </p>
+
+      <div class="hero-actions">
+        <a href="/contact" class="btn-primary" aria-label="Request a quote from Jayveecons">
+          Request a Quote
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="/products" class="btn-secondary">View Products →</a>
+      </div>
+    </div>
+
+    <!-- Right: stat cards -->
+    <div class="hero-stats" aria-label="Key company statistics">
+      <div class="hero-stat-card">
+        <div class="stat-number">{yearsOld}<span class="unit">+</span></div>
+        <div class="stat-label">Years of Engineering</div>
+        <div class="stat-desc">Founded 1987 in Bengaluru</div>
+      </div>
+      <div class="hero-stat-card">
+        <div class="stat-number">90<span class="unit">K</span></div>
+        <div class="stat-label">Sq.ft Manufacturing</div>
+        <div class="stat-desc">Machining, Fabrication, Assembly &amp; Testing</div>
+      </div>
+      <div class="hero-stat-card">
+        <div class="stat-number">4<span class="unit">+</span></div>
+        <div class="stat-label">Industries Served</div>
+        <div class="stat-desc">Cement · Mining · Food · Waste</div>
+      </div>
+      <div class="hero-stat-card">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Product Lines</div>
+        <div class="stat-desc">Handling · Processing · Ancillary Equipment</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hero-scroll" aria-hidden="true">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<style>
+  /* ── DARK navy gradient ── */
+  .hero {
+    position: relative;
+    min-height: 82svh;
+    display: flex;
+    align-items: center;
+    padding-top: 70px;    /* nav height */
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 90% 70% at 65% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 5% 90%,  rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    z-index: 0;
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 22%; width: 1px; height: 100%;
+    background: linear-gradient(180deg, transparent, rgba(208,212,220,.16) 30%, rgba(208,212,220,.06) 70%, transparent);
+  }
+
+  /* ── Inner layout — mobile-first ── */
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: clamp(28px,5vh,56px) clamp(16px,4vw,56px);
+    display: grid;
+    grid-template-columns: 1fr;            /* mobile: single column */
+    gap: clamp(32px,4vw,56px);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .hero-inner {
+      grid-template-columns: 1.1fr minmax(260px,360px);   /* desktop: 2 col */
+    }
+  }
+
+  /* ── Eyebrow ── */
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: clamp(16px,2vh,22px);
+    animation: fadeUp .8s ease .2s both;
+  }
+  .hero-eyebrow-line {
+    width: 44px; height: 2px;
+    background: var(--crimson);
+    flex-shrink: 0;
+  }
+  .hero-eyebrow span {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #ff7070;
+    font-weight: 500;
+  }
+
+  /* ── H1 ── */
+  .hero-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(40px, 7.5vw, 90px);
+    line-height: .93;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+    margin-bottom: clamp(18px,2.5vh,26px);
+    animation: fadeUp .8s ease .35s both;
+  }
+  .h-block   { display: block; color: var(--white); }
+  .accent    { color: var(--crimson-l); }
+  .chrome-grad {
+    background: linear-gradient(135deg, var(--chrome-l) 0%, var(--chrome) 40%, var(--chrome-d) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Sub ── */
+  .hero-sub {
+    font-size: clamp(14px, 1.6vw, 16px);
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--fog);
+    max-width: 640px;
+    margin-bottom: clamp(20px,3vh,30px);
+    animation: fadeUp .8s ease .5s both;
+  }
+  .hero-sub strong { color: var(--white); font-weight: 500; }
+
+  /* ── CTAs ── */
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    animation: fadeUp .8s ease .65s both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--crimson);
+    color: var(--white);
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(13px,1.4vw,15px);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: clamp(12px,1.5vh,14px) clamp(24px,3vw,32px);
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    transition: background .2s, transform .2s;
+    white-space: nowrap;
+    min-height: 44px;
+  }
+  .btn-primary:hover { background: var(--crimson-l); transform: translateX(3px); }
+  .btn-primary svg   { width: 16px; height: 16px; flex-shrink: 0; }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: transparent;
+    color: var(--chrome);
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: clamp(13px,1.4vw,15px);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: clamp(12px,1.5vh,13px) clamp(20px,2.5vw,32px);
+    border: 1px solid rgba(208,212,220,.2);
+    transition: color .2s, border-color .2s;
+    white-space: nowrap;
+    min-height: 44px;
+  }
+  .btn-secondary:hover { color: var(--white); border-color: rgba(208,212,220,.5); }
+
+  /* ── Stat cards ── */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;   /* mobile: 2 col */
+    gap: 8px;
+    animation: fadeIn 1s ease .8s both;
+  }
+  @media (min-width: 900px) {
+    .hero-stats { grid-template-columns: 1fr; gap: 2px; } /* desktop: stack */
+  }
+
+  .hero-stat-card {
+    background: rgba(13,26,58,.65);
+    border: 1px solid rgba(51,96,184,.2);
+    border-left: 3px solid transparent;
+    border-radius: 8px;
+    padding: clamp(14px,2vh,22px) clamp(14px,2vw,26px);
+    transition: border-color .3s, border-left-color .3s, background .3s;
+  }
+  .hero-stat-card:hover {
+    background: rgba(17,34,71,.8);
+    border-color: rgba(192,24,30,.4);
+    border-left-color: var(--crimson);
+  }
+
+  .stat-number {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(26px,4vw,42px);
+    line-height: 1;
+    color: var(--white);
+    letter-spacing: -.02em;
+  }
+  .stat-number .unit { font-size: .55em; color: #ff7070; }
+  .stat-label  { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #b8c0d0; margin-top: 5px; }
+  .stat-desc   { font-size: 12px; color: #8e9ab0; margin-top: 2px; font-weight: 300; line-height: 1.4; }
+
+  /* ── Scroll indicator ── */
+  .hero-scroll {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;           /* hidden on mobile */
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    animation: fadeIn 1s ease 1.3s both;
+    z-index: 1;
+  }
+  @media (min-width: 640px) { .hero-scroll { display: flex; } }
+  .hero-scroll span { font-family: var(--font-mono); font-size: 9px; letter-spacing: .18em; color: var(--mist); text-transform: uppercase; }
+  .scroll-line { width: 1px; height: 42px; background: linear-gradient(var(--crimson), transparent); animation: pulse 2s ease infinite; }
+
+  /* ── Animations ── */
+  @keyframes fadeUp  { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes pulse   { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-eyebrow, .hero-headline, .hero-sub,
+    .hero-actions, .hero-stats, .hero-scroll { animation: none; }
+    .scroll-line { animation: none; }
+  }
+</style>

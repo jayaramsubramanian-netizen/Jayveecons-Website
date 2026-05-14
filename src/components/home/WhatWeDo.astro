@@ -1,0 +1,414 @@
+---
+/**
+ * WhatWeDo.astro — LIGHT white + blue grid
+ * Gap fix: header moved inside left grid column → no centering gap
+ * Animation fix: transform:translateY (GPU) replaces top:% (unreliable)
+ * Dot timing recalculated to match flow travel speed
+ */
+---
+
+<section class="wwd-section" id="about" aria-labelledby="wwd-heading">
+  <div class="wwd-inner">
+    <div class="wwd-grid">
+
+      <!-- LEFT: header + copy + badge all in one column -->
+      <div class="wwd-left">
+
+        <div class="wwd-header reveal">
+          <div class="section-tag">
+            <div class="tag-line"></div>
+            <span>Who We Are</span>
+          </div>
+          <h2 class="section-headline" id="wwd-heading">
+            Built for<br><span class="accent">Bulk Handling &amp; Processing</span>
+          </h2>
+        </div>
+
+        <div class="wwd-copy reveal">
+          <p>Jayveecons Consultants and Engineers is the design and engineering arm of the Jayveecons Group, working in close integration with our manufacturing partner AkshayVipra El-Mec Pvt. Ltd. to deliver end-to-end solutions for bulk material handling and processing.</p>
+          <p>From concept to commissioning, we manage the full lifecycle in-house — engineering, fabrication, erection, and support — without outsourcing critical execution.</p>
+          <p>Every system is refined through three decades of field experience, resulting in equipment engineered for durability, efficiency, and lower lifecycle maintenance.</p>
+
+          <div class="vectomec-badge">
+            <span class="badge-intro">Introducing</span>
+            <span class="badge-product">
+              VECTRIX<sup>™</sup> Design Platform
+              <span class="badge-amp">&amp;</span>
+              VECTOMEC<sup>™</sup> Equipment Line
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: pipeline — no reveal class, always visible so CSS animation runs -->
+      <div class="wwd-pipeline" aria-label="Delivery process phases">
+        <div class="pipeline" role="list">
+
+          <!-- Blue flow glow — GPU-accelerated translateY, 5s loop -->
+          <div class="flow" aria-hidden="true"></div>
+
+          <div class="node n1" role="listitem">
+            <div class="dot" aria-hidden="true"></div>
+            <div class="node-card">
+              <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
+              </svg>
+              <div class="node-phase">Phase 01</div>
+              <div class="node-title">Engineering Design</div>
+              <p class="node-desc">Flow modeling, torque analysis, PSD interpretation, and system configuration.</p>
+            </div>
+          </div>
+
+          <div class="node n2" role="listitem">
+            <div class="dot" aria-hidden="true"></div>
+            <div class="node-card">
+              <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+              </svg>
+              <div class="node-phase">Phase 02</div>
+              <div class="node-title">Fabrication</div>
+              <p class="node-desc">Precision manufacturing with controlled tolerances and material-specific optimization at our 90,000 sq.ft facility.</p>
+            </div>
+          </div>
+
+          <div class="node n3" role="listitem">
+            <div class="dot" aria-hidden="true"></div>
+            <div class="node-card">
+              <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+              </svg>
+              <div class="node-phase">Phase 03</div>
+              <div class="node-title">Erection &amp; Commissioning</div>
+              <p class="node-desc">On-site alignment, installation, calibration, and flow validation ensuring real-world performance.</p>
+            </div>
+          </div>
+
+          <div class="node n4" role="listitem">
+            <div class="dot" aria-hidden="true"></div>
+            <div class="node-card">
+              <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              <div class="node-phase">Phase 04</div>
+              <div class="node-title">After-Sales Optimization</div>
+              <p class="node-desc">Continuous system tuning, wear monitoring, and throughput optimization for lifecycle efficiency.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ── WHITE + BLUE GRID BACKGROUND ── */
+  .wwd-section {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding: clamp(32px,4vh,56px) 0;
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    border-bottom: 1px solid rgba(8,56,146,.08);
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .wwd-inner {
+    max-width: 1440px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 clamp(16px,4vw,48px);
+  }
+
+  /* ── 2-col grid — top-aligned so left column never gets pushed down ── */
+  .wwd-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(24px,3vw,48px);
+    align-items: start;   /* ← FIX: was center, which pushed short left col down */
+  }
+  @media (min-width: 900px) {
+    .wwd-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Left column stacks header directly above copy — no gap between them */
+  .wwd-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .wwd-header { margin-bottom: clamp(12px,1.5vh,18px); }
+
+  /* Section tag */
+  .section-tag { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .tag-line    { width: 28px; height: 2px; background: #c0181e; flex-shrink: 0; }
+  .section-tag span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #c0181e;
+  }
+
+  /* Headline */
+  .section-headline {
+    font-family: var(--font-head);
+    font-weight: 800; font-size: clamp(32px,4.5vw,56px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: rgba(8,56,146,.9);
+    margin-bottom: 0;
+  }
+  .accent { color: #c0181e; }
+
+  /* Copy paragraphs — tight spacing */
+  .wwd-copy p {
+    font-size: clamp(14px,1.4vw,18px);
+    font-weight: 400;
+    line-height: 1.7;
+    color: #2a3550;
+    margin-bottom: 8px;
+  }
+  .wwd-copy p:last-of-type { margin-bottom: 0; }
+
+  /* Badge — crimson bg, white text */
+  .vectomec-badge {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #c0181e;
+    border-left: 4px solid #8c1014;
+    padding: 12px 16px;
+    margin-top: 25px;
+    border-radius: 8px;
+  }
+  .badge-intro {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.75);
+  }
+  .badge-product {
+    font-family: var(--font-head);
+   font-weight: 700;
+   font-size: clamp(17px,2vw,22px);
+    letter-spacing: .05em;
+    color: #ffffff;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .badge-amp { color: rgba(255,255,255,.55); font-weight: 400; margin: 0 4px; }
+
+  /* ════════════════════════════════════════
+     PIPELINE
+     Flow uses transform:translateY (GPU-accelerated, no % calc issues).
+     Dot delays calculated to match flow travel time to each node.
+  ════════════════════════════════════════ */
+  .wwd-pipeline { min-height: auto; }
+
+  .pipeline {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Vertical centre line */
+  .pipeline::before {
+    content: '';
+    position: absolute;
+    left: 50%; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(8,56,146,.15) 8%,
+      rgba(8,56,146,.28) 20%,
+      rgba(8,56,146,.28) 80%,
+      rgba(8,56,146,.15) 92%,
+      transparent 100%
+    );
+    transform: translateX(-50%);
+  }
+
+  /*
+    FLOW — GPU transform animation (translateY, not top).
+    Starts 80px above pipeline top, travels 680px total, exits below.
+    5s cycle, linear, infinite.
+  */
+  .flow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 6px;
+    height: 80px;
+    /* Start position: 80px above the pipeline */
+    transform: translateX(-50%) translateY(-80px);
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(100,170,255,.15) 10%,
+      rgba(100,170,255,.85) 40%,
+      rgba(180,220,255,1)   50%,
+      rgba(100,170,255,.85) 60%,
+      rgba(100,170,255,.15) 90%,
+      transparent 100%
+    );
+    filter: blur(1.5px);
+    border-radius: 3px;
+    z-index: 3;
+    animation: moveFlow 5s linear infinite;
+  }
+
+  /*
+    translateY(-80px) → translateY(600px)
+    Total travel: 680px in 5s = 136px/s
+
+    Node centre positions from pipeline top (estimated per node height ~120px + 24px margin):
+      n1 ≈  60px   → flow arrives at (60+80)/136 ≈ 1.03s
+      n2 ≈ 204px   → flow arrives at (204+80)/136 ≈ 2.09s
+      n3 ≈ 348px   → flow arrives at (348+80)/136 ≈ 3.15s
+      n4 ≈ 492px   → flow arrives at (492+80)/136 ≈ 4.21s
+
+    pulseDot duration = 5s. Negative delay = -(5 - arrival_time):
+      n1: -(5-1.03) = -3.97s ≈ -4.0s
+      n2: -(5-2.09) = -2.91s ≈ -2.9s
+      n3: -(5-3.15) = -1.85s ≈ -1.9s
+      n4: -(5-4.21) = -0.79s ≈ -0.8s
+  */
+  @keyframes moveFlow {
+    0%   { transform: translateX(-50%) translateY(-80px);  }
+    100% { transform: translateX(-50%) translateY(600px);  }
+  }
+
+  /* Nodes — visible from the start */
+  .node {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 12px 0;
+  }
+
+  .node.n1, .node.n3 { flex-direction: row;         }
+  .node.n2, .node.n4 { flex-direction: row-reverse;  }
+
+  /* Dots — always visible, pulsing in sync with flow */
+  .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #c0181e;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    flex-shrink: 0;
+    animation: pulseDot 5s ease-in-out infinite;
+  }
+
+  .node.n1 .dot { animation-delay: -4.0s; }
+  .node.n2 .dot { animation-delay: -2.9s; }
+  .node.n3 .dot { animation-delay: -1.9s; }
+  .node.n4 .dot { animation-delay: -0.8s; }
+
+  /*
+    pulseDot: ring expands and fades in first 18% (0.9s),
+    then steady glow for remaining 82%.
+    Fires at 0% of each 5s cycle = exactly when flow reaches that node.
+  */
+  @keyframes pulseDot {
+    0%   {
+      box-shadow:
+        0 0 0  2px rgba(192,24,30,.6),
+        0 0 0  0   rgba(192,24,30,0),
+        0 0 8px    rgba(192,24,30,.35);
+    }
+    6%   {
+      box-shadow:
+        0 0 0  3px rgba(192,24,30,.9),
+        0 0 0  10px rgba(192,24,30,.5),
+        0 0 22px   rgba(192,24,30,.8);
+    }
+    12%  {
+      box-shadow:
+        0 0 0  2px rgba(192,24,30,.6),
+        0 0 0  18px rgba(192,24,30,0),
+        0 0 14px   rgba(192,24,30,.4);
+    }
+    18%  {
+      box-shadow:
+        0 0 0  2px rgba(192,24,30,.6),
+        0 0 0  0   rgba(192,24,30,0),
+        0 0 8px    rgba(192,24,30,.35);
+    }
+    100% {
+      box-shadow:
+        0 0 0  2px rgba(192,24,30,.6),
+        0 0 0  0   rgba(192,24,30,0),
+        0 0 8px    rgba(192,24,30,.35);
+    }
+  }
+
+  /* Node card — navy gradient */
+  .node-card {
+    width: calc(50% - 16px);
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    padding: clamp(12px,1.4vw,18px) clamp(14px,1.6vw,20px);
+    border-radius: 12px;
+    border-top: 3px solid transparent;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+    transition: border-top-color .3s, box-shadow .3s;
+  }
+  .node-card:hover {
+    border-top-color: #c0181e;
+    box-shadow: 0 10px 28px rgba(0,0,0,.24);
+  }
+
+  .node.n1 .node-card,
+  .node.n3 .node-card { margin-right: auto; margin-left: 0;  }
+  .node.n2 .node-card,
+  .node.n4 .node-card { margin-left: auto;  margin-right: 0; }
+
+  .node-icon  { width: 18px; height: 18px; color: var(--crimson-l); margin-bottom: 3px; opacity: .9; }
+  .node-phase { font-family: var(--font-mono); font-size: 9px; letter-spacing: .12em; color: var(--crimson-l); text-transform: uppercase; margin-bottom: 2px; opacity: .8; }
+  .node-title { font-family: var(--font-head); font-weight: 700; font-size: clamp(17px,2vw,22px); text-transform: uppercase; letter-spacing: .03em; color: #ffffff; margin-bottom: 4px; line-height: 1.1; }
+  .node-desc  { font-family: var(--font-body); font-size: clamp(12px,1vw,15px); font-weight: 300; color: var(--fog); line-height: 1.5; margin: 0; }
+
+  /* Mobile — linearise pipeline to left rail */
+  @media (max-width: 600px) {
+    .pipeline::before { left: 16px; transform: none; }
+    .flow             { left: 16px; }
+    .node.n1, .node.n2,
+    .node.n3, .node.n4 { flex-direction: column; align-items: flex-start; }
+    .dot { left: 16px; transform: none; }
+    .node-card { width: 100%; margin-left: 36px !important; margin-right: 0 !important; }
+
+    /* On mobile translateY needs adjusting since pipeline is taller */
+    @keyframes moveFlow {
+      0%   { transform: translateY(-80px);  }
+      100% { transform: translateY(900px);  }
+    }
+  }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .flow   { animation: none; transform: translateX(-50%) translateY(-80px); display: none; }
+    .dot    { animation: none; box-shadow: 0 0 0 2px rgba(192,24,30,.6), 0 0 8px rgba(192,24,30,.35); }
+  }
+</style>

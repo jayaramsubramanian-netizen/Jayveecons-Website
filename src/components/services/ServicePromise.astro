@@ -74,12 +74,12 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: clamp(32px, 5vw, 72px);
-    align-items: start;
+    align-items: center;
   }
   @media (min-width: 1024px) {
     .promise-grid { grid-template-columns: 1fr 1fr; }
   }
-
+ 
   /* ── Section tag ── */
   .section-tag {
     display: inline-flex;
@@ -141,10 +141,10 @@
   }
 
   /* ── Stats grid — 2×2 ── */
-  .promise-stats {
+   .promise-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2px;
+    gap: 16px;
   }
   .pstat {
     background:
@@ -152,7 +152,8 @@
       radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
       linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
     border-top: 3px solid transparent;
-    border-radius: 4px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.14);
     padding: clamp(18px, 2.5vw, 28px);
     transition: border-top-color .3s, box-shadow .3s;
   }
