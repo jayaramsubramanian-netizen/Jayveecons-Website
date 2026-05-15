@@ -1,19 +1,28 @@
 ---
 // IndustriesCrossSector.astro
 // "The Same Engineering. Every Sector." two-column section.
-// Uses page-container token. No props.
+// Background: DARK navy gradient
+// Cards: white on dark section
 ---
 
 <style>
+  /* ── DARK navy gradient ── */
   .cross-sector {
     padding-block: clamp(48px, 8vh, 96px);
-    background: var(--navy-deep, #060c1e);
+    background:
+      radial-gradient(ellipse 90% 70% at 65% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 5%  90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
   }
 
   .cross-inner {
     max-width: 1440px;
     margin-inline: auto;
-    padding-inline: clamp(18px, 4vw, 48px);
+    padding-inline: clamp(16px, 4vw, 48px);
   }
 
   /* Stack on mobile, side-by-side at 1024px */
@@ -23,8 +32,11 @@
     gap: clamp(32px, 5vw, 80px);
     align-items: start;
   }
+  @media (min-width: 1024px) {
+    .cross-grid { grid-template-columns: 1fr 1fr; }
+  }
 
-  /* ── Section tag + headline ── */
+  /* Section tag — crimson-l on dark */
   .section-tag {
     display: inline-flex;
     align-items: center;
@@ -40,17 +52,19 @@
     color: var(--crimson-l);
   }
 
+  /* Headline — white + red accent (dark section) */
   .section-headline {
     font-family: var(--font-head);
-    font-weight: 800;
-    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 800; 
+    font-size:clamp(32px,4.5vw,56px);
     text-transform: uppercase;
     line-height: .97;
     color: var(--white);
     margin-bottom: 20px;
   }
+  .section-headline .accent { color: var(--crimson-l); }
 
-  /* ── Left copy ── */
+  /* Left copy — fog on dark */
   .cross-copy p {
     font-size: clamp(14px, 1.5vw, 16px);
     font-weight: 300;
@@ -60,58 +74,65 @@
   }
   .cross-copy p strong { color: var(--white); font-weight: 500; }
 
-  /* ── Right points ── */
+  /* Right points — white cards on dark section */
   .cross-points {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 12px;
   }
 
   .cross-point {
-    background: rgba(10, 12, 18, .7);
-    padding: clamp(14px, 2vw, 22px);
+    background: #ffffff;
+    padding: clamp(16px, 2vw, 22px);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.2);
     display: flex;
     gap: 16px;
     align-items: flex-start;
-    border-left: 3px solid transparent;
-    transition: border-left-color .25s, background .25s;
+    border-top: 3px solid transparent;
+    transition: border-top-color .25s, box-shadow .25s, transform .25s;
   }
   .cross-point:hover {
-    background: rgba(13, 26, 58, .5);
-    border-left-color: var(--crimson);
+    border-top-color: #c0181e;
+    box-shadow: 0 8px 32px rgba(0,0,0,.32);
+    transform: translateY(-2px);
   }
 
+  /* Icon — crimson on white card */
   .cp-icon {
     width: 36px; height: 36px;
-    background: rgba(192, 24, 30, .12);
-    border: 1px solid rgba(192, 24, 30, .25);
+    background: rgba(192,24,30,.08);
+    border: 1px solid rgba(192,24,30,.2);
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    color: var(--crimson-l);
+    color: #c0181e;
   }
   .cp-icon svg { width: 18px; height: 18px; }
 
+  /* Card text — dark on white card */
   .cp-title {
     font-family: var(--font-head);
     font-weight: 700;
     font-size: clamp(14px, 1.4vw, 16px);
     text-transform: uppercase;
     letter-spacing: .05em;
-    color: var(--chrome, #d0d4dc);
+    color: 
     margin-bottom: 4px;
   }
   .cp-desc {
     font-size: 13px;
-    font-weight: 300;
-    color: var(--fog);
+    font-weight: 400;
+    color: #3a4560;
     line-height: 1.6;
   }
 
-  @media (min-width: 1024px) {
-    .cross-grid { grid-template-columns: 1fr 1fr; }
-  }
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 </style>
 
 <section class="cross-sector" aria-labelledby="cross-heading">
@@ -122,7 +143,7 @@
       <div class="cross-copy reveal">
         <div class="section-tag"><div class="line"></div><span>Why Jayveecons</span></div>
         <h2 class="section-headline" id="cross-heading">
-          The Same Engineering.<br>Every Sector.
+          The Same Engineering.<br><span class="accent">Every Sector.</span>
         </h2>
         <p>
           What makes Jayveecons different isn't that we serve many industries — it's that
@@ -139,7 +160,7 @@
         </p>
       </div>
 
-      <!-- Right: feature points -->
+      <!-- Right: feature points — white cards -->
       <div class="cross-points reveal">
 
         <div class="cross-point">
@@ -150,7 +171,7 @@
           </div>
           <div>
             <div class="cp-title">In-House Fabrication</div>
-            <div class="cp-desc">Every component machined, rolled, welded, and balanced in our own facility — no sub-contractors for critical parts.</div>
+            <p class="cp-desc">Every component machined, rolled, welded, and balanced in our own facility — no sub-contractors for critical parts.</p>
           </div>
         </div>
 
@@ -163,7 +184,7 @@
           </div>
           <div>
             <div class="cp-title">Material-First Design</div>
-            <div class="cp-desc">We begin every enquiry with material properties — bulk density, abrasiveness, moisture, temperature — before selecting equipment type.</div>
+            <p class="cp-desc">We begin every enquiry with material properties — bulk density, abrasiveness, moisture, temperature — before selecting equipment type.</p>
           </div>
         </div>
 
@@ -176,7 +197,7 @@
           </div>
           <div>
             <div class="cp-title">Complete Documentation</div>
-            <div class="cp-desc">GA drawings, material certificates, weld maps, hydrostatic test records — supplied as standard, not as an extra.</div>
+            <p class="cp-desc">GA drawings, material certificates, weld maps, hydrostatic test records — supplied as standard, not as an extra.</p>
           </div>
         </div>
 
@@ -190,11 +211,11 @@
           </div>
           <div>
             <div class="cp-title">Engineering Support</div>
-            <div class="cp-desc">Our engineers respond to technical enquiries within 24 hours and can visit site for assessment anywhere in India.</div>
+            <p class="cp-desc">Our engineers respond to technical enquiries within 24 hours and can visit site for assessment anywhere in India.</p>
           </div>
         </div>
 
-      </div><!-- /cross-points -->
-    </div><!-- /cross-grid -->
+      </div>
+    </div>
   </div>
 </section>

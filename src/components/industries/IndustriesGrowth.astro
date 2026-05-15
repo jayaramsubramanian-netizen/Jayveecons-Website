@@ -1,148 +1,191 @@
 ---
 // IndustriesGrowth.astro
 // "Where We Are Growing" — 3 target/growth sector cards.
-// Uses section-container + page-container padding tokens.
----
+// Background: WHITE + blue square grid (light section)
+// Cards: navy gradient on light section
 ---
 
 <style>
+  /* ── WHITE + BLUE GRID BACKGROUND ── */
   .target-sectors {
     padding-block: clamp(48px, 8vh, 96px);
-    background: var(--ink, #090c14);
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    border-bottom: 1px solid rgba(8,56,146,.08);
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
   }
 
-  /* Header row — matches page-container */
+  /* Header row */
   .section-header {
     max-width: 1440px;
     margin-inline: auto;
-    padding-inline: clamp(18px, 4vw, 48px);
+    padding-inline: clamp(16px, 4vw, 48px);
     margin-bottom: clamp(28px, 4vh, 52px);
   }
 
+  /* Section tag — crimson on light bg */
   .section-tag {
     display: inline-flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 10px;
   }
-  .section-tag .line { width: 28px; height: 2px; background: var(--crimson); flex-shrink: 0; }
+  .section-tag .line { width: 28px; height: 2px; background: #c0181e; flex-shrink: 0; }
   .section-tag span {
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: .2em;
     text-transform: uppercase;
-    color: var(--crimson-l);
+    color: #c0181e;
   }
 
+  /* Headline — navy + red accent (light section) */
   .section-headline {
     font-family: var(--font-head);
-    font-weight: 800;
-    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 800; 
+    font-size:clamp(32px,4.5vw,56px);
     text-transform: uppercase;
     line-height: .97;
-    color: var(--white);
+    color: rgba(8,56,146,.9);
     margin-bottom: 14px;
   }
+  .section-headline .accent { color: #c0181e; }
 
+  /* Intro copy — dark on light */
   .intro-copy {
-    font-size: clamp(14px, 1.6vw, 17px);
-    font-weight: 300;
-    color: var(--fog);
+    font-size: clamp(14px, 1.6vw, 16px);
+    font-weight: 400;
+    color: #2a3550;
     max-width: 720px;
     line-height: 1.8;
   }
 
-  /* Card grid — inside page-container */
+  /* Card grid */
   .cards-wrap {
     max-width: 1440px;
     margin-inline: auto;
-    padding-inline: clamp(18px, 4vw, 48px);
+    padding-inline: clamp(16px, 4vw, 48px);
   }
 
   .target-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2px;
+    gap: 20px;
   }
+  @media (min-width: 640px)  { .target-grid { grid-template-columns: 1fr 1fr; gap: 20px; } }
+  @media (min-width: 1024px) { .target-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
 
+  /* Card — navy gradient on light section */
   .target-card {
-    background: var(--ink-2, #0a0d16);
-    padding: clamp(22px, 3vw, 36px);
-    border-top: 2px solid var(--teal-l, #14a898);
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    padding: clamp(22px, 3vw, 32px);
+    border-radius: 12px;
+    border-top: 3px solid var(--teal-l, #14a898);
+    box-shadow: 0 8px 24px rgba(0,0,0,.14);
     position: relative;
     overflow: hidden;
-    transition: background .3s;
+    transition: border-top-color .25s, box-shadow .25s, transform .25s;
   }
-  .target-card:hover { background: rgba(13, 122, 110, .06); }
+  .target-card:hover {
+    box-shadow: 0 14px 36px rgba(0,0,0,.24);
+    transform: translateY(-3px);
+  }
   .target-card::before {
     content: '';
     position: absolute;
     top: 0; right: 0;
-    width: 60px; height: 60px;
+    width: 80px; height: 80px;
     background: radial-gradient(circle at top right, rgba(20,168,152,.08), transparent 70%);
     pointer-events: none;
   }
 
+  /* Icon — teal on navy card */
   .tc-icon {
-    width: 40px; height: 40px;
+    width: 38px; height: 38px;
     color: var(--teal-l, #14a898);
-    margin-bottom: 18px;
-    opacity: .85;
+    margin-bottom: 16px;
+    opacity: .9;
   }
 
+  /* Card name — white on navy */
   .tc-name {
     font-family: var(--font-head);
     font-weight: 700;
-    font-size: clamp(20px, 2.5vw, 26px);
+    font-size: clamp(18px, 2.2vw, 24px);
     text-transform: uppercase;
     letter-spacing: .04em;
     color: var(--white);
     margin-bottom: 8px;
+    line-height: 1.05;
   }
 
+  /* Status badge */
   .tc-status {
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 12px;
     letter-spacing: .14em;
     text-transform: uppercase;
-    background: rgba(20, 168, 152, .12);
+    background: rgba(20,168,152,.15);
     color: var(--teal-l, #14a898);
     padding: 3px 8px;
+    border-radius: 2px;
     display: inline-block;
     margin-bottom: 14px;
   }
 
+  /* Description — fog on navy */
   .tc-desc {
-    font-size: clamp(13px, 1.4vw, 14px);
+    font-size: clamp(12px, 1.3vw, 14px);
     font-weight: 300;
     color: var(--fog);
     line-height: 1.7;
     margin-bottom: 16px;
   }
 
+  /* Opportunity block */
   .tc-opportunity {
-    font-size: 12px;
+    font-size: clamp(12px, 1.2vw, 14px);
     font-weight: 300;
-    color: var(--mist);
-    line-height: 1.6;
-    border-top: 1px solid rgba(20, 168, 152, .1);
+    color: #8898b0;
+    line-height: 1.65;
+    border-top: 1px solid rgba(20,168,152,.15);
     padding-top: 14px;
   }
   .tc-opportunity strong {
     color: var(--teal-l, #14a898);
-    font-weight: 500;
+    font-weight: 600;
+    font-family: var(--font-head);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    display: block;
+    margin-bottom: 4px;
   }
 
-  @media (min-width: 640px)  { .target-grid { grid-template-columns: 1fr 1fr; } }
-  @media (min-width: 1024px) { .target-grid { grid-template-columns: repeat(3, 1fr); } }
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 </style>
 
 <section class="target-sectors" id="target" aria-labelledby="target-heading">
 
   <div class="section-header">
-    <div class="section-tag reveal"><div class="line"></div><span>Where We Are Growing</span></div>
+    <div class="section-tag reveal">
+      <div class="line"></div>
+      <span>Where We Are Growing</span>
+    </div>
     <h2 class="section-headline reveal" id="target-heading">
-      Equipment Ready.<br>Experience Transferable.
+      Equipment Ready.<br><span class="accent">Experience Transferable.</span>
     </h2>
     <p class="intro-copy reveal">
       The equipment we build for cement plants, mines, and food processing operations is
@@ -172,10 +215,11 @@
           leak-proof conveying systems and pressure-rated containment vessels.
         </p>
         <div class="tc-opportunity">
-          <strong>What we bring:</strong> Enclosed screw conveyors for dusty and hazardous
-          bulk solids; belt and bucket systems for high-volume proppant handling; fabricated
-          pressure vessels and storage systems; abrasion-resistant material selection from
-          our mining work. ASME documentation available where specified.
+          <strong>What we bring</strong>
+          Enclosed screw conveyors for dusty and hazardous bulk solids; belt and bucket
+          systems for high-volume proppant handling; fabricated pressure vessels and storage
+          systems; abrasion-resistant material selection from our mining work. ASME
+          documentation available where specified.
         </div>
       </article>
 
@@ -193,10 +237,11 @@
           that permits clean-in-place or strip-down cleaning.
         </p>
         <div class="tc-opportunity">
-          <strong>What we bring:</strong> Stainless steel screw conveyors and bucket
-          elevators to Ra surface finish requirements; crevice-free weld geometry; contained
-          transfer points; IBC handling systems; full material certification. Our food-grade
-          fabrication experience is the direct foundation for pharma-grade work.
+          <strong>What we bring</strong>
+          Stainless steel screw conveyors and bucket elevators to Ra surface finish
+          requirements; crevice-free weld geometry; contained transfer points; IBC handling
+          systems; full material certification. Our food-grade fabrication experience is the
+          direct foundation for pharma-grade work.
         </div>
       </article>
 
@@ -216,10 +261,11 @@
           for the seasonal intensity of harvest intake.
         </p>
         <div class="tc-opportunity">
-          <strong>What we bring:</strong> High-capacity bucket elevators and belt conveyors
-          for grain intake; flat-bottom and hopper-bottom silos with aeration systems;
-          rotary dryers for harvested grain moisture reduction; screw conveyors and feeders
-          for milling and blending. Food-safe material selection is standard.
+          <strong>What we bring</strong>
+          High-capacity bucket elevators and belt conveyors for grain intake; flat-bottom
+          and hopper-bottom silos with aeration systems; rotary dryers for harvested grain
+          moisture reduction; screw conveyors and feeders for milling and blending.
+          Food-safe material selection is standard.
         </div>
       </article>
 

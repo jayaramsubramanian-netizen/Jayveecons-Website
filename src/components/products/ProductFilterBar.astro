@@ -1,0 +1,253 @@
+---
+/**
+ * ProductFilterBar.astro — sticky dark filter bar
+ * Props: counts — build-time category counts from products.ts
+ * JS: vanilla, no framework. Dispatches custom 'product-filter' event
+ * that ProductGrid listens to. Keeps components decoupled.
+ */
+interface Props {
+  counts: {
+    handling:    number;
+    processing:  number;
+    ancillary:   number;
+    accessories: number;
+  };
+}
+const { counts } = Astro.props;
+const total = Object.values(counts).reduce((a, b) => a + b, 0);
+
+const tabs = [
+  { id: 'all',         label: 'All Products',        count: total          },
+  { id: 'handling',    label: 'Material Handling',    count: counts.handling    },
+  { id: 'processing',  label: 'Material Processing',  count: counts.processing  },
+  { id: 'ancillary',   label: 'Ancillary Equipment',  count: counts.ancillary   },
+  { id: 'accessories', label: 'Accessories & Parts',  count: counts.accessories },
+] as const;
+---
+
+<div class="pfb-wrap" id="filter-bar" role="navigation" aria-label="Product category filter">
+  <div class="pfb-inner">
+
+    <!-- Category tabs -->
+    <div class="pfb-tabs" role="tablist" aria-label="Filter products by category">
+      {tabs.map((tab, i) => (
+        <button
+          class={`pfb-tab${i === 0 ? ' active' : ''}`}
+          data-cat={tab.id}
+          role="tab"
+          aria-selected={i === 0 ? 'true' : 'false'}
+          aria-controls="product-grid"
+        >
+          {tab.label}
+          <span class="pfb-count">{tab.count}</span>
+        </button>
+      ))}
+    </div>
+
+    <!-- Search -->
+    <div class="pfb-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input
+        type="search"
+        id="product-search"
+        placeholder="Search products…"
+        aria-label="Search products"
+        autocomplete="off"
+        spellcheck="false"
+      >
+      <button class="pfb-clear" id="search-clear" aria-label="Clear search" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /* ── Sticky dark bar — sits just below the fixed navbar (70px) ── */
+  .pfb-wrap {
+    position: sticky;
+    top: 70px;
+    z-index: 50;
+    background: rgba(6,7,12,.97);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(51,96,184,.18);
+    /* Subtle crimson top accent line */
+    box-shadow:
+      0 1px 0 rgba(192,24,30,.25) inset,
+      0 4px 20px rgba(0,0,0,.4);
+  }
+
+  /* ── Inner layout ── */
+  .pfb-inner {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    min-height: 52px;
+  }
+  @media (min-width: 480px)  { .pfb-inner { padding-inline: 20px; } }
+  @media (min-width: 768px)  { .pfb-inner { padding-inline: 32px; } }
+  @media (min-width: 1024px) { .pfb-inner { padding-inline: 48px; } }
+
+  /* ── Tab list — scrollable on mobile ── */
+  .pfb-tabs {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex: 1;
+    min-width: 0;
+  }
+  .pfb-tabs::-webkit-scrollbar { display: none; }
+
+  /* ── Individual tab ── */
+  .pfb-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 clamp(12px, 2vw, 24px);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #6a7a9a;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color .2s, border-bottom-color .2s;
+    min-height: 52px;
+    /* Touch target */
+    min-width: 44px;
+  }
+  .pfb-tab:hover                    { color: var(--fog); }
+  .pfb-tab.active                   { color: var(--white); border-bottom-color: var(--crimson); }
+  .pfb-tab:focus-visible            { outline: 2px solid var(--crimson); outline-offset: -2px; }
+
+  /* Count pill */
+  .pfb-count {
+    font-size: 10px;
+    background: rgba(51,96,184,.18);
+    color: #5580cc;
+    padding: 2px 7px;
+    border-radius: 20px;
+    transition: background .2s, color .2s;
+    font-variant-numeric: tabular-nums;
+  }
+  .pfb-tab.active .pfb-count {
+    background: var(--crimson);
+    color: var(--white);
+  }
+
+  /* ── Search — hidden on narrow mobile, shown at 480px ── */
+  .pfb-search {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0 8px clamp(12px, 2vw, 20px);
+    border-left: 1px solid rgba(51,96,184,.15);
+    flex-shrink: 0;
+  }
+  @media (min-width: 480px) { .pfb-search { display: flex; } }
+
+  .pfb-search > svg {
+    width: 14px; height: 14px;
+    color: #4a5a7a;
+    flex-shrink: 0;
+  }
+  .pfb-search input {
+    background: transparent;
+    border: none;
+    color: var(--white);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .08em;
+    width: clamp(100px, 14vw, 200px);
+    outline: none;
+    padding: 4px 0;
+    caret-color: var(--crimson);
+  }
+  .pfb-search input::placeholder { color: #3d4a60; }
+
+  /* Clear button */
+  .pfb-clear {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    color: #4a5a7a;
+    display: flex;
+    align-items: center;
+    transition: color .2s;
+    flex-shrink: 0;
+  }
+  .pfb-clear:hover { color: var(--fog); }
+  .pfb-clear svg   { width: 12px; height: 12px; }
+  .pfb-clear[hidden] { display: none; }
+</style>
+
+<script>
+  const bar        = document.getElementById('filter-bar')!;
+  const tabs       = bar.querySelectorAll<HTMLButtonElement>('.pfb-tab');
+  const searchEl   = document.getElementById('product-search') as HTMLInputElement;
+  const clearBtn   = document.getElementById('search-clear') as HTMLButtonElement;
+
+  // Dispatch a custom event — ProductGrid listens to this
+  function dispatch(cat: string, query: string) {
+    document.dispatchEvent(new CustomEvent('product-filter', {
+      detail: { cat, query }
+    }));
+  }
+
+  // ── Tab clicks ──
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      dispatch(tab.dataset.cat!, searchEl.value.trim());
+
+      // Scroll active tab into view on mobile
+      tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    });
+  });
+
+  // ── Search input ──
+  let timer: ReturnType<typeof setTimeout>;
+  searchEl.addEventListener('input', () => {
+    clearTimeout(timer);
+    const q = searchEl.value.trim();
+    clearBtn.hidden = q.length === 0;
+    timer = setTimeout(() => {
+      const activeCat = bar.querySelector<HTMLButtonElement>('.pfb-tab.active')?.dataset.cat ?? 'all';
+      dispatch(activeCat, q);
+    }, 180);
+  });
+
+  // ── Clear button ──
+  clearBtn.addEventListener('click', () => {
+    searchEl.value = '';
+    clearBtn.hidden = true;
+    const activeCat = bar.querySelector<HTMLButtonElement>('.pfb-tab.active')?.dataset.cat ?? 'all';
+    dispatch(activeCat, '');
+    searchEl.focus();
+  });
+</script>

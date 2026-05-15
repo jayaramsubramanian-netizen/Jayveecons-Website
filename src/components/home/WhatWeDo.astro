@@ -20,7 +20,7 @@
             <span>Who We Are</span>
           </div>
           <h2 class="section-headline" id="wwd-heading">
-            Built for<br><span class="accent">Bulk Handling &amp; Processing</span>
+            Built for <span class="accent">Bulk Processing</span>
           </h2>
         </div>
 
@@ -163,7 +163,8 @@
   /* Headline */
   .section-headline {
     font-family: var(--font-head);
-    font-weight: 800; font-size: clamp(32px,4.5vw,56px);
+    font-weight: 800;
+    font-size:clamp(32px,4.5vw,56px);
     text-transform: uppercase;
     line-height: .97;
     color: rgba(8,56,146,.9);
@@ -173,7 +174,7 @@
 
   /* Copy paragraphs — tight spacing */
   .wwd-copy p {
-    font-size: clamp(14px,1.4vw,18px);
+    font-size: clamp(13px,1.4vw,15px);
     font-weight: 400;
     line-height: 1.7;
     color: #2a3550;
@@ -185,24 +186,24 @@
   .vectomec-badge {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 4px;
     background: #c0181e;
     border-left: 4px solid #8c1014;
     padding: 12px 16px;
-    margin-top: 25px;
+    margin-top: 14px;
     border-radius: 8px;
   }
   .badge-intro {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 10px;
     letter-spacing: .18em;
     text-transform: uppercase;
     color: rgba(255,255,255,.75);
   }
   .badge-product {
     font-family: var(--font-head);
-   font-weight: 700;
-   font-size: clamp(17px,2vw,22px);
+    font-weight: 700;
+    font-size: clamp(13px,1.5vw,17px);
     letter-spacing: .05em;
     color: #ffffff;
     text-transform: uppercase;
@@ -245,49 +246,42 @@
     Starts 80px above pipeline top, travels 680px total, exits below.
     5s cycle, linear, infinite.
   */
+  /*
+    FLOW — horizontal centring via left/margin-left (not transform)
+    so the animation only ever touches translateY — no conflict with
+    the element's own transform property.
+  */
   .flow {
     position: absolute;
-    top: 0;
-    left: 50%;
+    top: -80px;              /* start above pipeline */
+    left: calc(50% - 3px);  /* centred without transform */
+    margin: 0;
     width: 6px;
     height: 80px;
-    /* Start position: 80px above the pipeline */
-    transform: translateX(-50%) translateY(-80px);
     background: linear-gradient(
       to bottom,
       transparent 0%,
-      rgba(100,170,255,.15) 10%,
-      rgba(100,170,255,.85) 40%,
+      rgba(100,170,255,.1)  10%,
+      rgba(100,170,255,.9)  40%,
       rgba(180,220,255,1)   50%,
-      rgba(100,170,255,.85) 60%,
-      rgba(100,170,255,.15) 90%,
+      rgba(100,170,255,.9)  60%,
+      rgba(100,170,255,.1)  90%,
       transparent 100%
     );
     filter: blur(1.5px);
     border-radius: 3px;
     z-index: 3;
+    will-change: transform;
     animation: moveFlow 5s linear infinite;
   }
 
   /*
-    translateY(-80px) → translateY(600px)
-    Total travel: 680px in 5s = 136px/s
-
-    Node centre positions from pipeline top (estimated per node height ~120px + 24px margin):
-      n1 ≈  60px   → flow arrives at (60+80)/136 ≈ 1.03s
-      n2 ≈ 204px   → flow arrives at (204+80)/136 ≈ 2.09s
-      n3 ≈ 348px   → flow arrives at (348+80)/136 ≈ 3.15s
-      n4 ≈ 492px   → flow arrives at (492+80)/136 ≈ 4.21s
-
-    pulseDot duration = 5s. Negative delay = -(5 - arrival_time):
-      n1: -(5-1.03) = -3.97s ≈ -4.0s
-      n2: -(5-2.09) = -2.91s ≈ -2.9s
-      n3: -(5-3.15) = -1.85s ≈ -1.9s
-      n4: -(5-4.21) = -0.79s ≈ -0.8s
+    Only translateY — no translateX needed, no conflict.
+    Travels 680px (80px above → 600px below top=0).
   */
   @keyframes moveFlow {
-    0%   { transform: translateX(-50%) translateY(-80px);  }
-    100% { transform: translateX(-50%) translateY(600px);  }
+    0%   { transform: translateY(0);     }
+    100% { transform: translateY(680px); }
   }
 
   /* Nodes — visible from the start */
@@ -383,24 +377,19 @@
 
   .node-icon  { width: 18px; height: 18px; color: var(--crimson-l); margin-bottom: 3px; opacity: .9; }
   .node-phase { font-family: var(--font-mono); font-size: 9px; letter-spacing: .12em; color: var(--crimson-l); text-transform: uppercase; margin-bottom: 2px; opacity: .8; }
-  .node-title { font-family: var(--font-head); font-weight: 700; font-size: clamp(17px,2vw,22px); text-transform: uppercase; letter-spacing: .03em; color: #ffffff; margin-bottom: 4px; line-height: 1.1; }
+  .node-title { font-family: var(--font-head); font-weight: 700; font-size: clamp(17px,2vw,22px); text-transform: uppercase; letter-spacing: .03em; color: var(--white); margin-bottom: 4px; line-height: 1.1; }
   .node-desc  { font-family: var(--font-body); font-size: clamp(12px,1vw,15px); font-weight: 300; color: var(--fog); line-height: 1.5; margin: 0; }
 
   /* Mobile — linearise pipeline to left rail */
   @media (max-width: 600px) {
     .pipeline::before { left: 16px; transform: none; }
-    .flow             { left: 16px; }
+    .flow             { left: 12px; }   /* left-rail position without translateX */
     .node.n1, .node.n2,
     .node.n3, .node.n4 { flex-direction: column; align-items: flex-start; }
     .dot { left: 16px; transform: none; }
     .node-card { width: 100%; margin-left: 36px !important; margin-right: 0 !important; }
-
-    /* On mobile translateY needs adjusting since pipeline is taller */
-    @keyframes moveFlow {
-      0%   { transform: translateY(-80px);  }
-      100% { transform: translateY(900px);  }
-    }
   }
+  /* NOTE: @keyframes cannot be nested inside @media — moveFlow runs unchanged on mobile. */
 
   /* Reveal */
   .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
@@ -408,7 +397,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
-    .flow   { animation: none; transform: translateX(-50%) translateY(-80px); display: none; }
+    .flow   { animation: none; display: none; }
     .dot    { animation: none; box-shadow: 0 0 0 2px rgba(192,24,30,.6), 0 0 8px rgba(192,24,30,.35); }
   }
 </style>
