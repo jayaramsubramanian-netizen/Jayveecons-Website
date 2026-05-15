@@ -1,3 +1,9 @@
+---
+// ServicePromise.astro
+// Year computed server-side — no hardcoded numbers.
+const yearsOld = new Date().getFullYear() - 1987;
+---
+
 <section class="sp-section" id="promise">
   <div class="sp-inner">
     <div class="promise-grid">
@@ -8,7 +14,10 @@
           <div class="line"></div>
           <span>Our Service Promise</span>
         </div>
-        <h2 class="section-headline">Why Single-Source<br>Matters</h2>
+        <!-- Headline: navy base + red accent (light section) -->
+        <h2 class="section-headline">
+          Why Single-Source<br><span class="accent">Matters</span>
+        </h2>
         <p class="body-text">In industrial equipment, the weakest link is almost always the handoff. When a design firm passes a drawing to a fabricator, and the fabricator passes equipment to an installation contractor, and the contractor hands over to a maintenance team — critical knowledge is lost at every transfer. Nobody owns the outcome.</p>
         <p class="body-text"><strong>Jayveecons is built to eliminate that problem.</strong> The engineer who designed your conveyor is available to answer your installation team's questions. The fabricator who built your kiln can diagnose why a component has worn faster than expected. The commissioning engineer can write the maintenance procedure because they ran the machine.</p>
         <blockquote>
@@ -19,26 +28,34 @@
 
       <!-- Right: stats -->
       <div class="promise-stats reveal">
+
+        <!-- Year computed server-side, unit styled with .u class matching all other stat cards -->
         <div class="pstat">
-          <div class="pstat-num" id="svc-years">39<span class="u">+</span></div>
+          <div class="pstat-num">
+            {yearsOld}<span class="u"> +</span>
+          </div>
           <div class="pstat-label">Years of Continuous Operation</div>
           <div class="pstat-desc">Uninterrupted service delivery since 1987</div>
         </div>
+
         <div class="pstat">
-          <div class="pstat-num">24<span class="u">h</span></div>
+          <div class="pstat-num">24<span class="u"> h</span></div>
           <div class="pstat-label">Response Commitment</div>
           <div class="pstat-desc">All project and parts enquiries responded to within one business day</div>
         </div>
+
         <div class="pstat">
-          <div class="pstat-num">90<span class="u">K</span></div>
+          <div class="pstat-num">90<span class="u"> K</span></div>
           <div class="pstat-label">Sq.ft Workshop Capacity</div>
           <div class="pstat-desc">Full machining and fabrication in-house, no subcontracting of critical work</div>
         </div>
+
         <div class="pstat">
-          <div class="pstat-num">100<span class="u">%</span></div>
+          <div class="pstat-num">100<span class="u"> %</span></div>
           <div class="pstat-label">In-House Engineering</div>
           <div class="pstat-desc">Design, fabrication, erection, and support — all one team</div>
         </div>
+
       </div>
 
     </div>
@@ -46,30 +63,26 @@
 </section>
 
 <style>
-  /* ── Section — white + blue grid, alternates with dark ServicesList ── */
+  /* ── Section — white + blue grid ── */
   .sp-section {
     background-color: #f8fafc;
     background-image:
       linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
       linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
-    background-size: 90px 90px;
+    background-size: 60px 60px;
     padding-block: clamp(52px, 7vh, 88px);
     border-bottom: 1px solid rgba(8,56,146,.08);
   }
 
-  /* ── Container ── */
   .sp-inner {
     width: 100%;
     max-width: 1440px;
     margin-inline: auto;
-    padding-inline: 16px;
+    padding-inline: clamp(16px, 4vw, 48px);
     box-sizing: border-box;
   }
-  @media (min-width: 480px)  { .sp-inner { padding-inline: 20px; } }
-  @media (min-width: 768px)  { .sp-inner { padding-inline: 32px; } }
-  @media (min-width: 1024px) { .sp-inner { padding-inline: 48px; } }
 
-  /* ── Two-column grid ── */
+  /* Two-column grid */
   .promise-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -79,39 +92,39 @@
   @media (min-width: 1024px) {
     .promise-grid { grid-template-columns: 1fr 1fr; }
   }
- 
-  /* ── Section tag ── */
+
+  /* Section tag — crimson on light bg */
   .section-tag {
     display: inline-flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 12px;
   }
-  .section-tag .line {
-    width: 28px; height: 2px;
-    background: var(--crimson);
-    flex-shrink: 0;
-  }
+  .section-tag .line { width: 28px; height: 2px; background: #c0181e; flex-shrink: 0; }
   .section-tag span {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: .2em;
     text-transform: uppercase;
-    color: var(--crimson);
+    color: #c0181e;
   }
 
-  /* ── Headline — dark on light bg ── */
+  /* Headline — navy base + red accent (light section) */
   .section-headline {
     font-family: var(--font-head);
     font-weight: 800; 
     font-size:clamp(32px,4.5vw,56px);
     text-transform: uppercase;
     line-height: .97;
-    color: #1a1d24;
-    margin-bottom: 20px;
+    letter-spacing: .01em;
+    color: rgba(8, 56, 146, 0.9);  
+    margin-bottom: clamp(28px, 4vh, 44px);
   }
-.section-headline .accent { color: var(--crimson-l); }
-  /* ── Body copy ── */
+.section-headline .accent{
+  color: var(--crimson-l)
+}
+
+  /* Body copy */
   .body-text {
     font-family: var(--font-body);
     font-size: clamp(14px, 1.5vw, 16px);
@@ -122,9 +135,9 @@
   }
   .body-text strong { color: #1a1d24; font-weight: 600; }
 
-  /* ── Blockquote ── */
+  /* Blockquote */
   blockquote {
-    border-left: 3px solid var(--crimson);
+    border-left: 3px solid #c0181e;
     padding: 16px 20px;
     background: rgba(8,56,146,.05);
     margin: 20px 0;
@@ -140,12 +153,14 @@
     margin: 0;
   }
 
-  /* ── Stats grid — 2×2 ── */
-   .promise-stats {
+  /* Stats 2×2 grid */
+  .promise-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
   }
+
+  /* Stat card — navy gradient */
   .pstat {
     background:
       radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
@@ -159,8 +174,10 @@
   }
   .pstat:hover {
     border-top-color: var(--crimson);
-    box-shadow: 0 4px 24px rgba(8,56,146,.25);
+    box-shadow: 0 8px 28px rgba(0,0,0,.24);
   }
+
+  /* Stat number */
   .pstat-num {
     font-family: var(--font-head);
     font-weight: 800;
@@ -169,13 +186,17 @@
     color: var(--white);
     letter-spacing: -.02em;
   }
+
+  
   .pstat-num .u {
-    font-size: .5em;
+    font-size: .75em;
     color: #ff7070;
+    font-weight: 700;
   }
+
   .pstat-label {
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: .14em;
     text-transform: uppercase;
     color: var(--crimson-l);

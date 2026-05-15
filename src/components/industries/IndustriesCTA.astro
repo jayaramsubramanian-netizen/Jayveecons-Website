@@ -1,63 +1,61 @@
 ---
 // IndustriesCTA.astro
-// Final CTA band.
-// .btn-primary and .btn-secondary are defined here directly —
-// no external shared CSS file needed.
+// Background: WHITE + blue square grid (light section)
+// All text, accents and buttons updated for light background
 ---
 
 <style>
+  /* ── WHITE + BLUE GRID BACKGROUND ── */
   .cta-band {
     padding-block: clamp(56px, 9vh, 104px);
-    background:
-      radial-gradient(ellipse 60% 80% at 50% 110%, rgba(192,24,30,.08), transparent 60%),
-      linear-gradient(155deg, var(--navy-deep, #060c1e) 0%, var(--ink, #090c14) 60%);
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    border-top: 1px solid rgba(8,56,146,.08);
     position: relative;
     overflow: hidden;
-  }
-  /* Top rule */
-  .cta-band::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(192,24,30,.3) 50%, transparent);
-    pointer-events: none;
+    isolation: isolate;
   }
 
   .cta-inner {
     max-width: 1440px;
     margin-inline: auto;
-    padding-inline: clamp(18px, 4vw, 48px);
+    padding-inline: clamp(16px, 4vw, 48px);
     display: grid;
     grid-template-columns: 1fr;
     gap: clamp(24px, 4vw, 56px);
     align-items: center;
   }
 
+  /* Eyebrow — crimson on light */
   .cta-eyebrow {
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: .2em;
-    color: var(--crimson-l);
+    color: #c0181e;
     text-transform: uppercase;
     margin-bottom: 12px;
   }
 
+  /* Headline — navy base + red accent (light section) */
   .cta-headline {
     font-family: var(--font-head);
     font-weight: 800;
-    font-size: clamp(28px, 5vw, 56px);
+    font-size:clamp(32px,4.5vw,56px);
     text-transform: uppercase;
     line-height: .97;
-    color: var(--white);
+    color: rgba(8,56,146,.9);
     margin-bottom: 14px;
   }
-  .cta-headline .accent { color: var(--crimson-l); }
+  .cta-headline .accent { color: #c0181e; }
 
+  /* Sub copy — dark on light */
   .cta-sub {
     font-size: clamp(14px, 1.5vw, 16px);
-    font-weight: 300;
-    color: var(--fog);
+    font-weight: 400;
+    color: #2a3550;
     line-height: 1.65;
     max-width: 560px;
   }
@@ -69,14 +67,21 @@
     gap: 12px;
     align-items: flex-start;
   }
+  @media (min-width: 640px) {
+    .cta-actions { flex-direction: row; align-items: center; }
+  }
+  @media (min-width: 1024px) {
+    .cta-inner   { grid-template-columns: 1fr auto; }
+    .cta-actions { flex-direction: column; align-items: flex-end; }
+  }
 
-  /* ── Button styles (self-contained, no external file needed) ── */
+  /* Primary button — crimson, unchanged */
   .btn-primary {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: var(--crimson);
-    color: var(--white);
+    background: #c0181e;
+    color: #ffffff;
     font-family: var(--font-head);
     font-weight: 700;
     font-size: 14px;
@@ -87,15 +92,18 @@
     clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
     transition: background .2s, transform .2s;
     white-space: nowrap;
+    min-height: 44px;
   }
   .btn-primary:hover { background: var(--crimson-l); transform: translateX(2px); }
+  .btn-primary svg { flex-shrink: 0; }
 
+  /* Secondary button — navy border on light bg */
   .btn-secondary {
     display: inline-flex;
     align-items: center;
     gap: 9px;
-    background: transparent;
-    color: var(--chrome, #d0d4dc);
+    background:  rgba(8,56,146,.9);
+    color: #ffffff;
     font-family: var(--font-head);
     font-weight: 600;
     font-size: 14px;
@@ -103,20 +111,22 @@
     text-transform: uppercase;
     text-decoration: none;
     padding: 12px 30px;
-    border: 1px solid rgba(208, 212, 220, .2);
-    transition: color .2s, border-color .2s;
+    border: 1px solid rgba(8,56,146,.25);
+    border-radius: 2px;
+    transition: background .2s, color .2s, border-color .2s;
     white-space: nowrap;
+    min-height: 44px;
   }
-  .btn-secondary:hover { color: var(--white); border-color: rgba(208, 212, 220, .5); }
+  .btn-secondary:hover {
+    background: rgba(8,56,146,.06);
+    color: rgba(8,56,146,1);
+    border-color: rgba(8,56,146,.45);
+  }
 
-  @media (min-width: 640px) {
-    .cta-actions { flex-direction: row; align-items: center; }
-  }
-
-  @media (min-width: 1024px) {
-    .cta-inner   { grid-template-columns: 1fr auto; }
-    .cta-actions { flex-direction: column; align-items: flex-end; }
-  }
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 </style>
 
 <section class="cta-band" aria-labelledby="cta-heading">

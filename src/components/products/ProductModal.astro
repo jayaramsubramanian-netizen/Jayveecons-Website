@@ -1,0 +1,435 @@
+---
+/**
+ * ProductModal.astro — single <dialog> island
+ * Populated from window.__PRODUCTS__ (injected by ProductGrid).
+ * Listens for 'open-product-modal' custom event from ProductGrid.
+ * No framework — vanilla JS only.
+ */
+---
+
+<dialog class="pm-dialog" id="product-modal" aria-labelledby="pm-title" aria-modal="true">
+  <div class="pm-backdrop"></div>
+
+  <div class="pm-panel" role="document">
+
+    <!-- Close button -->
+    <button class="pm-close" id="pm-close" aria-label="Close product details">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+      <span>Close</span>
+    </button>
+
+    <!-- Content — swapped by JS -->
+    <div class="pm-content" id="pm-content">
+
+      <div class="pm-header">
+        <div class="pm-tag" id="pm-tag"></div>
+        <h2 class="pm-title" id="pm-title"></h2>
+        <p  class="pm-desc"  id="pm-desc"></p>
+      </div>
+
+      <div class="pm-body">
+        <!-- Left: specs + features -->
+        <div class="pm-left">
+          <div class="pm-section-label">Typical Specifications</div>
+          <dl class="pm-specs" id="pm-specs"></dl>
+
+          <div class="pm-section-label" id="pm-feat-label" hidden>Key Design Features</div>
+          <dl class="pm-specs" id="pm-features"></dl>
+        </div>
+
+        <!-- Right: apps + actions -->
+        <div class="pm-right">
+          <div class="pm-section-label">Industries &amp; Applications</div>
+          <ul class="pm-apps" id="pm-apps" aria-label="Applications"></ul>
+
+          <div class="pm-actions" id="pm-actions"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</dialog>
+
+<style>
+  /* ── Native <dialog> reset + overlay ── */
+  .pm-dialog {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    z-index: 200;
+    overflow: hidden;
+    /* Hidden by default — shown via JS .showModal() */
+  }
+  .pm-dialog:not([open]) { display: none; }
+
+  /* Semi-transparent backdrop */
+  .pm-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(4,6,12,.82);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    cursor: pointer; /* click outside to close */
+  }
+
+  /* ── Panel — slides up from bottom on mobile, centered on desktop ── */
+  .pm-panel {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    max-height: 92svh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.88) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    border-top: 3px solid var(--crimson);
+    border-radius: 16px 16px 0 0;
+    padding: clamp(20px, 3vh, 36px) clamp(16px, 4vw, 40px) clamp(24px, 4vh, 48px);
+    animation: slideUp .3s cubic-bezier(.4,0,.2,1) both;
+    z-index: 1;
+  }
+
+  @media (min-width: 768px) {
+    .pm-panel {
+      top: 50%; bottom: auto;
+      left: 50%; right: auto;
+      transform: translate(-50%, -50%);
+      width: min(92vw, 1000px);
+      max-height: 88svh;
+      border-radius: 12px;
+      border-top: none;
+      border-left: 3px solid var(--crimson);
+      animation: fadeScale .28s cubic-bezier(.4,0,.2,1) both;
+    }
+  }
+
+  /* ── Close button ── */
+  .pm-close {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--mist);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 4px 0;
+    margin-bottom: clamp(16px, 2vh, 24px);
+    transition: color .2s;
+    float: right;
+    clear: both;
+  }
+  .pm-close:hover { color: var(--white); }
+  .pm-close:focus-visible { outline: 2px solid var(--crimson); outline-offset: 3px; }
+  .pm-close svg   { width: 14px; height: 14px; }
+
+  /* ── Header ── */
+  .pm-header { clear: both; margin-bottom: clamp(18px, 2.5vh, 28px); }
+
+  .pm-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    background: var(--crimson);
+    color: var(--white);
+    padding: 3px 10px;
+    margin-bottom: 10px;
+  }
+
+  .pm-title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(24px, 3.5vw, 40px);
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    color: var(--white);
+    line-height: .97;
+    margin-bottom: 12px;
+  }
+
+  .pm-desc {
+    font-family: var(--font-body);
+    font-size: clamp(13px, 1.4vw, 15px);
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.8;
+    max-width: 860px;
+  }
+
+  /* ── Body: two columns on desktop ── */
+  .pm-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(20px, 3vw, 48px);
+    margin-top: clamp(16px, 2.5vh, 28px);
+  }
+  @media (min-width: 640px) {
+    .pm-body { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── Section label ── */
+  .pm-section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #ff7070;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(51,96,184,.15);
+    margin-bottom: 12px;
+    margin-top: 20px;
+  }
+  .pm-section-label:first-child { margin-top: 0; }
+
+  /* ── Spec rows ── */
+  .pm-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 4px;
+  }
+  .pm-spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(51,96,184,.1);
+  }
+  .pm-spec-row:last-child { border-bottom: none; }
+  .pm-spec-key {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .06em;
+    color: var(--chrome-d);
+    flex-shrink: 0;
+    min-width: 110px;
+    font-weight: 500;
+  }
+  .pm-spec-val {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--fog);
+    text-align: right;
+    line-height: 1.45;
+  }
+
+  /* ── App pills ── */
+  .pm-apps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    list-style: none;
+    padding: 0; margin: 0 0 24px;
+  }
+  .pm-app-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    background: rgba(13,26,58,.8);
+    border: 1px solid rgba(51,96,184,.3);
+    color: #7ab0ff;
+    padding: 5px 12px;
+  }
+
+  /* ── Action buttons ── */
+  .pm-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .pm-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--crimson);
+    color: var(--white);
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 13px 28px;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: background .2s, transform .15s;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+  }
+  .pm-btn-primary:hover { background: var(--crimson-l); transform: translateX(2px); }
+  .pm-btn-primary svg   { width: 14px; height: 14px; }
+
+  .pm-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: transparent;
+    color: var(--chrome);
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 12px 28px;
+    border: 1px solid rgba(208,212,220,.2);
+    transition: color .2s, border-color .2s;
+    white-space: nowrap;
+  }
+  .pm-btn-secondary:hover { color: var(--white); border-color: rgba(208,212,220,.5); }
+
+  /* ── Animations ── */
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  @keyframes fadeScale {
+    from { opacity: 0; transform: translate(-50%, -48%) scale(.96); }
+    to   { opacity: 1; transform: translate(-50%, -50%) scale(1);   }
+  }
+
+  /* Scrollbar styling */
+  .pm-panel::-webkit-scrollbar       { width: 4px; }
+  .pm-panel::-webkit-scrollbar-track { background: transparent; }
+  .pm-panel::-webkit-scrollbar-thumb { background: rgba(51,96,184,.3); border-radius: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pm-panel { animation: none; }
+  }
+</style>
+
+<script>
+  type Product = {
+    id:       string;
+    name:     string;
+    series:   string;
+    fullDesc: string;
+    specs:    { key: string; val: string }[];
+    features?: { key: string; val: string }[];
+    modalApps: string[];
+  };
+
+  const dialog   = document.getElementById('product-modal') as HTMLDialogElement;
+  const backdrop = dialog.querySelector('.pm-backdrop') as HTMLElement;
+  const closeBtn = document.getElementById('pm-close') as HTMLButtonElement;
+
+  // Elements to populate
+  const elTag      = document.getElementById('pm-tag')!;
+  const elTitle    = document.getElementById('pm-title')!;
+  const elDesc     = document.getElementById('pm-desc')!;
+  const elSpecs    = document.getElementById('pm-specs')!;
+  const elFeatures = document.getElementById('pm-features')!;
+  const elFeatLabel= document.getElementById('pm-feat-label') as HTMLElement;
+  const elApps     = document.getElementById('pm-apps')!;
+  const elActions  = document.getElementById('pm-actions')!;
+
+  function specRowHTML(key: string, val: string) {
+    return `<div class="pm-spec-row">
+      <dt class="pm-spec-key">${key}</dt>
+      <dd class="pm-spec-val">${val}</dd>
+    </div>`;
+  }
+
+  function open(id: string) {
+    const products: Product[] = (window as any).__PRODUCTS__ ?? [];
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+
+    // Populate
+    elTag.textContent   = p.series;
+    elTitle.textContent = p.name;
+    elDesc.textContent  = p.fullDesc;
+
+    elSpecs.innerHTML = p.specs.map(s => specRowHTML(s.key, s.val)).join('');
+
+    if (p.features && p.features.length) {
+      elFeatures.innerHTML = p.features.map(f => specRowHTML(f.key, f.val)).join('');
+      elFeatLabel.hidden   = false;
+    } else {
+      elFeatures.innerHTML = '';
+      elFeatLabel.hidden   = true;
+    }
+
+    elApps.innerHTML = p.modalApps
+      .map(a => `<li class="pm-app-tag">${a}</li>`)
+      .join('');
+
+    elActions.innerHTML = `
+      <a href="/contact?product=${p.id}" class="pm-btn-primary">
+        Request a Quote
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="/contact" class="pm-btn-secondary">Technical Enquiry</a>
+    `;
+
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+    dialog.showModal();
+
+    // Focus the close button for keyboard users
+    closeBtn.focus();
+  }
+
+  function close() {
+    dialog.close();
+    document.body.style.overflow = '';
+  }
+
+  // Listen for open event from ProductGrid
+  document.addEventListener('open-product-modal', (e: Event) => {
+    open((e as CustomEvent<{ id: string }>).detail.id);
+  });
+
+  // Close on button click
+  closeBtn.addEventListener('click', close);
+
+  // Close on backdrop click
+  backdrop.addEventListener('click', close);
+
+  // Close on Escape (native dialog behaviour, but we also need to restore scroll)
+  dialog.addEventListener('cancel', (e) => {
+    e.preventDefault();
+    close();
+  });
+
+  // Trap focus inside modal
+  dialog.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key !== 'Tab') return;
+    const focusable = Array.from(
+      dialog.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter(el => !el.hidden && el.offsetParent !== null);
+
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+</script>
