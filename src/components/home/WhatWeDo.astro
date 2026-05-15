@@ -1,9 +1,11 @@
 ---
 /**
  * WhatWeDo.astro — LIGHT white + blue grid
- * Gap fix: header moved inside left grid column → no centering gap
- * Animation fix: transform:translateY (GPU) replaces top:% (unreliable)
- * Dot timing recalculated to match flow travel speed
+ * Pipeline animation: Web Animations API + IntersectionObserver
+ * - Reads actual DOM positions at runtime (no hardcoded pixel guesses)
+ * - Starts fresh every time section enters viewport (no throttling issues)
+ * - Flow and dot pulses calculated from real node coordinates
+ * - Repeats on a clean interval, fully synchronised
  */
 ---
 
@@ -11,7 +13,7 @@
   <div class="wwd-inner">
     <div class="wwd-grid">
 
-      <!-- LEFT: header + copy + badge all in one column -->
+      <!-- LEFT: header + copy + badge -->
       <div class="wwd-left">
 
         <div class="wwd-header reveal">
@@ -41,14 +43,14 @@
 
       </div>
 
-      <!-- RIGHT: pipeline — no reveal class, always visible so CSS animation runs -->
+      <!-- RIGHT: pipeline -->
       <div class="wwd-pipeline" aria-label="Delivery process phases">
-        <div class="pipeline" role="list">
+        <div class="pipeline" id="wwd-pipeline" role="list">
 
-          <!-- Blue flow glow — GPU-accelerated translateY, 5s loop -->
-          <div class="flow" aria-hidden="true"></div>
+          <!-- Flow glow — JS will animate this -->
+          <div class="flow" id="wwd-flow" aria-hidden="true"></div>
 
-          <div class="node n1" role="listitem">
+          <div class="node" role="listitem" data-node="0">
             <div class="dot" aria-hidden="true"></div>
             <div class="node-card">
               <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -60,7 +62,7 @@
             </div>
           </div>
 
-          <div class="node n2" role="listitem">
+          <div class="node" role="listitem" data-node="1">
             <div class="dot" aria-hidden="true"></div>
             <div class="node-card">
               <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -72,7 +74,7 @@
             </div>
           </div>
 
-          <div class="node n3" role="listitem">
+          <div class="node" role="listitem" data-node="2">
             <div class="dot" aria-hidden="true"></div>
             <div class="node-card">
               <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -84,7 +86,7 @@
             </div>
           </div>
 
-          <div class="node n4" role="listitem">
+          <div class="node" role="listitem" data-node="3">
             <div class="dot" aria-hidden="true"></div>
             <div class="node-card">
               <svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -102,6 +104,97 @@
     </div>
   </div>
 </section>
+
+<script>
+(function () {
+  const CYCLE_MS    = 5000;   // full loop ms
+  const FLOW_HEIGHT = 80;     // px — glow element height
+  const DOT_PULSE   = 500;    // ms — dot burst duration
+
+  const section  = document.getElementById('wwd-pipeline')?.closest('.wwd-section');
+  const pipeline = document.getElementById('wwd-pipeline');
+  const flow     = document.getElementById('wwd-flow');
+  if (!section || !pipeline || !flow) return;
+
+  const nodes = [...pipeline.querySelectorAll('.node')];
+  const dots  = nodes.map(n => n.querySelector('.dot'));
+
+  let rafId      = null;
+  let startTime  = null;
+  let lastCycle  = new Array(dots.length).fill(-1); // which cycle each dot last pulsed
+
+  // Read actual dot positions from the DOM on every frame
+  function getDotOffsets() {
+    const pipeTop = pipeline.getBoundingClientRect().top;
+    return dots.map(dot => {
+      const r = dot.getBoundingClientRect();
+      return (r.top + r.height / 2) - pipeTop;
+    });
+  }
+
+  function pulseDot(dot) {
+    dot.animate([
+      { boxShadow: '0 0 0 2px rgba(192,24,30,.5)' },
+      { boxShadow: '0 0 0 4px rgba(192,24,30,.9), 0 0 0 14px rgba(192,24,30,.45), 0 0 28px rgba(192,24,30,.7)' },
+      { boxShadow: '0 0 0 2px rgba(192,24,30,.5), 0 0 0 24px rgba(192,24,30,0)' },
+      { boxShadow: '0 0 0 2px rgba(192,24,30,.5)' },
+    ], { duration: DOT_PULSE, easing: 'ease-out' });
+  }
+
+  function frame(now) {
+    // Set reference time on first frame
+    if (!startTime) startTime = now;
+
+    const elapsed      = now - startTime;
+    const cycleIndex   = Math.floor(elapsed / CYCLE_MS);  // which loop we're on
+    const cycleElapsed = elapsed % CYCLE_MS;              // ms into current loop
+    const progress     = cycleElapsed / CYCLE_MS;         // 0 → 1
+
+    const pipeH       = pipeline.offsetHeight;
+    const totalTravel = pipeH + FLOW_HEIGHT;
+
+    // Move flow from above pipeline to below it
+    const y = -FLOW_HEIGHT + totalTravel * progress;
+    flow.style.top = y + 'px';
+
+    // Detect when flow centre crosses each dot — fire pulse once per cycle
+    const flowCentre = y + FLOW_HEIGHT / 2;
+    const offsets    = getDotOffsets();
+
+    offsets.forEach((offset, i) => {
+      if (flowCentre >= offset && lastCycle[i] < cycleIndex) {
+        lastCycle[i] = cycleIndex;
+        pulseDot(dots[i]);
+      }
+    });
+
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function start() {
+    if (rafId) return;             // already running — ignore duplicate observer fires
+    flow.style.opacity = '1';
+    startTime = null;              // reset so next frame sets fresh reference
+    lastCycle.fill(-1);
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function stop() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    flow.style.opacity = '0';
+    flow.style.top     = '0px';
+    dots.forEach(d => { d.style.boxShadow = ''; });
+  }
+
+  // Start/stop with viewport visibility
+  const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) { start(); } else { stop(); }
+  }, { threshold: 0.1 });
+
+  observer.observe(section);
+  document.addEventListener('astro:before-swap', stop);
+})();
+</script>
 
 <style>
   /* ── WHITE + BLUE GRID BACKGROUND ── */
@@ -129,93 +222,32 @@
     padding: 0 clamp(16px,4vw,48px);
   }
 
-  /* ── 2-col grid — top-aligned so left column never gets pushed down ── */
   .wwd-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: clamp(24px,3vw,48px);
-    align-items: start;   /* ← FIX: was center, which pushed short left col down */
+    align-items: start;
   }
-  @media (min-width: 900px) {
-    .wwd-grid { grid-template-columns: 1fr 1fr; }
-  }
+  @media (min-width: 900px) { .wwd-grid { grid-template-columns: 1fr 1fr; } }
 
-  /* Left column stacks header directly above copy — no gap between them */
-  .wwd-left {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
+  .wwd-left { display: flex; flex-direction: column; gap: 0; }
   .wwd-header { margin-bottom: clamp(12px,1.5vh,18px); }
 
-  /* Section tag */
   .section-tag { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 8px; }
   .tag-line    { width: 28px; height: 2px; background: #c0181e; flex-shrink: 0; }
-  .section-tag span {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: #c0181e;
-  }
+  .section-tag span { font-family: var(--font-mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: #c0181e; }
 
-  /* Headline */
-  .section-headline {
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size:clamp(32px,4.5vw,56px);
-    text-transform: uppercase;
-    line-height: .97;
-    color: rgba(8,56,146,.9);
-    margin-bottom: 0;
-  }
+  .section-headline { font-family: var(--font-head); font-weight: 800; font-size: clamp(32px,4vw,56px); text-transform: uppercase; line-height: .97; color: rgba(8,56,146,.9); margin-bottom: 0; }
   .accent { color: #c0181e; }
 
-  /* Copy paragraphs — tight spacing */
-  .wwd-copy p {
-    font-size: clamp(13px,1.4vw,15px);
-    font-weight: 400;
-    line-height: 1.7;
-    color: #2a3550;
-    margin-bottom: 8px;
-  }
-  .wwd-copy p:last-of-type { margin-bottom: 0; }
+  .wwd-copy p { font-size: clamp(14px,1.4vw,18px); font-weight: 400; line-height: 1.7; color: #2a3550; margin-bottom: 8px; }
 
-  /* Badge — crimson bg, white text */
-  .vectomec-badge {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    background: #c0181e;
-    border-left: 4px solid #8c1014;
-    padding: 12px 16px;
-    margin-top: 14px;
-    border-radius: 8px;
-  }
-  .badge-intro {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,.75);
-  }
-  .badge-product {
-    font-family: var(--font-head);
-    font-weight: 700;
-    font-size: clamp(13px,1.5vw,17px);
-    letter-spacing: .05em;
-    color: #ffffff;
-    text-transform: uppercase;
-    line-height: 1.2;
-  }
-  .badge-amp { color: rgba(255,255,255,.55); font-weight: 400; margin: 0 4px; }
+  .vectomec-badge { display: flex; flex-direction: column; gap: 4px; background: #c0181e; border-left: 4px solid #8c1014; padding: 12px 16px; margin-top: 14px; border-radius: 8px; }
+  .badge-intro   { font-family: var(--font-mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.75); }
+  .badge-product { font-family: var(--font-head); font-weight: 700; font-size: clamp(13px,1.5vw,17px); letter-spacing: .05em; color: #fff; text-transform: uppercase; line-height: 1.2; }
+  .badge-amp     { color: rgba(255,255,255,.55); font-weight: 400; margin: 0 4px; }
 
-  /* ════════════════════════════════════════
-     PIPELINE
-     Flow uses transform:translateY (GPU-accelerated, no % calc issues).
-     Dot delays calculated to match flow travel time to each node.
-  ════════════════════════════════════════ */
+  /* ══ PIPELINE ══ */
   .wwd-pipeline { min-height: auto; }
 
   .pipeline {
@@ -224,135 +256,67 @@
     margin: 0 auto;
   }
 
-  /* Vertical centre line */
   .pipeline::before {
     content: '';
     position: absolute;
     left: 50%; top: 0; bottom: 0; width: 2px;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(8,56,146,.15) 8%,
-      rgba(8,56,146,.28) 20%,
-      rgba(8,56,146,.28) 80%,
-      rgba(8,56,146,.15) 92%,
-      transparent 100%
-    );
+    background: linear-gradient(to bottom, transparent, rgba(8,56,146,.2) 15%, rgba(8,56,146,.2) 85%, transparent);
     transform: translateX(-50%);
   }
 
   /*
-    FLOW — GPU transform animation (translateY, not top).
-    Starts 80px above pipeline top, travels 680px total, exits below.
-    5s cycle, linear, infinite.
-  */
-  /*
-    FLOW — horizontal centring via left/margin-left (not transform)
-    so the animation only ever touches translateY — no conflict with
-    the element's own transform property.
+    ── FLOW FIX ──
+    1. opacity:0  — hidden until JS reveals it (no flash on load)
+    2. top set by JS — not CSS (avoids cascade conflict with Web Animations API)
+    3. left:50% + margin-left:-3px — centres 6px element without transform
+    4. No filter:blur — creates stacking context clipped by overflow:hidden on parent
+    5. No will-change:transform — JS uses 'top', not transform
   */
   .flow {
     position: absolute;
-    top: -80px;              /* start above pipeline */
-    left: calc(50% - 3px);  /* centred without transform */
-    margin: 0;
+    top: 0;
+    left: 50%;
+    margin-left: -3px;
     width: 6px;
     height: 80px;
+    opacity: 0;
     background: linear-gradient(
       to bottom,
       transparent 0%,
-      rgba(100,170,255,.1)  10%,
-      rgba(100,170,255,.9)  40%,
+      rgba(106,166,255,.15) 10%,
+      rgba(106,166,255,.95) 40%,
       rgba(180,220,255,1)   50%,
-      rgba(100,170,255,.9)  60%,
-      rgba(100,170,255,.1)  90%,
+      rgba(106,166,255,.95) 60%,
+      rgba(106,166,255,.15) 90%,
       transparent 100%
     );
-    filter: blur(1.5px);
     border-radius: 3px;
     z-index: 3;
-    will-change: transform;
-    animation: moveFlow 5s linear infinite;
+    will-change: top, opacity;
   }
 
-  /*
-    Only translateY — no translateX needed, no conflict.
-    Travels 680px (80px above → 600px below top=0).
-  */
-  @keyframes moveFlow {
-    0%   { transform: translateY(0);     }
-    100% { transform: translateY(680px); }
-  }
-
-  /* Nodes — visible from the start */
   .node {
     position: relative;
     display: flex;
     align-items: center;
     margin: 12px 0;
   }
+  .node[data-node="0"], .node[data-node="2"] { flex-direction: row; }
+  .node[data-node="1"], .node[data-node="3"] { flex-direction: row-reverse; }
 
-  .node.n1, .node.n3 { flex-direction: row;         }
-  .node.n2, .node.n4 { flex-direction: row-reverse;  }
-
-  /* Dots — always visible, pulsing in sync with flow */
   .dot {
-    width: 14px;
-    height: 14px;
+    width: 14px; height: 14px;
     border-radius: 50%;
     background: #c0181e;
+    box-shadow: 0 0 0 2px rgba(192,24,30,.6), 0 0 8px rgba(192,24,30,.35);
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     z-index: 4;
     flex-shrink: 0;
-    animation: pulseDot 5s ease-in-out infinite;
+    will-change: box-shadow;
   }
 
-  .node.n1 .dot { animation-delay: -4.0s; }
-  .node.n2 .dot { animation-delay: -2.9s; }
-  .node.n3 .dot { animation-delay: -1.9s; }
-  .node.n4 .dot { animation-delay: -0.8s; }
-
-  /*
-    pulseDot: ring expands and fades in first 18% (0.9s),
-    then steady glow for remaining 82%.
-    Fires at 0% of each 5s cycle = exactly when flow reaches that node.
-  */
-  @keyframes pulseDot {
-    0%   {
-      box-shadow:
-        0 0 0  2px rgba(192,24,30,.6),
-        0 0 0  0   rgba(192,24,30,0),
-        0 0 8px    rgba(192,24,30,.35);
-    }
-    6%   {
-      box-shadow:
-        0 0 0  3px rgba(192,24,30,.9),
-        0 0 0  10px rgba(192,24,30,.5),
-        0 0 22px   rgba(192,24,30,.8);
-    }
-    12%  {
-      box-shadow:
-        0 0 0  2px rgba(192,24,30,.6),
-        0 0 0  18px rgba(192,24,30,0),
-        0 0 14px   rgba(192,24,30,.4);
-    }
-    18%  {
-      box-shadow:
-        0 0 0  2px rgba(192,24,30,.6),
-        0 0 0  0   rgba(192,24,30,0),
-        0 0 8px    rgba(192,24,30,.35);
-    }
-    100% {
-      box-shadow:
-        0 0 0  2px rgba(192,24,30,.6),
-        0 0 0  0   rgba(192,24,30,0),
-        0 0 8px    rgba(192,24,30,.35);
-    }
-  }
-
-  /* Node card — navy gradient */
   .node-card {
     width: calc(50% - 16px);
     background:
@@ -365,39 +329,34 @@
     box-shadow: 0 6px 20px rgba(0,0,0,0.14);
     transition: border-top-color .3s, box-shadow .3s;
   }
-  .node-card:hover {
-    border-top-color: #c0181e;
-    box-shadow: 0 10px 28px rgba(0,0,0,.24);
-  }
+  .node-card:hover { border-top-color: #c0181e; box-shadow: 0 10px 28px rgba(0,0,0,.24); }
 
-  .node.n1 .node-card,
-  .node.n3 .node-card { margin-right: auto; margin-left: 0;  }
-  .node.n2 .node-card,
-  .node.n4 .node-card { margin-left: auto;  margin-right: 0; }
+  .node[data-node="0"] .node-card,
+  .node[data-node="2"] .node-card { margin-right: auto; margin-left: 0;  }
+  .node[data-node="1"] .node-card,
+  .node[data-node="3"] .node-card { margin-left: auto;  margin-right: 0; }
 
   .node-icon  { width: 18px; height: 18px; color: var(--crimson-l); margin-bottom: 3px; opacity: .9; }
-  .node-phase { font-family: var(--font-mono); font-size: 9px; letter-spacing: .12em; color: var(--crimson-l); text-transform: uppercase; margin-bottom: 2px; opacity: .8; }
-  .node-title { font-family: var(--font-head); font-weight: 700; font-size: clamp(13px,1.6vw,17px); text-transform: uppercase; letter-spacing: .03em; color: var(--white); margin-bottom: 4px; line-height: 1.1; }
-  .node-desc  { font-family: var(--font-body); font-size: clamp(11px,1vw,12px); font-weight: 300; color: var(--fog); line-height: 1.5; margin: 0; }
+  .node-phase { font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; color: var(--crimson-l); text-transform: uppercase; margin-bottom: 2px; opacity: .8; }
+  .node-title { font-family: var(--font-head); font-weight: 700; font-size: clamp(17px,2vw,22px); text-transform: uppercase; letter-spacing: .03em; color: var(--white); margin-bottom: 4px; line-height: 1.1; }
+  .node-desc  { font-family: var(--font-body); font-size: clamp(12px,1vw,15px); font-weight: 300; color: var(--fog); line-height: 1.5; margin: 0; }
 
-  /* Mobile — linearise pipeline to left rail */
+  /* Mobile */
   @media (max-width: 600px) {
     .pipeline::before { left: 16px; transform: none; }
-    .flow             { left: 12px; }   /* left-rail position without translateX */
-    .node.n1, .node.n2,
-    .node.n3, .node.n4 { flex-direction: column; align-items: flex-start; }
+    .flow             { left: 12px; margin-left: 0; }
+    .node[data-node="0"], .node[data-node="1"],
+    .node[data-node="2"], .node[data-node="3"] { flex-direction: column; align-items: flex-start; }
     .dot { left: 16px; transform: none; }
     .node-card { width: 100%; margin-left: 36px !important; margin-right: 0 !important; }
   }
-  /* NOTE: @keyframes cannot be nested inside @media — moveFlow runs unchanged on mobile. */
 
-  /* Reveal */
   .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
-    .flow   { animation: none; display: none; }
-    .dot    { animation: none; box-shadow: 0 0 0 2px rgba(192,24,30,.6), 0 0 8px rgba(192,24,30,.35); }
+    .flow   { display: none; }
+    .dot    { box-shadow: 0 0 0 2px rgba(192,24,30,.6); }
   }
 </style>

@@ -1,8 +1,8 @@
 ---
 // IndustriesCrossSector.astro
-// "The Same Engineering. Every Sector." two-column section.
+// "Transforming Experience" two-column section.
 // Background: DARK navy gradient
-// Cards: white on dark section
+// Cards: white on dark — matches WhyJayveecons.astro exactly
 ---
 
 <style>
@@ -25,7 +25,8 @@
     padding-inline: clamp(16px, 4vw, 48px);
   }
 
-  /* Stack on mobile, side-by-side at 1024px */
+  /* Stack on mobile, side-by-side at 1024px
+     align-items: start — each column manages its own vertical rhythm */
   .cross-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -36,7 +37,23 @@
     .cross-grid { grid-template-columns: 1fr 1fr; }
   }
 
-  /* Section tag — crimson-l on dark */
+  /* Left column: flex so we can push cards to align with copy, not headline */
+  .cross-copy {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Spacer pushes the headline out of the vertical center calculation —
+     cards will naturally sit against the paragraph block height */
+  .cross-copy-header {
+    flex-shrink: 0;
+  }
+
+  .cross-copy-body {
+    flex: 1;
+  }
+
+  /* ── Section tag — matches WhyJayveecons ── */
   .section-tag {
     display: inline-flex;
     align-items: center;
@@ -52,11 +69,11 @@
     color: var(--crimson-l);
   }
 
-  /* Headline — white + red accent (dark section) */
+  /* ── Headline — matches WhyJayveecons ── */
   .section-headline {
     font-family: var(--font-head);
-    font-weight: 800; 
-    font-size:clamp(32px,4.5vw,56px);
+    font-weight: 800;
+    font-size: clamp(32px, 4.5vw, 56px);
     text-transform: uppercase;
     line-height: .97;
     color: var(--white);
@@ -64,72 +81,92 @@
   }
   .section-headline .accent { color: var(--crimson-l); }
 
-  /* Left copy — fog on dark */
+  /* ── Left copy — fog on dark, matches WhyJayveecons body text ── */
   .cross-copy p {
+    font-family: var(--font-body);
     font-size: clamp(14px, 1.5vw, 16px);
     font-weight: 300;
     color: var(--fog);
     line-height: 1.8;
     margin-bottom: 16px;
   }
+  .cross-copy p:last-child { margin-bottom: 0; }
   .cross-copy p strong { color: var(--white); font-weight: 500; }
 
-  /* Right points — white cards on dark section */
+  /* ── Right: card column — flex, fills height ── */
   .cross-points {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px; /* matches why-grid gap */
   }
 
+  /* ── White card — matches WhyJayveecons .why-card exactly ── */
   .cross-point {
     background: #ffffff;
-    padding: clamp(16px, 2vw, 22px);
+    padding: clamp(18px, 2.5vw, 28px) clamp(16px, 2vw, 24px);
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    border-top: 3px solid transparent;
+    transition: border-top-color .25s, box-shadow .25s, transform .25s;
     display: flex;
     gap: 16px;
     align-items: flex-start;
-    border-top: 3px solid transparent;
-    transition: border-top-color .25s, box-shadow .25s, transform .25s;
+    position: relative;
+    overflow: hidden;
   }
   .cross-point:hover {
     border-top-color: #c0181e;
-    box-shadow: 0 8px 32px rgba(0,0,0,.32);
-    transform: translateY(-2px);
+    box-shadow: 0 12px 36px rgba(0,0,0,.32);
+    transform: translateY(-3px);
+  }
+  /* Subtle corner glow — matches WhyJayveecons .why-card::after */
+  .cross-point::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 90px; height: 90px;
+    background: radial-gradient(circle at top right, rgba(8,56,146,.04), transparent 70%);
+    pointer-events: none;
   }
 
-  /* Icon — crimson on white card */
+  /* ── Icon box ── */
   .cp-icon {
-    width: 36px; height: 36px;
-    background: rgba(192,24,30,.08);
-    border: 1px solid rgba(192,24,30,.2);
+    width: 38px; height: 38px;
+    background: rgba(192,24,30,.07);
+    border: 1px solid rgba(192,24,30,.18);
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     color: #c0181e;
+    margin-top: 2px; /* optical alignment with title */
   }
   .cp-icon svg { width: 18px; height: 18px; }
 
-  /* Card text — dark on white card */
+  /* ── Card title — matches .why-title from WhyJayveecons ── */
   .cp-title {
     font-family: var(--font-head);
     font-weight: 700;
-    font-size: clamp(14px, 1.4vw, 16px);
+    font-size: clamp(15px, 1.6vw, 18px);
     text-transform: uppercase;
-    letter-spacing: .05em;
-    color: 
-    margin-bottom: 4px;
-  }
-  .cp-desc {
-    font-size: 13px;
-    font-weight: 400;
-    color: #3a4560;
-    line-height: 1.6;
+    letter-spacing: .04em;
+    color: rgba(8,56,146,.9); /* FIX: was missing value entirely */
+    margin-bottom: 5px;
+    line-height: 1.1;
   }
 
-  /* Reveal */
+  /* ── Card description — matches .why-text from WhyJayveecons ── */
+  .cp-desc {
+    font-family: var(--font-body);
+    font-size: clamp(13px, 1.3vw, 14px);
+    font-weight: 400;
+    color: #3a4560;
+    line-height: 1.75;
+    margin: 0;
+  }
+
+  /* ── Reveal ── */
   .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
   @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
@@ -139,29 +176,43 @@
   <div class="cross-inner">
     <div class="cross-grid">
 
-      <!-- Left: copy -->
+      <!-- Left: copy split into header + body -->
       <div class="cross-copy reveal">
-        <div class="section-tag"><div class="line"></div><span>Why Jayveecons</span></div>
-        <h2 class="section-headline" id="cross-heading">
-          The Same Engineering.<br><span class="accent">Every Sector.</span>
-        </h2>
-        <p>
-          What makes Jayveecons different isn't that we serve many industries — it's that
-          <strong>the same engineering rigour</strong> we developed building VSK kilns in 1987
-          underpins everything we fabricate today. Whether the material is cement raw meal or
-          grain, clinker or pharmaceutical powder, the first-principles engineering is identical.
-        </p>
-        <p>
-          Our cross-sector experience means we don't re-learn material behaviour from scratch
-          on every project. We draw on decades of data from abrasive mineral handling and apply
-          it to wear-lining a food-grade screw. We apply our pressure vessel experience from
-          pneumatic conveying to oil &amp; gas containment requirements.
-          <strong>Cross-sector knowledge is not a marketing claim — it's our fabrication advantage.</strong>
-        </p>
+        <div class="cross-copy-header">
+          <div class="section-tag"><div class="line"></div><span>Why Jayveecons</span></div>
+          <h2 class="section-headline" id="cross-heading">
+            Transforming Experience<br>
+            <span class="accent">Into Engineered Solutions.</span>
+          </h2>
+        </div>
+        <div class="cross-copy-body">
+          <p>
+            Jayveecons' strength is not simply that we serve multiple industries — it is that decades
+            of process engineering, manufacturing, and material handling experience developed in one
+            sector continuously informs the solutions we deliver in another. Since our beginnings in
+            cement and Vertical Shaft Kiln systems in 1987, we have built engineering knowledge across
+            bulk solids handling, thermal processing, storage, conveying, and industrial process systems
+            that translates across industries and applications.
+          </p>
+          <p>
+            While every industry has unique operational requirements, the core engineering challenges —
+            material flow, abrasion, temperature, wear, contamination control, throughput, reliability,
+            and maintainability — often share the same underlying principles. Our experience across
+            cement, mining, food processing, waste management, fertilizers, steel, and industrial
+            processing sectors allows us to approach new projects with a broader understanding of
+            material behaviour, operating conditions, and long-term equipment performance.
+          </p>
+          <p>
+            This cross-sector experience enables Jayveecons to deliver solutions that are not only
+            application-specific, but strengthened by lessons learned across decades of real industrial
+            operations — equipment engineered with practical manufacturing knowledge, field experience,
+            and proven process understanding.
+          </p>
+        </div>
       </div>
 
-      <!-- Right: feature points — white cards -->
-      <div class="cross-points reveal">
+      <!-- Right: cards aligned via CSS to the copy body, not the headline -->
+      <div class="cross-points reveal" style="align-self: center; padding-top: clamp(0px, 2vh, 16px)">
 
         <div class="cross-point">
           <div class="cp-icon" aria-hidden="true">

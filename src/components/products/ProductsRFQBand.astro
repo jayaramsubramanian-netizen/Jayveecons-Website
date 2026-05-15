@@ -1,0 +1,201 @@
+---
+/**
+ * ProductsRfqBand.astro — closing CTA band
+ * DARK navy gradient — matches ServicesCta and index.astro CTA band.
+ * Two-column layout: copy left, buttons right (stacks on mobile).
+ */
+---
+
+<section class="rfq-section" aria-labelledby="rfq-heading">
+  <div class="rfq-inner">
+
+    <div class="rfq-copy reveal">
+      <div class="rfq-eyebrow">Can't Find What You Need?</div>
+      <h2 class="rfq-headline" id="rfq-heading">
+        We Build to<br>
+        <span class="accent">Your Specification</span>
+      </h2>
+      <p class="rfq-sub">
+        Every plant is different. If your requirement doesn't match a standard catalogue item,
+        our engineers will design it from scratch. Tell us your material, capacity, and site
+        conditions — we'll take it from there.
+      </p>
+    </div>
+
+    <div class="rfq-actions reveal">
+      <a href="/contact" class="btn-primary">
+        Request a Quote
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <a href="/contact?type=technical" class="btn-secondary">Technical Enquiry →</a>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ── Section — dark navy gradient, closes the page ── */
+  .rfq-section {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(64px, 9vh, 104px);
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+  }
+
+  /* Subtle bottom radial glow */
+  .rfq-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% 110%, rgba(192,24,30,.1), transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Top accent line */
+  .rfq-section::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(192,24,30,.35) 50%, transparent);
+  }
+
+  /* ── Container ── */
+  .rfq-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 16px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(28px, 4vw, 56px);
+    align-items: center;
+  }
+  @media (min-width: 480px)  { .rfq-inner { padding-inline: 20px; } }
+  @media (min-width: 768px)  { .rfq-inner { padding-inline: 32px; } }
+  @media (min-width: 1024px) {
+    .rfq-inner {
+      padding-inline: 48px;
+      grid-template-columns: 1fr auto;
+    }
+  }
+
+  /* ── Copy ── */
+  .rfq-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+    margin-bottom: 14px;
+  }
+
+  .rfq-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(32px, 4.5vw, 58px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: var(--white);
+    margin-bottom: 14px;
+  }
+  .rfq-headline .accent { color: var(--crimson-l); }
+
+  .rfq-sub {
+    font-family: var(--font-body);
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.7;
+    max-width: 580px;
+  }
+
+  /* ── Actions ── */
+  .rfq-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .rfq-actions {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+  }
+
+  /* ── Buttons — identical to ServicesCta ── */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--crimson);
+    color: var(--white);
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 15px 36px;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    transition: background .2s, transform .2s;
+    white-space: nowrap;
+    min-height: 44px;
+  }
+  .btn-primary:hover { background: var(--crimson-l); transform: translateX(2px); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: transparent;
+    color: var(--chrome);
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px 36px;
+    border: 1px solid rgba(208,212,220,.2);
+    transition: color .2s, border-color .2s;
+    white-space: nowrap;
+    min-height: 44px;
+  }
+  .btn-secondary:hover { color: var(--white); border-color: rgba(208,212,220,.5); }
+
+  /* ── Reveal ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .65s ease, transform .65s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.rfq-section .reveal').forEach(el => obs.observe(el));
+</script>

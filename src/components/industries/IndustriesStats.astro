@@ -1,35 +1,26 @@
 ---
 // IndustriesStats.astro
-// 4-up stat section — styled to match QuickContactCards.astro exactly:
-//   • #f8fafc light section background
-//   • page-container token for layout
-//   • Dark navy gradient cards with border-radius:12px, box-shadow, hover lift
-//   • Section headline: navy + crimson accent
 ---
 
 <style>
-  /* ── Section shell — matches qc-section ── */
   .stat-section {
-    
     padding-block: clamp(48px, 7vh, 88px);
     background-color: #f8fafc;
-background-image:
-  linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
-  linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
-background-size: 60px 60px;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
   }
 
-  /* ── Heading wrapper — matches qc-heading-wrap ── */
   .stat-heading-wrap {
     margin-bottom: clamp(24px, 4vh, 40px);
     text-align: center;
   }
 
-  /* ── Section headline — matches qc-section-headline ── */
   .stat-section-headline {
     font-family: var(--font-head);
-    font-weight: 800; 
-    font-size:clamp(32px,4.5vw,56px);
+    font-weight: 800;
+    font-size: clamp(32px, 4.5vw, 56px);
     text-transform: uppercase;
     line-height: .97;
     letter-spacing: -.01em;
@@ -38,7 +29,6 @@ background-size: 60px 60px;
   }
   .stat-section-headline .accent { color: #e02428; }
 
-  /* ── Card grid — matches qc-grid breakpoints exactly ── */
   .stat-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -48,7 +38,6 @@ background-size: 60px 60px;
   @media (min-width: 900px)  { .stat-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
   @media (min-width: 1440px) { .stat-grid { gap: 32px; } }
 
-  /* ── Stat card — exact .card gradient, radius, shadow, hover from QuickContactCards ── */
   .stat-card {
     background:
       radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
@@ -65,7 +54,7 @@ background-size: 60px 60px;
   @media (min-width: 1024px) { .stat-card { padding: 32px; } }
   .stat-card:hover { transform: translateY(-4px); }
 
-  /* ── Number — large, white, same weight as qc-value ── */
+  /* FIX: .stat-num sets the base size. .u is always relative to it — consistent across all cards */
   .stat-num {
     font-family: var(--font-head);
     font-weight: 800;
@@ -75,12 +64,18 @@ background-size: 60px 60px;
     letter-spacing: -.02em;
     margin-bottom: 8px;
   }
-  .stat-num .u {
-    font-size: .5em;
-    color: #ff7070;
+  /* FIX: explicit font-size so it never inherits a shrunken context,
+     and explicit color so it's always red regardless of how the element is rendered */
+  .stat-num .u{color: #ff7070;},
+  #ind-years .u{color: #ff7070;},
+  #ind-years span {
+    font-size: clamp(40px, 5vw, 56px);
+    color: #ff7070 !important;
+    font-weight: 800;
+    vertical-align: baseline;
+    line-height: 1;
   }
 
-  /* ── Label — matches tc-role / qc-label mono style ── */
   .stat-label {
     font-family: var(--font-mono);
     font-size: 12px;
@@ -90,7 +85,6 @@ background-size: 60px 60px;
     margin-bottom: 8px;
   }
 
-  /* ── Detail — matches tc-dept / qc-note body style ── */
   .stat-detail {
     font-family: var(--font-body);
     font-size: 13px;
@@ -113,6 +107,7 @@ background-size: 60px 60px;
     <div class="stat-grid">
 
       <div class="stat-card reveal">
+        <!-- FIX: suffix rendered as sibling span, not nested inside .u -->
         <div class="stat-num">5<span class="u">+</span></div>
         <div class="stat-label">Active Industries</div>
         <div class="stat-detail">Cement · Mining · Food &amp; Agri · Waste · Steel &amp; Fertilizers</div>
@@ -124,8 +119,9 @@ background-size: 60px 60px;
         <div class="stat-detail">Oil &amp; Gas · Pharmaceuticals · Agriculture Processing</div>
       </div>
 
+      <!-- FIX: id present, script will replace with calculated year -->
       <div class="stat-card reveal">
-        <div class="stat-num" id="ind-years">39<span class="u">+</span></div>
+        <div class="stat-num" id="ind-years"></div>
         <div class="stat-label">Years Domain Experience</div>
         <div class="stat-detail">Cross-sector bulk material expertise since 1987</div>
       </div>
@@ -144,6 +140,6 @@ background-size: 60px 60px;
   const el = document.getElementById('ind-years');
   if (el) {
     const yr = new Date().getFullYear() - 1987;
-    el.innerHTML = `${yr}<span class="u">+</span>`;
+    el.innerHTML = `${yr}`;
   }
 </script>
