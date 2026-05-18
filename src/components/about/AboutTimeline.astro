@@ -1,0 +1,379 @@
+---
+// AboutTimeline.astro
+// Company history timeline — unified with ServicesList.astro dark styling:
+//   • Navy radial gradient section background (matches .svc-block.dark)
+//   • White content cards on dark (matches .dark .svc-point)
+//   • Ghost year numbers (matches .dark .svc-num)
+//   • Crimson diamond accent (matches .svc-point-bullet)
+//   • font-head / font-mono / font-body tokens throughout
+//   • Scroll-activated diamond glow via IntersectionObserver
+---
+
+<style>
+  /* ══════════════════════════════════════════════════
+     SECTION — matches .svc-block.dark exactly
+  ══════════════════════════════════════════════════ */
+  .timeline-section {
+    width: 100%;
+    background:
+      radial-gradient(ellipse 90% 70% at 65% 40%, rgba(8,56,146,0.85) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 5%  90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    border-left: 4px solid transparent;
+    transition: border-left-color .3s;
+    padding-block: clamp(48px, 7vh, 80px);
+  }
+  .timeline-section:hover { border-left-color: var(--crimson); }
+
+  /* ── Container — matches .sl-inner ── */
+  .tl-inner {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 16px;
+    box-sizing: border-box;
+  }
+  @media (min-width: 480px)  { .tl-inner { padding-inline: 20px; } }
+  @media (min-width: 768px)  { .tl-inner { padding-inline: 32px; } }
+  @media (min-width: 1024px) { .tl-inner { padding-inline: 48px; } }
+
+  /* ── Section tag — matches .section-tag on dark block ── */
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .section-tag .line { width: 28px; height: 2px; background: var(--crimson); flex-shrink: 0; }
+  .section-tag span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+  }
+
+  /* ── Section headline — matches .dark .section-headline ── */
+  .section-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(32px, 4.5vw, 56px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: #ffffff;
+    margin-bottom: clamp(28px, 4vh, 48px);
+  }
+  .section-headline .accent { color: var(--crimson-l); }
+
+  /* ══════════════════════════════════════════════════
+     TIMELINE LAYOUT
+     3-col grid: [year] [diamond+line] [card]
+     Year column = ghost large number (like .svc-num)
+  ══════════════════════════════════════════════════ */
+  .timeline { position: relative; }
+
+  .tl-item {
+    display: grid;
+    /* ghost-year | connector | white card */
+    grid-template-columns: clamp(56px, 8vw, 120px) 40px 1fr;
+    gap: 0;
+    margin-bottom: clamp(20px, 3vh, 36px);
+    align-items: start;
+  }
+  @media (min-width: 480px) { .tl-item { grid-template-columns: clamp(72px, 9vw, 130px) 44px 1fr; } }
+  @media (min-width: 768px) { .tl-item { grid-template-columns: clamp(100px, 10vw, 140px) 48px 1fr; } }
+
+  /* ── Year column ── ghost number + era label below
+     Matches .dark .svc-num: huge, ghost crimson         ── */
+  .tl-year-col {
+    text-align: right;
+    padding-top: 2px;
+    padding-right: 4px;
+  }
+  .tl-year {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 56px);    /* large ghost like .svc-num */
+    line-height: .9;
+    letter-spacing: -.02em;
+    color: rgba(192,24,30,.2);            /* matches .dark .svc-num */
+    transition: color .4s;
+  }
+  .tl-era {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(192,24,30,.35);
+    margin-top: 4px;
+    transition: color .3s;
+    line-height: 1.3;
+  }
+
+  /* Active: ghost number becomes visible crimson */
+  .tl-item.tl-active .tl-year { color: rgba(192,24,30,.65); }
+  .tl-item.tl-active .tl-era  { color: var(--crimson-l); }
+
+  /* ── Middle connector: diamond + vertical line ── */
+  .tl-mid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  .tl-diamond {
+    width: 14px; height: 14px;
+    background: var(--crimson);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    flex-shrink: 0;
+    margin-top: 8px;
+    position: relative;
+    z-index: 2;
+    transition: transform .3s;
+  }
+  @media (min-width: 480px) { .tl-diamond { width: 16px; height: 16px; } }
+
+  /* Active glow animation — same timing as diamondGlow in about-shared.css */
+  .tl-item.tl-active .tl-diamond {
+    animation: diamondGlow 1.5s ease infinite;
+  }
+
+  /* Connecting line between diamonds */
+  .tl-line {
+    width: 2px;
+    flex: 1;
+    min-height: clamp(20px, 3vh, 36px);
+    background: linear-gradient(180deg, rgba(192,24,30,.6), rgba(192,24,30,.08));
+    margin-top: 2px;
+  }
+  .tl-item:last-child .tl-line { display: none; }
+
+  /* ══════════════════════════════════════════════════
+     CONTENT CARD — WHITE on dark, matches .dark .svc-point
+     • #ffffff background
+     • box-shadow: 0 4px 20px rgba(0,0,0,0.18)
+     • border-top: 3px solid transparent → crimson on active/hover
+     • Title: font-head, uppercase, navy (rgba(8,56,146,.9))
+     • Body: font-body 300wt, #3a4560
+     • Tag: font-mono, crimson bg, crimson-l text
+  ══════════════════════════════════════════════════ */
+  .tl-content {
+    background: #ffffff;
+    border-radius: 12px;
+    border-top: 3px solid transparent;
+    box-shadow: 0 4px 20px rgba(0,0,0,.18);
+    padding: clamp(14px, 2.5vw, 24px);
+    margin-left: clamp(6px, 1.5vw, 14px);
+    transition: border-top-color .3s, box-shadow .3s;
+  }
+  .tl-content:hover,
+  .tl-item.tl-active .tl-content {
+    border-top-color: #c0181e;
+    box-shadow: 0 8px 32px rgba(0,0,0,.28);
+  }
+
+  /* Card title — matches .dark .svc-point-text strong */
+  .tl-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(14px, 1.8vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: rgba(8,56,146,.9);
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+
+  /* Card body — matches .dark .svc-point-text */
+  .tl-text {
+    font-family: var(--font-body);
+    font-size: clamp(12px, 1.3vw, 14px);
+    font-weight: 300;
+    color: #3a4560;
+    line-height: 1.7;
+    margin: 0 0 10px;
+  }
+  /* Inline red highlight for VECTOMEC / VECTRIX */
+  .tl-text .hl-red {
+    color: #c0181e;
+    font-weight: 600;
+    letter-spacing: .3px;
+  }
+
+  /* Tag pill — matches .tl-tag style, crimson bg */
+  .tl-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    background: rgba(192,24,30,.1);
+    color: #c0181e;
+    padding: 3px 10px;
+    border-radius: 2px;
+    border: 1px solid rgba(192,24,30,.2);
+  }
+
+  /* ── Reveal animation ── */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @keyframes diamondGlow {
+    0%,100% { box-shadow: 0 0 0 0 rgba(192,24,30,.5); transform: rotate(45deg) scale(1); }
+    50%      { box-shadow: 0 0 12px 4px rgba(192,24,30,.3); transform: rotate(45deg) scale(1.2); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .tl-item.tl-active .tl-diamond { animation: none; }
+  }
+</style>
+
+<section class="timeline-section" id="history" aria-labelledby="timeline-heading">
+  <div class="tl-inner">
+
+    <div class="section-tag reveal">
+      <div class="line"></div>
+      <span>Company History</span>
+    </div>
+    <h2 class="section-headline reveal" id="timeline-heading">
+      The <span class="accent">Journey</span>
+    </h2>
+
+    <div class="timeline" id="timeline" role="list">
+
+      <div class="tl-item reveal" data-year="1987" role="listitem">
+        <div class="tl-year-col">
+          <div class="tl-year">1987</div>
+          <div class="tl-era">Founding</div>
+        </div>
+        <div class="tl-mid" aria-hidden="true">
+          <div class="tl-diamond"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <h3 class="tl-title">Jayveecons Founded</h3>
+          <p class="tl-text">K.&thinsp;R. Subramanian establishes Jayveecons as an engineering consultancy in Bengaluru, focused on Vertical Shaft Kiln (VSK) technology for small-scale cement plants. Early clients are local cement manufacturers seeking cost-effective process solutions.</p>
+          <span class="tl-tag">Bengaluru, Karnataka</span>
+        </div>
+      </div>
+
+      <div class="tl-item reveal" data-year="1990" role="listitem">
+        <div class="tl-year-col">
+          <div class="tl-year">1990s</div>
+          <div class="tl-era">Expansion</div>
+        </div>
+        <div class="tl-mid" aria-hidden="true">
+          <div class="tl-diamond"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <h3 class="tl-title">From Consulting to Manufacturing</h3>
+          <p class="tl-text">Growing demand across sectors beyond cement motivates the transition from consulting to full manufacturing. Jayveecons invests in its first fabrication facility, expanding capability to design and build material handling equipment in-house.</p>
+          <span class="tl-tag">Manufacturing begins</span>
+        </div>
+      </div>
+
+      <div class="tl-item reveal" data-year="2000" role="listitem">
+        <div class="tl-year-col">
+          <div class="tl-year">2000s</div>
+          <div class="tl-era">Growth</div>
+        </div>
+        <div class="tl-mid" aria-hidden="true">
+          <div class="tl-diamond"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <h3 class="tl-title">Multi-Sector Capability</h3>
+          <p class="tl-text">Product range expands to serve mining, food processing, steel, and waste management industries. The 90,000&thinsp;sq.ft facility is established, housing a versatile machining and fabrication shop capable of large-scale industrial builds.</p>
+          <span class="tl-tag">90,000 sq.ft facility</span>
+        </div>
+      </div>
+
+      <div class="tl-item reveal" data-year="2012" role="listitem">
+        <div class="tl-year-col">
+          <div class="tl-year">2012</div>
+          <div class="tl-era">Recognition</div>
+        </div>
+        <div class="tl-mid" aria-hidden="true">
+          <div class="tl-diamond"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <h3 class="tl-title">Priyadarshini Award</h3>
+          <p class="tl-text">Jayveecons Group receives the Priyadarshini Award in recognition of business excellence and community contribution. Mrs. Rama Subramanian leads the company's continued growth as Managing Director.</p>
+          <span class="tl-tag">National recognition</span>
+        </div>
+      </div>
+
+      <div class="tl-item reveal" data-year="2015" role="listitem">
+        <div class="tl-year-col">
+          <div class="tl-year">2015</div>
+          <div class="tl-era">Recognition</div>
+        </div>
+        <div class="tl-mid" aria-hidden="true">
+          <div class="tl-diamond"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <h3 class="tl-title">Women Entrepreneur Award</h3>
+          <p class="tl-text">Awarded at the National Vendor Development Programme cum Industrial Exhibition, Kolar — recognising entrepreneurial leadership by Managing Director Mrs. Rama Subramanian, accepted alongside Health Minister Mr. K.&thinsp;R. RameshKumar.</p>
+          <span class="tl-tag">NVDP Exhibition, Kolar</span>
+        </div>
+      </div>
+
+      <div class="tl-item reveal" data-year="2016" role="listitem">
+        <div class="tl-year-col">
+          <div class="tl-year">2016</div>
+          <div class="tl-era">Digital</div>
+        </div>
+        <div class="tl-mid" aria-hidden="true">
+          <div class="tl-diamond"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <h3 class="tl-title">Jayveecons Goes Online</h3>
+          <p class="tl-text">Jayveecons Group launches its first website, marking formal entry into the digital marketplace and signalling international ambition to serve clients beyond India.</p>
+          <span class="tl-tag">First web presence</span>
+        </div>
+      </div>
+
+      <div class="tl-item reveal" data-year="now" role="listitem">
+        <div class="tl-year-col">
+          <div class="tl-year">Now</div>
+          <div class="tl-era">Next Chapter</div>
+        </div>
+        <div class="tl-mid" aria-hidden="true">
+          <div class="tl-diamond"></div>
+          <!-- no line after last item -->
+        </div>
+        <div class="tl-content">
+          <h3 class="tl-title">VECTRIX™, VECTOMEC™ &amp; Global Expansion</h3>
+          <p class="tl-text">
+            Jayveecons introduces the <span class="hl-red">VECTOMEC™</span> equipment brand
+            and a fully modernised line designed to <span class="hl-red">VECTRIX™</span>
+            standards, targeting expansion into Oil &amp; Gas, Pharmaceuticals, and
+            Agriculture Processing. The JV Group structure provides integrated
+            design-manufacture-deliver capability through AkshayVipra El-Mec.
+          </p>
+          <span class="tl-tag">VECTOMEC™ · Global ambition</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  (() => {
+    const tlItems = document.querySelectorAll('.tl-item');
+    if (!tlItems.length) return;
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach((e) =>
+        e.target.classList.toggle('tl-active', e.isIntersecting)
+      ),
+      { threshold: 0.45, rootMargin: '-10% 0px -35% 0px' }
+    );
+    tlItems.forEach((item) => obs.observe(item));
+  })();
+</script>

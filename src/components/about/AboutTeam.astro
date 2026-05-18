@@ -1,0 +1,417 @@
+---
+// AboutTeam.astro
+// Unified with ServicesList.astro dark styling:
+//   • Section: .svc-block.dark navy gradient
+//   • Cards: white (#ffffff) matching .dark .svc-point
+//   • Photo placeholder top of each card (replace with <img> when ready)
+//   • Names: font-head uppercase rgba(8,56,146,.9)
+//   • Role: font-mono crimson label
+//   • Body: font-body 300wt #3a4560
+//   • Crimson top border on hover / featured
+//
+// TO ADD A PHOTO — replace the .team-photo-placeholder div with:
+//   <img
+//     src="/images/team/[filename].jpg"
+//     alt="[Full name], [Role], Jayveecons Group"
+//     class="team-photo"
+//   />
+// Recommended: 400 × 400px square, face centred, .jpg quality 85
+---
+
+<style>
+  /* ── Section — .svc-block.dark ── */
+  .team-section {
+    width: 100%;
+    background:
+      radial-gradient(ellipse 90% 70% at 65% 40%, rgba(8,56,146,0.85) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 5%  90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    border-left: 4px solid transparent;
+    transition: border-left-color .3s;
+    padding-block: clamp(48px, 7vh, 88px);
+  }
+  .team-section:hover { border-left-color: var(--crimson); }
+
+  /* ── Container — .sl-inner ── */
+  .team-inner {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 16px;
+    box-sizing: border-box;
+  }
+  @media (min-width: 480px)  { .team-inner { padding-inline: 20px; } }
+  @media (min-width: 768px)  { .team-inner { padding-inline: 32px; } }
+  @media (min-width: 1024px) { .team-inner { padding-inline: 48px; } }
+
+  /* ── Section tag — dark block ── */
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .section-tag .line { width: 28px; height: 2px; background: var(--crimson); flex-shrink: 0; }
+  .section-tag span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--crimson-l);
+  }
+
+  /* ── Headline — white on dark ── */
+  .section-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 52px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: #ffffff;
+    margin-bottom: 8px;
+  }
+  .section-headline .accent { color: var(--crimson-l); }
+
+  /* ── Sub copy ── */
+  .section-sub {
+    font-family: var(--font-body);
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-weight: 300;
+    color: #ffffff;
+    line-height: 1.75;
+    max-width: 640px;
+    margin-bottom: clamp(28px, 4vh, 44px);
+  }
+
+  /* ── Card grid — 1→2→3→5 col ── */
+  .team-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 480px)  { .team-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 768px)  { .team-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1200px) { .team-grid { grid-template-columns: repeat(5, 1fr); } }
+
+  /* ════════════════════════════════════════════════
+     TEAM CARD — white on dark (.dark .svc-point style)
+     Structure:
+       [photo placeholder or real img — square]
+       [role label]
+       [name]
+       [department]
+       [tag]
+  ════════════════════════════════════════════════ */
+  .team-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border-top: 3px solid transparent;
+    box-shadow: 0 4px 20px rgba(0,0,0,.18);
+    overflow: hidden;                      /* clips photo to card corners */
+    transition: border-top-color .3s, box-shadow .3s, transform .3s;
+    display: flex;
+    flex-direction: column;
+  }
+  .team-card:hover {
+    border-top-color: #c0181e;
+    box-shadow: 0 8px 32px rgba(0,0,0,.28);
+    transform: translateY(-3px);
+  }
+  .team-card.featured { border-top-color: #c0181e; }
+
+  /* ── Photo area — square 1:1 ── */
+  .team-photo-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    overflow: hidden;
+    background: rgba(8,56,146,.04);
+    flex-shrink: 0;
+  }
+
+  /* Real photo (swap in when ready) */
+  .team-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    transition: transform .5s ease;
+  }
+  .team-card:hover .team-photo { transform: scale(1.04); }
+
+  /* ── Photo placeholder ──
+     Remove this div and the styles below when adding real photos.
+     Replace with:
+       <img
+         src="/images/team/[name].jpg"
+         alt="[Full Name], [Role], Jayveecons Group"
+         class="team-photo"
+       />
+  ── */
+  .team-photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+  }
+  /* Subtle diagonal hatch — differentiates from content area */
+  .team-photo-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(8,56,146,.03) 0px,
+      rgba(8,56,146,.03) 1px,
+      transparent 1px,
+      transparent 10px
+    );
+  }
+  /* Dashed inner border hint */
+  .team-photo-placeholder::after {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border: 1.5px dashed rgba(8,56,146,.12);
+    border-radius: 6px;
+    pointer-events: none;
+  }
+  .placeholder-icon {
+    width: 44px; height: 44px;
+    color: rgba(8,56,146,.2);
+    position: relative;
+    z-index: 1;
+  }
+  .placeholder-initials {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: .06em;
+    color: rgba(192,24,30,.18);   /* ghost crimson — matches .svc-num ghost */
+    position: relative;
+    z-index: 1;
+    line-height: 1;
+  }
+  .placeholder-hint {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(8,56,146,.25);
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 0 12px;
+    line-height: 1.4;
+  }
+
+  /* ── Card info area — below photo ── */
+  .team-info {
+    padding: clamp(14px, 2vw, 20px);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  /* Role — font-mono crimson (.svc-label style) */
+  .team-role {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #c0181e;
+    margin-bottom: 5px;
+  }
+
+  /* Name — font-head navy uppercase (.dark .svc-point-text strong) */
+  .team-name {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(13px, 1.5vw, 16px);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: rgba(8,56,146,1);
+    margin-bottom: 4px;
+    line-height: 1.1;
+  }
+
+  /* Department — font-body dark copy (.dark .svc-point-text) */
+  .team-dept {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(8,56,146,1);
+    margin-bottom: 12px;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  /* Tag — navy bg pill */
+  .team-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    background: rgba(8,56,146,.07);
+    border: 1px solid rgba(8,56,146,.15);
+    color: rgba(8,56,146,1);
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-top: auto;
+  }
+
+  /* ── Reveal ── */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+</style>
+
+<section class="team-section" id="team" aria-labelledby="team-heading">
+  <div class="team-inner">
+
+    <div class="section-tag reveal"><div class="line"></div><span>Leadership</span></div>
+    <h2 class="section-headline reveal" id="team-heading">
+      The People Behind <span class="accent">Jayveecons</span>
+    </h2>
+    <p class="section-sub reveal">
+      A team built on engineering depth, operational experience, and a shared commitment
+      to delivering equipment that performs.
+    </p>
+
+    <div class="team-grid" role="list">
+
+      <!-- ── K.R. Subramanian ── -->
+      <div class="team-card featured reveal" role="listitem">
+        <div class="team-photo-wrap">
+          <!--
+            Replace this block with:
+            <img src="/images/team/kr-subramanian.jpg"
+                 alt="K. R. Subramanian, Founder & Managing Director, Jayveecons Group"
+                 class="team-photo" />
+            Recommended: 400×400px square .jpg
+          -->
+          <div class="team-photo-placeholder" aria-label="Photo placeholder — K. R. Subramanian">
+            <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+            <div class="placeholder-initials">KS</div>
+            <div class="placeholder-hint">Photo coming soon</div>
+          </div>
+        </div>
+        <div class="team-info">
+          <div class="team-role">Executive Management</div>
+          <h3 class="team-name">Mr. K.&thinsp;R. Subramanian</h3>
+          <div class="team-dept">Managing Director — Jayveecons Group</div>
+          <span class="team-tag">Founder · Strategy · Innovation</span>
+        </div>
+      </div>
+
+      <!-- ── Rama Subramanian ── -->
+      <div class="team-card featured reveal" role="listitem">
+        <div class="team-photo-wrap">
+          <!--
+            Replace with:
+            <img src="/images/team/rama-subramanian.jpg"
+                 alt="Rama Subramanian, Director, Jayveecons Group"
+                 class="team-photo" />
+          -->
+          <div class="team-photo-placeholder" aria-label="Photo placeholder — Rama Subramanian">
+            <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+            <div class="placeholder-initials">RS</div>
+            <div class="placeholder-hint">Photo coming soon</div>
+          </div>
+        </div>
+        <div class="team-info">
+          <div class="team-role">Executive Management</div>
+          <h3 class="team-name">Mrs. Rama Subramanian</h3>
+          <div class="team-dept">Director — Jayveecons Group</div>
+          <span class="team-tag">Finance · Organisation · Culture</span>
+        </div>
+      </div>
+
+      <!-- ── Vardhani Subramanian ── -->
+      <div class="team-card featured reveal" role="listitem">
+        <div class="team-photo-wrap">
+          <!--
+            Replace with:
+            <img src="/images/team/vardhani-subramanian.jpg"
+                 alt="Vardhani Subramanian, Vice President, Jayveecons LLC USA"
+                 class="team-photo" />
+          -->
+          <div class="team-photo-placeholder" aria-label="Photo placeholder — Vardhani Subramanian">
+            <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+            <div class="placeholder-initials">VS</div>
+            <div class="placeholder-hint">Photo coming soon</div>
+          </div>
+        </div>
+        <div class="team-info">
+          <div class="team-role">Executive Management</div>
+          <h3 class="team-name">Ms. Vardhani Subramanian</h3>
+          <div class="team-dept">Vice President, Jayveecons LLC, USA</div>
+          <span class="team-tag">Technology · International Ops</span>
+        </div>
+      </div>
+
+      <!-- ── Sreenandini Jayaram ── -->
+      <div class="team-card featured reveal" role="listitem">
+        <div class="team-photo-wrap">
+          <!--
+            Replace with:
+            <img src="/images/team/sreenandini-jayaram.jpg"
+                 alt="Sreenandini Jayaram, Vice President, Jayveecons LLC USA"
+                 class="team-photo" />
+          -->
+          <div class="team-photo-placeholder" aria-label="Photo placeholder — Sreenandini Jayaram">
+            <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+            <div class="placeholder-initials">SJ</div>
+            <div class="placeholder-hint">Photo coming soon</div>
+          </div>
+        </div>
+        <div class="team-info">
+          <div class="team-role">Executive Management</div>
+          <h3 class="team-name">Mrs. Sreenandini Jayaram</h3>
+          <div class="team-dept">Vice President, Jayveecons LLC, USA</div>
+          <span class="team-tag">Compliance · Talent · Brand</span>
+        </div>
+      </div>
+
+      <!-- ── Velavan Kandasamy ── -->
+      <div class="team-card reveal" role="listitem">
+        <div class="team-photo-wrap">
+          <!--
+            Replace with:
+            <img src="/images/team/velavan-kandasamy.jpg"
+                 alt="Velavan Kandasamy, Engineering Leadership, Jayveecons Group"
+                 class="team-photo" />
+          -->
+          <div class="team-photo-placeholder" aria-label="Photo placeholder — Velavan Kandasamy">
+            <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+            <div class="placeholder-initials">VK</div>
+            <div class="placeholder-hint">Photo coming soon</div>
+          </div>
+        </div>
+        <div class="team-info">
+          <div class="team-role">Sales &amp; BD</div>
+          <h3 class="team-name">Mr. Velavan Kandasamy</h3>
+          <div class="team-dept">Engineering Leadership, Jayveecons Group</div>
+          <span class="team-tag">SME · Product Development</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

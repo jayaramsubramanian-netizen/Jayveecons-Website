@@ -1,7 +1,7 @@
 ---
 // IndustriesCTA.astro
+// Final CTA band.
 // Background: WHITE + blue square grid (light section)
-// All text, accents and buttons updated for light background
 ---
 
 <style>
@@ -16,7 +16,6 @@
     border-top: 1px solid rgba(8,56,146,.08);
     position: relative;
     overflow: hidden;
-    isolation: isolate;
   }
 
   .cta-inner {
@@ -39,11 +38,11 @@
     margin-bottom: 12px;
   }
 
-  /* Headline — navy base + red accent (light section) */
+  /* Headline — navy + red accent (light section) */
   .cta-headline {
     font-family: var(--font-head);
     font-weight: 800;
-    font-size:clamp(32px,4.5vw,56px);
+    font-size: clamp(34px,5.5vw,70px);
     text-transform: uppercase;
     line-height: .97;
     color: rgba(8,56,146,.9);
@@ -95,15 +94,14 @@
     min-height: 44px;
   }
   .btn-primary:hover { background: var(--crimson-l); transform: translateX(2px); }
-  .btn-primary svg { flex-shrink: 0; }
 
   /* Secondary button — navy border on light bg */
   .btn-secondary {
     display: inline-flex;
     align-items: center;
     gap: 9px;
-    background:  rgba(8,56,146,.9);
-    color: #ffffff;
+    background: transparent;
+    color: rgba(8,56,146,.9);
     font-family: var(--font-head);
     font-weight: 600;
     font-size: 14px;

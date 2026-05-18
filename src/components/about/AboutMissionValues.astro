@@ -1,0 +1,189 @@
+---
+// AboutMissionValues.astro — WhatWeDo design language.
+// White + blue grid bg (alternates with dark timeline).
+// Mission left | Values grid right.
+---
+
+<style>
+  .mv-section {
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    border-bottom: 1px solid rgba(8,56,146,.08);
+    padding-block: clamp(60px, 8vh, 96px);
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+  }
+
+  .mv-inner {
+    max-width: 1440px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 48px);
+  }
+
+  /* ── Section tag + headline ── */
+  .section-tag { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .tag-line { width: 28px; height: 2px; background: #c0181e; flex-shrink: 0; }
+  .section-tag span { font-family: var(--font-mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: #c0181e; }
+
+  .section-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(32px,4.5vw,56px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: rgba(8,56,146,.9);
+    margin-bottom: clamp(24px, 3vh, 40px);
+  }
+  .accent { color: #c0181e; }
+
+  /* ── Two-column grid ── */
+  .mv-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+  }
+  @media (min-width: 1024px) { .mv-grid { grid-template-columns: 1fr 1fr; } }
+
+  /* ── Mission block ── */
+  .mission-block { display: flex; flex-direction: column; gap: clamp(14px, 2vh, 20px); }
+
+  .big-quote {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(20px, 2.5vw, 30px);
+    text-transform: uppercase;
+    line-height: 1.05;
+    color: rgba(8,56,146,.9);
+    margin-bottom: 4px;
+    letter-spacing: .02em;
+  }
+  .big-quote span { color: #c0181e; }
+
+  /* Mission copy card — dark gradient */
+  .mission-card {
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,.9) 0%, transparent 60%),
+      linear-gradient(155deg, var(--navy-deep, #060c1e) 0%, var(--ink, #090c14) 55%, var(--black, #000) 100%);
+    border-radius: 12px;
+    border-top: 3px solid transparent;
+    box-shadow: 0 6px 20px rgba(0,0,0,.14);
+    padding: clamp(16px, 2.5vw, 24px);
+    transition: border-top-color .3s;
+  }
+  .mission-card:hover { border-top-color: #c0181e; }
+  .mission-card p {
+    font-size: clamp(13px, 1.4vw, 15px);
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--fog, #c8cdd8);
+    margin: 0 0 12px;
+  }
+  .mission-card p:last-child { margin-bottom: 0; }
+  .hl-red   { color: rgba(233,8,15,.92);  font-weight: 600; letter-spacing: .3px; }
+  .hl-green { color: rgba(8,233,27,.7);   font-weight: 600; letter-spacing: .3px; }
+
+  /* ── Values grid — 2-col on all sizes ── */
+  .values-col { display: flex; flex-direction: column; gap: clamp(16px, 2vh, 24px); }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .value-card {
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,.9) 0%, transparent 60%),
+      linear-gradient(155deg, var(--navy-deep, #060c1e) 0%, var(--ink, #090c14) 55%, var(--black, #000) 100%);
+    border-radius: 12px;
+    border-top: 3px solid transparent;
+    box-shadow: 0 6px 20px rgba(0,0,0,.14);
+    padding: clamp(14px, 2vw, 22px);
+    transition: border-top-color .3s, box-shadow .3s;
+  }
+  .value-card:hover { border-top-color: #c0181e; box-shadow: 0 10px 28px rgba(0,0,0,.24); }
+
+  .value-icon { width: 28px; height: 28px; color: #e02428; margin-bottom: 10px; opacity: .85; display: block; }
+  .value-name { font-family: var(--font-head); font-weight: 700; font-size: clamp(13px, 1.5vw, 16px); text-transform: uppercase; letter-spacing: .06em; color: var(--white, #fff); margin-bottom: 5px; }
+  .value-desc { font-size: 12px; font-weight: 300; color: var(--fog, #c8cdd8); line-height: 1.55; }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+</style>
+
+<section class="mv-section" id="values" aria-labelledby="mission-heading">
+  <div class="mv-inner">
+    <div class="mv-grid">
+
+      <!-- Left: Mission -->
+      <div class="reveal">
+        <div class="section-tag"><div class="tag-line"></div><span>Mission &amp; Philosophy</span></div>
+        <h2 class="section-headline" id="mission-heading">What Drives Us - <span class="accent">"Moving Your World Ahead"</span></h2>
+        <div class="mission-block">
+          <div class="mission-card">
+            <p>Our commitment to engineering is embedded in every system we design. Each piece of equipment is purpose-built to move material with precision, reliability, and efficiency. Long before sustainability became an industry mandate, we adopted a <span class="hl-green">"Go Green"</span> philosophy as a core engineering principle.</p>
+            <p>Through lean system design, optimized energy consumption, and reduced material losses, our equipment consistently delivers lower operating costs alongside a smaller environmental footprint.</p>
+            <p>Our quality framework is formalized through the <span class="hl-red">VECTRIX™</span> Design Platform — our indigenously developed multi-physics engineering framework enabling predictive design, rapid iteration, and continuous improvement across all applications.</p>
+            <p>The result is a new generation of equipment under the <span class="hl-red">VECTOMEC™</span> line — systems continuously refined through data-driven R&amp;D and field performance feedback.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Values -->
+      <div class="values-col reveal">
+        <div>
+          <div class="section-tag"><div class="tag-line"></div><span>Core Values</span></div>
+          <h2 class="section-headline" id="values-heading">How We <span class="accent">Work</span></h2>
+        </div>
+        <div class="values-grid" role="list">
+
+          <div class="value-card" role="listitem">
+            <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div class="value-name">Reliability</div>
+            <div class="value-desc">Equipment that performs to spec, every shift, every year.</div>
+          </div>
+
+          <div class="value-card" role="listitem">
+            <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            <div class="value-name">Integrity</div>
+            <div class="value-desc">Honest engineering, honest pricing, honest timelines.</div>
+          </div>
+
+          <div class="value-card" role="listitem">
+            <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            <div class="value-name">Diligence</div>
+            <div class="value-desc">Thorough engineering at every phase. No shortcuts on design, material, or execution.</div>
+          </div>
+
+          <div class="value-card" role="listitem">
+            <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <div class="value-name">Innovation</div>
+            <div class="value-desc">Continuous improvement driven by customer feedback. VECTOMEC™ is the current expression.</div>
+          </div>
+
+          <div class="value-card" role="listitem">
+            <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            <div class="value-name">Safety</div>
+            <div class="value-desc">Operator safety as a primary design constraint — not an afterthought.</div>
+          </div>
+
+          <div class="value-card" role="listitem">
+            <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zM2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+            <div class="value-name">Go Green</div>
+            <div class="value-desc">Lean, efficient designs since before sustainability was mainstream.</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

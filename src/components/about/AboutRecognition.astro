@@ -1,0 +1,171 @@
+---
+// AboutRecognition.astro — WhatWeDo design language.
+// White + blue grid bg. Cards match node-card style.
+// 1-col → 2-col@640px → 3-col@1024px
+---
+
+<style>
+  .rec-section {
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    border-bottom: 1px solid rgba(8,56,146,.08);
+    padding-block: clamp(52px, 7vh, 88px);
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+  }
+
+  .rec-inner {
+    max-width: 1440px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 48px);
+  }
+
+  .section-tag { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .tag-line { width: 28px; height: 2px; background: #c0181e; flex-shrink: 0; }
+  .section-tag span { font-family: var(--font-mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: #c0181e; }
+
+  .section-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(36px,5vw,56px);
+    text-transform: uppercase;
+    line-height: .97;
+    color: rgba(8,56,146,.9);
+    margin-bottom: 8px;
+  }
+  .accent { color: #c0181e; }
+
+  .section-sub {
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-weight: 400;
+    color: #2a3550;
+    line-height: 1.7;
+    max-width: 720px;
+    margin-bottom: clamp(24px, 4vh, 40px);
+  }
+
+  /* ── Card grid ── */
+  .rec-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 640px)  { .rec-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .rec-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  /* Award card — matches WhatWeDo node-card */
+  .rec-card {
+    background:
+      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep, #060c1e) 0%, var(--ink, #090c14) 55%, var(--black, #000) 100%);
+    border-radius: 12px;
+    border-top: 3px solid #c0181e;
+    box-shadow: 0 6px 20px rgba(0,0,0,.14);
+    padding: clamp(20px, 3vw, 32px);
+    transition: box-shadow .3s, transform .3s;
+  }
+  .rec-card:hover {
+    box-shadow: 0 12px 30px rgba(0,0,0,.24);
+    transform: translateY(-3px);
+  }
+
+  .rec-year {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(36px, 5vw, 52px);
+    color: #e02428;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .rec-name {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(15px, 1.8vw, 19px);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--white, #fff);
+    margin-bottom: 4px;
+  }
+  .rec-org {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #ff7070;
+    margin-bottom: 12px;
+    opacity: .85;
+  }
+  .rec-desc {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--fog, #c8cdd8);
+    line-height: 1.65;
+  }
+
+  /* Placeholder card */
+  .rec-placeholder {
+    background: rgba(8,56,146,.04);
+    border: 1.5px dashed rgba(8,56,146,.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 140px;
+    padding: 32px;
+    text-align: center;
+  }
+  .rec-placeholder span {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    color: rgba(8,56,146,.4);
+    text-transform: uppercase;
+  }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+</style>
+
+<section class="rec-section" id="recognition" aria-labelledby="rec-heading">
+  <div class="rec-inner">
+
+    <div class="section-tag reveal"><div class="tag-line"></div><span>Recognition &amp; Awards</span></div>
+    <h2 class="section-headline reveal" id="rec-heading">
+      Acknowledged Beyond <span class="accent">the Factory Floor</span>
+    </h2>
+    <p class="section-sub reveal">
+      Our awards reflect leadership, community contribution, and entrepreneurial excellence —
+      the values that shape how we build, not just what we build.
+    </p>
+
+    <div class="rec-grid" role="list">
+
+      <div class="rec-card reveal" role="listitem">
+        <div class="rec-year">2012</div>
+        <h3 class="rec-name">Priyadarshini Award</h3>
+        <div class="rec-org">National Excellence Recognition</div>
+        <p class="rec-desc">Awarded in recognition of business leadership and excellence, reflecting Jayveecons Group's contribution to Indian manufacturing and the communities it operates in.</p>
+      </div>
+
+      <div class="rec-card reveal" role="listitem">
+        <div class="rec-year">2015</div>
+        <h3 class="rec-name">Women Entrepreneur Award</h3>
+        <div class="rec-org">NVDP Exhibition · Kolar, Karnataka</div>
+        <p class="rec-desc">Presented at the National Vendor Development Programme cum Industrial Exhibition, recognising entrepreneurial leadership by Managing Director Mrs. Rama Subramanian, accepted alongside Health Minister Mr. K.&thinsp;R. RameshKumar.</p>
+      </div>
+
+      <div class="rec-placeholder reveal" role="listitem" aria-label="More awards coming soon">
+        <span>Additional awards &amp; milestones — coming soon</span>
+      </div>
+
+    </div>
+  </div>
+</section>

@@ -1,11 +1,23 @@
-<section class="sph-section">
+---
+// ServicesPageHeader.astro
+// Unified with CareersHero pattern: flow line, eyebrow, H1 size, breadcrumb
+---
+
+<section class="sph-section" aria-label="Services page header">
+
+  <!-- Flow line — right side, desktop only — matches CareersHero exactly -->
+  <div class="ch-flow-col" aria-hidden="true">
+    <div class="ch-flow-line"></div>
+    <div class="ch-flow-glow" id="svc-flow-glow"></div>
+  </div>
+
   <div class="sph-inner">
 
-    <div class="breadcrumb">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="/">Home</a>
-      <span class="sep">/</span>
-      <span class="current">Services</span>
-    </div>
+      <span class="sep" aria-hidden="true">/</span>
+      <span class="current" aria-current="page">Services</span>
+    </nav>
 
     <div class="page-eyebrow">
       <div class="page-eyebrow-line"></div>
@@ -15,37 +27,96 @@
     <h1 class="page-title">
       From First
       <span class="accent">Drawing</span><br>
-      <span class="chrome">To Last Bolt</span>
+      To <span class="chrome">Last Bolt</span>
     </h1>
 
     <p class="page-sub">
-      Jayveecons doesn't hand off. We design it, fabricate it, install it, and support it — from the initial engineering brief to long-term parts and maintenance, under one roof, under one team's accountability.
+      Jayveecons doesn't hand off. We design it, fabricate it, install it, and support it —
+      from the initial engineering brief to long-term parts and maintenance, under one roof,
+      under one team's accountability.
     </p>
 
   </div>
 </section>
 
 <style>
-  /* ── Section shell — dark navy, matches ContactHero gradient ── */
+  /* ── Section shell — dark navy gradient ── */
   .sph-section {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     background:
       radial-gradient(ellipse 90% 70% at 65% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
       radial-gradient(ellipse 50% 60% at 5%  90%, rgba(192,24,30,.07) 0%, transparent 50%),
       linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
     padding-block: clamp(100px, 14vh, 140px) clamp(48px, 7vh, 80px);
   }
+  .sph-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(192,24,30,.3) 50%, transparent);
+    pointer-events: none;
+  }
 
-  /* ── Container — same token as rest of site ── */
+  /* ── Flow column — right edge, desktop only ── */
+  .ch-flow-col {
+    display: none;
+    position: absolute;
+    top: 0; bottom: 0;
+    right: calc(clamp(48px, 6vw, 96px) + 200px);
+    width: 2px;
+    z-index: 0;
+    pointer-events: none;
+  }
+  @media (min-width: 900px) { .ch-flow-col { display: block; } }
+
+  .ch-flow-line {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(208,212,220,.12) 8%,
+      rgba(208,212,220,.12) 92%,
+      transparent 100%
+    );
+  }
+
+  .ch-flow-glow {
+    position: absolute;
+    left: 50%;
+    margin-left: -3px;
+    top: 0;
+    width: 6px;
+    height: 100px;
+    opacity: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(106,166,255,.12) 10%,
+      rgba(106,166,255,.9)  40%,
+      rgba(180,220,255,1)   50%,
+      rgba(106,166,255,.9)  60%,
+      rgba(106,166,255,.12) 90%,
+      transparent 100%
+    );
+    border-radius: 3px;
+    z-index: 3;
+    will-change: top, opacity;
+  }
+
+  /* ── Inner container ── */
   .sph-inner {
+    position: relative;
+    z-index: 1;
     width: 100%;
     max-width: 1440px;
     margin-inline: auto;
-    padding-inline: 16px;
+    padding-inline: clamp(16px, 4vw, 48px);
     box-sizing: border-box;
   }
-  @media (min-width: 480px)  { .sph-inner { padding-inline: 20px; } }
-  @media (min-width: 768px)  { .sph-inner { padding-inline: 32px; } }
-  @media (min-width: 1024px) { .sph-inner { padding-inline: 48px; } }
 
   /* ── Breadcrumb ── */
   .breadcrumb {
@@ -58,38 +129,33 @@
     letter-spacing: .16em;
     text-transform: uppercase;
   }
-  .breadcrumb a       { color: var(--mist); text-decoration: none; transition: color .2s; }
-  .breadcrumb a:hover { color: var(--white); }
-  .breadcrumb .sep    { color: var(--crimson); opacity: .6; }
-  .breadcrumb .current { color: var(--crimson-l); }
+  .breadcrumb a        { color: var(--mist); text-decoration: none; transition: color .2s; min-height: 44px; display: flex; align-items: center; }
+  .breadcrumb a:hover  { color: var(--white); }
+  .breadcrumb .sep     { color: var(--crimson); opacity: .6; }
+  .breadcrumb .current { color: #ff7070; }      /* ← unified: matches CareersHero */
 
   /* ── Eyebrow ── */
   .page-eyebrow {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
+    gap: 12px;
+    margin-bottom: 22px;
     animation: fadeUp .7s ease .1s both;
   }
-  .page-eyebrow-line {
-    width: 30px;
-    height: 2px;
-    background: var(--crimson);
-    flex-shrink: 0;
-  }
+  .page-eyebrow-line { width: 40px; height: 2px; background: var(--crimson); flex-shrink: 0; }  /* ← 40px: unified */
   .page-eyebrow span {
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: .2em;
     text-transform: uppercase;
-    color: var(--crimson-l);
+    color: #ff7070;    /* ← unified: was var(--crimson-l) */
   }
 
-  /* ── Headline ── */
+  /* ── H1 — unified size matches CareersHero ── */
   .page-title {
     font-family: var(--font-head);
     font-weight: 800;
-    font-size: clamp(44px, 6.5vw, 84px);
+    font-size: clamp(40px, 7vw, 84px);   /* ← unified: was clamp(44px,6.5vw,84px) */
     text-transform: uppercase;
     line-height: .93;
     letter-spacing: -.01em;
@@ -97,9 +163,7 @@
     margin-bottom: 20px;
     animation: fadeUp .7s ease .2s both;
   }
-  .page-title .accent {
-    color: var(--crimson-l);
-  }
+  .page-title .accent { color: var(--crimson-l); }
   .page-title .chrome {
     background: linear-gradient(135deg, var(--chrome-l), var(--chrome));
     -webkit-background-clip: text;
@@ -117,4 +181,49 @@
     line-height: 1.75;
     animation: fadeUp .7s ease .3s both;
   }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(26px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-eyebrow, .page-title, .page-sub { animation: none; }
+    .ch-flow-glow { display: none; }
+  }
 </style>
+
+<script>
+(function () {
+  const CYCLE_MS    = 5500;
+  const FLOW_HEIGHT = 100;
+
+  const section = document.querySelector('.sph-section');
+  const col     = section?.querySelector('.ch-flow-col');
+  const glow    = document.getElementById('svc-flow-glow');
+  if (!section || !col || !glow) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let rafId = null, startTime = null;
+
+  function frame(now) {
+    if (!startTime) startTime = now;
+    const progress = (now - startTime) % CYCLE_MS / CYCLE_MS;
+    const y = -FLOW_HEIGHT + (col.offsetHeight + FLOW_HEIGHT) * progress;
+    glow.style.top = y + 'px';
+    rafId = requestAnimationFrame(frame);
+  }
+  function start() {
+    if (rafId) return;
+    glow.style.opacity = '1'; startTime = null;
+    rafId = requestAnimationFrame(frame);
+  }
+  function stop() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    glow.style.opacity = '0'; glow.style.top = '0px';
+  }
+
+  new IntersectionObserver(e => { e[0].isIntersecting ? start() : stop(); }, { threshold: 0.05 }).observe(section);
+  document.addEventListener('astro:before-swap', stop);
+})();
+</script>

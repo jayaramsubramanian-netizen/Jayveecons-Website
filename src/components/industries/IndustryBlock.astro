@@ -1,66 +1,42 @@
 ---
 /**
- * IndustryBlock.astro
- * Reusable industry card — two layout modes:
- *
- * MODE A — Standard (default):
- *   Left: copy panel | Right: full-bleed image
- *   Used for: Mining, Food, Waste, Steel
- *
- * MODE B — Product Grid (productGrid prop):
- *   Left: copy panel | Right: 4-col photo+name+desc product grid
- *   Matches the cement brochure layout exactly.
- *   Used for: Cement (isCement + productGrid)
- *
- * All props unchanged from previous version PLUS:
- *   productGrid?  ProductItem[]   — switches to brochure grid mode
- *
- * interface ProductItem {
- *   imgSrc:  string   product photo path
- *   imgAlt:  string
- *   name:    string   product name (uppercase in grid)
- *   desc:    string   one-line description
- * }
+ * IndustryBlock.astro — theme-aware
+ * Accepts theme="dark" | theme="light" from IndustriesActive.
+ * All colors driven by .dark / .light descendant selectors.
+ * Layout logic (MODE A image | MODE B product grid) unchanged.
  */
 
-export interface SubSector {
-  icon: string;
-  label: string;
-}
-
-export interface ProductItem {
-  imgSrc: string;
-  imgAlt: string;
-  name: string;
-  desc: string;
-}
+export interface SubSector  { icon: string; label: string; }
+export interface ProductItem { imgSrc: string; imgAlt: string; name: string; desc: string; }
 
 export interface Props {
-  num: string;
-  reverse?: boolean;
-  id: string;
-  label: string;
-  sector: string;
-  statusText: string;
-  headline: string;
-  descEm?: string;
-  desc: string[];
-  subsectors?: SubSector[];
+  theme?:       'dark' | 'light';
+  num:          string;
+  reverse?:     boolean;
+  id:           string;
+  label:        string;
+  sector:       string;
+  statusText:   string;
+  headline:     string;
+  descEm?:      string;
+  desc:         string[];
+  subsectors?:  SubSector[];
   cementStats?: { icon: string; num: string; label: string }[];
   productGrid?: ProductItem[];
-  trustText: string;
+  trustText:    string;
   productsTitle: string;
-  products: string[];
-  ctaHref: string;
-  ctaLabel: string;
-  ctaText: string;
-  imgSrc?: string;
-  imgAlt?: string;
-  imgEager?: boolean;
-  isCement?: boolean;
+  products:     string[];
+  ctaHref:      string;
+  ctaLabel:     string;
+  ctaText:      string;
+  imgSrc?:      string;
+  imgAlt?:      string;
+  imgEager?:    boolean;
+  isCement?:    boolean;
 }
 
 const {
+  theme = 'dark',
   num, reverse = false, id, label, sector, statusText,
   headline, descEm, desc, subsectors, cementStats,
   productGrid,
@@ -70,498 +46,18 @@ const {
 } = Astro.props;
 
 const hasProductGrid = productGrid && productGrid.length > 0;
+
+const blockClass = [
+  'ind-block',
+  theme,                                          // ← "dark" or "light"
+  reverse        ? 'ind-block--reverse'   : '',
+  isCement       ? 'ind-block--cement'    : '',
+  hasProductGrid ? 'ind-block--grid-mode' : '',
+  'reveal',
+].filter(Boolean).join(' ');
 ---
 
-<style>
-  /* ═══════════════════════════════════════════════════
-     BLOCK WRAPPER
-  ═══════════════════════════════════════════════════ */
-  .ind-block {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    background-color: #f8fafc;
-background-image:
-  linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
-  linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
-background-size: 60px 60px;
-  }
-
-  /* Cement flagship top accent */
-  .ind-block--cement::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--crimson) 0%, rgba(192,24,30,.3) 60%, transparent 100%);
-    z-index: 2;
-    pointer-events: none;
-  }
-
-  /* ═══════════════════════════════════════════════════
-     MODE A — STANDARD IMAGE PANEL
-  ═══════════════════════════════════════════════════ */
-  .ind-visual {
-    position: relative;
-    overflow: hidden;
-    background: var(--navy-deep);
-    aspect-ratio: 16 / 9;   /* intrinsic height on mobile */
-    width: 100%;
-    flex-shrink: 0;
-  }
-  .ind-visual img {
-    position: absolute;
-    inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: center center;
-    display: block;
-    transition: transform .7s ease, filter .4s;
-    filter: saturate(1.05) contrast(1.05);
-  }
-  .ind-block:hover .ind-visual img { transform: scale(1.03); }
-  .ind-visual::after {
-    content: '';
-    position: absolute;
-    inset: 0; z-index: 1;
-    background: linear-gradient(180deg, transparent 40%, rgba(10,12,18,.6) 100%);
-    pointer-events: none;
-  }
-
-  /* ═══════════════════════════════════════════════════
-     MODE B — PRODUCT GRID PANEL
-     Matches brochure: white bg, 4-col photo+name+desc
-  ═══════════════════════════════════════════════════ */
-  .ind-product-grid-panel {
-    background: #f0f4f8;
-    overflow-y: auto;
-    flex-shrink: 0;
-  }
-
-  /* Grid header bar — "VECTOMEC™ EQUIPMENT FOR CEMENT ————●" */
-  .pgp-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 20px 12px;
-    border-bottom: 1px solid rgba(8,56,146,.1);
-  }
-  .pgp-header-title {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--navy-deep, #060c1e);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .pgp-header-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(8,56,146,.3) 0%, rgba(8,56,146,.7) 80%, var(--crimson) 100%);
-    position: relative;
-  }
-  .pgp-header-line::after {
-    content: '';
-    position: absolute;
-    right: 0; top: 50%;
-    transform: translateY(-50%);
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--crimson);
-  }
-
-  /* The actual product grid — 4 columns */
-  .pgp-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);   /* 2-col on small */
-    gap: 1px;
-    background: rgba(8,56,146,.08);
-  }
-
-  .pgp-item {
-    background: #ffffff;
-    display: flex;
-    flex-direction: column;
-    transition: background .2s;
-  }
-  .pgp-item:hover { background: #f8fafc; }
-
-  /* Product photo */
-  .pgp-photo {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    filter: saturate(1.05);
-    transition: transform .5s ease;
-  }
-  .pgp-item:hover .pgp-photo { transform: scale(1.03); }
-
-  /* Product info below photo */
-  .pgp-info {
-    padding: 10px 12px 12px;
-    border-top: 2px solid rgba(8,56,146,.1);
-    flex: 1;
-  }
-  .pgp-icon {
-    width: 22px; height: 22px;
-    color: rgba(8,56,146,.5);
-    margin-bottom: 5px;
-    display: block;
-  }
-  .pgp-name {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--navy-deep, #060c1e);
-    margin-bottom: 4px;
-    line-height: 1.3;
-  }
-  .pgp-desc {
-    font-family: var(--font-body);
-    font-size: 11px;
-    font-weight: 300;
-    color: #4a5568;
-    line-height: 1.5;
-  }
-
-  /* ═══════════════════════════════════════════════════
-     COPY PANEL (shared by both modes)
-  ═══════════════════════════════════════════════════ */
-  .ind-copy {
-    background: var(--ink-3, #0d1424);
-    border-left: 4px solid var(--crimson);
-    padding: clamp(20px, 4vw, 36px) clamp(18px, 3.5vw, 36px);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    flex: 1;
-  }
-  .ind-copy--cement {
-    background: linear-gradient(160deg, var(--ink-3, #0d1424) 0%, rgba(13,26,58,.5) 100%);
-  }
-  .ind-copy::before {
-    content: attr(data-num);
-    position: absolute;
-    bottom: -20px; right: -10px;
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: 180px;
-    line-height: 1;
-    color: rgba(51, 96, 184, .05);
-    pointer-events: none;
-    user-select: none;
-  }
-  .ind-copy--right { border-left: none; border-right: 4px solid var(--crimson); }
-
-  /* ── Sector tag ── */
-  .ind-sector-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-    flex-shrink: 0;
-  }
-  .ind-sector-line { width: 28px; height: 2px; background: var(--crimson); flex-shrink: 0; }
-  .ind-sector-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--crimson-l);
-  }
-
-  /* ── Status dot ── */
-  .ind-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    flex-shrink: 0;
-  }
-  .ind-status-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--crimson);
-    flex-shrink: 0;
-    box-shadow: 0 0 6px var(--crimson);
-  }
-  .ind-status span {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--crimson-l);
-  }
-
-  /* ── Headline ── */
-  .ind-headline {
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: clamp(20px, 3vw, 30px);
-    text-transform: uppercase;
-    line-height: .97;
-    letter-spacing: -.01em;
-    color: var(--white);
-    margin-bottom: 12px;
-    flex-shrink: 0;
-  }
-  .ind-headline :global(.sub-hl) { color: var(--chrome-l, #d0d4dc); }
-
-  .ind-desc-em {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: var(--crimson-l);
-    margin-bottom: 12px;
-    margin-top: -6px;
-  }
-
-  .ind-desc {
-    font-size: 13px;
-    font-weight: 300;
-    color: var(--fog);
-    line-height: 1.75;
-    margin-bottom: 10px;
-  }
-
-  /* ── Cement mini-stats ── */
-  .cement-stats {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1px;
-    margin-bottom: 14px;
-    background: rgba(51, 96, 184, .1);
-    flex-shrink: 0;
-  }
-  .cement-stat {
-    background: rgba(10, 12, 18, .7);
-    padding: 10px 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 4px;
-    transition: background .25s;
-  }
-  .cement-stat:hover { background: rgba(13, 26, 58, .7); }
-  .cement-stat svg   { width: 16px; height: 16px; color: var(--crimson-l); opacity: .8; flex-shrink: 0; }
-  .cement-stat-num {
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: clamp(14px, 1.6vw, 18px);
-    color: var(--white);
-    line-height: 1;
-    letter-spacing: .04em;
-  }
-  .cement-stat-label {
-    font-family: var(--font-mono);
-    font-size: 7px;
-    letter-spacing: .09em;
-    text-transform: uppercase;
-    color: var(--mist);
-    line-height: 1.4;
-  }
-
-  /* ── Sub-sector icons ── */
-  .ind-subsectors {
-    display: flex;
-    align-items: flex-start;
-    gap: 0;
-    margin-bottom: 12px;
-    flex-shrink: 0;
-    border-top: 1px solid rgba(51, 96, 184, .12);
-    border-bottom: 1px solid rgba(51, 96, 184, .12);
-    padding: 8px 0;
-    flex-wrap: wrap;
-  }
-  .ind-sub {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    flex: 1;
-    min-width: calc(50% - 1px);
-    padding: 5px 4px;
-    border-right: 1px solid rgba(51, 96, 184, .12);
-  }
-  .ind-sub:last-child { border-right: none; }
-  .ind-sub svg { width: 18px; height: 18px; color: #7ab0ff; opacity: .8; }
-  .ind-sub-label {
-    font-family: var(--font-mono);
-    font-size: 8px;
-    letter-spacing: .09em;
-    text-transform: uppercase;
-    color: var(--mist);
-    text-align: center;
-    line-height: 1.3;
-  }
-
-  /* ── Trust badge ── */
-  .ind-trust {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    flex-shrink: 0;
-    background: rgba(13, 26, 58, .7);
-    border: 1px solid rgba(51, 96, 184, .2);
-    border-left: 3px solid var(--crimson);
-    padding: 9px 12px;
-    margin-bottom: 12px;
-  }
-  .ind-trust svg { width: 16px; height: 16px; color: var(--crimson-l); flex-shrink: 0; margin-top: 1px; }
-  .ind-trust-text {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: .09em;
-    text-transform: uppercase;
-    color: var(--fog);
-    line-height: 1.5;
-  }
-
-  /* ── Product tags (copy panel) ── */
-  .ind-products-title {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--crimson-l);
-    margin-bottom: 6px;
-    flex-shrink: 0;
-  }
-  .ind-products {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-bottom: 12px;
-  }
-  .ind-product-tag {
-    font-family: var(--font-mono);
-    font-size: 8px;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-    background: rgba(13, 26, 58, .8);
-    border: 1px solid rgba(51, 96, 184, .25);
-    color: #7ab0ff;
-    padding: 2px 7px;
-  }
-
-  /* ── CTA ── */
-  .ind-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--crimson-l);
-    text-decoration: none;
-    transition: color .2s;
-    margin-top: auto;
-    flex-shrink: 0;
-    padding-top: 8px;
-  }
-  .ind-cta:hover { color: var(--white); }
-  .ind-cta svg { width: 12px; height: 12px; }
-
-  /* ═══════════════════════════════════════════════════
-     DESKTOP ≥ 1024px — side-by-side grid
-     Both modes: copy 38% | right panel 62%
-     Cement grid mode: right panel is taller, auto height
-  ═══════════════════════════════════════════════════ */
-  @media (min-width: 1024px) {
-
-    /* Standard mode — fixed height, image fills panel */
-    .ind-block {
-      display: grid;
-      grid-template-columns: 38fr 62fr;
-      grid-template-rows: 1fr;
-      height: 560px;
-      flex-direction: unset;
-    }
-
-    /* Product grid mode — auto height to fit all product cards */
-    .ind-block--grid-mode {
-      height: auto;
-      align-items: stretch;
-    }
-
-    .ind-block--reverse {
-      grid-template-columns: 62fr 38fr;
-    }
-    .ind-block--reverse .ind-copy         { order: 2; }
-    .ind-block--reverse .ind-visual        { order: 1; }
-    .ind-block--reverse .ind-product-grid-panel { order: 1; }
-
-    /* Image panel fills grid cell */
-    .ind-visual {
-      aspect-ratio: unset;
-      height: 100%;
-      width: 100%;
-    }
-    .ind-visual::after {
-      background: linear-gradient(270deg, transparent 55%, rgba(10,12,18,.45) 100%);
-    }
-    .ind-block--reverse .ind-visual::after {
-      background: linear-gradient(90deg, transparent 55%, rgba(10,12,18,.45) 100%);
-    }
-
-    /* Product grid panel fills its cell */
-    .ind-product-grid-panel {
-      overflow-y: auto;
-    }
-
-    /* 4-col grid on desktop */
-    .pgp-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    /* Copy panel */
-    .ind-copy {
-      height: 100%;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(192,24,30,.3) transparent;
-      padding: 32px 36px;
-    }
-    .ind-copy--grid-mode {
-      /* In grid mode copy panel matches the taller right panel */
-      height: auto;
-      min-height: 100%;
-      overflow-y: visible;
-    }
-    .ind-copy::-webkit-scrollbar { width: 3px; }
-    .ind-copy::-webkit-scrollbar-thumb { background: rgba(192,24,30,.3); border-radius: 2px; }
-
-    .ind-copy--right { border-left: none; border-right: 4px solid var(--crimson); }
-    .cement-stats { grid-template-columns: repeat(4, 1fr); }
-    .ind-sub { min-width: unset; }
-  }
-
-  @media (min-width: 1280px) {
-    /* Only apply fixed height to standard (non-grid) blocks */
-    .ind-block:not(.ind-block--grid-mode) { height: 580px; }
-  }
-</style>
-
-<article
-  class={[
-    'ind-block',
-    reverse       ? 'ind-block--reverse'   : '',
-    isCement      ? 'ind-block--cement'    : '',
-    hasProductGrid ? 'ind-block--grid-mode' : '',
-    'reveal',
-  ].filter(Boolean).join(' ')}
-  id={id}
-  aria-label={label}
->
+<article class={blockClass} id={id} aria-label={label}>
 
   <!-- ══ COPY PANEL ══ -->
   <div
@@ -580,7 +76,7 @@ background-size: 60px 60px;
 
     <div class="ind-status">
       <div class="ind-status-dot"></div>
-      <span>{statusText}</span>
+      <span class="ind-status-text">{statusText}</span>
     </div>
 
     <h3 class="ind-headline" set:html={headline} />
@@ -668,7 +164,8 @@ background-size: 60px 60px;
             />
             <div class="pgp-info">
               <svg class="pgp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/>
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/>
               </svg>
               <div class="pgp-name">{item.name}</div>
               <div class="pgp-desc">{item.desc}</div>
@@ -680,3 +177,518 @@ background-size: 60px 60px;
   )}
 
 </article>
+
+<style>
+  /* ═══════════════════════════════════════════════════
+     BLOCK WRAPPER — background set by .dark / .light
+  ═══════════════════════════════════════════════════ */
+  .ind-block {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-left: 4px solid transparent;
+    transition: border-left-color .3s;
+  }
+  .ind-block:hover { border-left-color: var(--crimson); }
+
+  /* ── DARK theme ── */
+  .ind-block.dark {
+    background:
+      radial-gradient(ellipse 90% 70% at 65% 40%, rgba(8,56,146,0.85) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 5%  90%, rgba(192,24,30,.07) 0%, transparent 50%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+  }
+
+  /* ── LIGHT theme ── */
+  .ind-block.light {
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    border-top: 1px solid rgba(8,56,146,.07);
+    border-bottom: 1px solid rgba(8,56,146,.07);
+  }
+
+  /* Cement flagship top accent */
+  .ind-block--cement::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--crimson) 0%, rgba(192,24,30,.3) 60%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     COPY PANEL
+  ═══════════════════════════════════════════════════ */
+  .ind-copy {
+    border-left: 4px solid var(--crimson);
+    padding: clamp(20px, 4vw, 36px) clamp(18px, 3.5vw, 36px);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    flex: 1;
+  }
+  .ind-copy--right { border-left: none; border-right: 4px solid var(--crimson); }
+
+  /* Background of copy panel — inherits from block theme */
+  .dark  .ind-copy { background: rgba(0,0,0,.15); }   /* slight tint to separate from block bg */
+  .light .ind-copy { background: transparent; }
+
+  /* Ghost number watermark */
+  .ind-copy::before {
+    content: attr(data-num);
+    position: absolute;
+    bottom: -20px; right: -10px;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 180px;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+  .dark  .ind-copy::before { color: rgba(51,96,184,.05); }
+  .light .ind-copy::before { color: rgba(8,56,146,.04);  }
+
+  /* ── Sector tag ── */
+  .ind-sector-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+  .ind-sector-line  { width: 28px; height: 2px; background: var(--crimson); flex-shrink: 0; }
+  .ind-sector-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+  .dark  .ind-sector-label { color: var(--crimson-l); }
+  .light .ind-sector-label { color: var(--crimson); }
+
+  /* ── Status ── */
+  .ind-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+  }
+  .ind-status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--crimson);
+    box-shadow: 0 0 6px var(--crimson);
+    flex-shrink: 0;
+  }
+  .ind-status-text {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .dark  .ind-status-text { color: var(--crimson-l); }
+  .light .ind-status-text { color: var(--crimson); }
+
+  /* ── Headline ── */
+  .ind-headline {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(20px, 3vw, 30px);
+    text-transform: uppercase;
+    line-height: .97;
+    letter-spacing: -.01em;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+  .dark  .ind-headline { color: var(--white); }
+  .light .ind-headline { color: #1a1d24; }
+
+  .dark  .ind-headline :global(.sub-hl) { color: var(--chrome-l); }
+  .light .ind-headline :global(.sub-hl) { color: var(--crimson); }
+
+  /* ── Desc emphasis ── */
+  .ind-desc-em {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    margin-top: -6px;
+  }
+  .dark  .ind-desc-em { color: var(--crimson-l); }
+  .light .ind-desc-em { color: var(--crimson); }
+
+  /* ── Body copy ── */
+  .ind-desc {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.75;
+    margin-bottom: 10px;
+  }
+  .dark  .ind-desc { color: var(--fog); }
+  .light .ind-desc { color: #4a5068; }
+
+  /* ── Cement mini-stats ── */
+  .cement-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    margin-bottom: 14px;
+    flex-shrink: 0;
+  }
+  .dark  .cement-stats { background: rgba(51,96,184,.1); }
+  .light .cement-stats { background: rgba(8,56,146,.08); }
+
+  .cement-stat {
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    transition: background .25s;
+  }
+  .dark  .cement-stat         { background: rgba(10,12,18,.7); }
+  .dark  .cement-stat:hover   { background: rgba(13,26,58,.7); }
+  .light .cement-stat         { background: #ffffff; }
+  .light .cement-stat:hover   { background: #f0f4fb; }
+
+  .cement-stat svg { width: 16px; height: 16px; flex-shrink: 0; opacity: .8; }
+  .dark  .cement-stat svg { color: var(--crimson-l); }
+  .light .cement-stat svg { color: var(--crimson); }
+
+  .cement-stat-num {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(14px, 1.6vw, 18px);
+    line-height: 1;
+    letter-spacing: .04em;
+  }
+  .dark  .cement-stat-num { color: var(--white); }
+  .light .cement-stat-num { color: #1a1d24; }
+
+  .cement-stat-label {
+    font-family: var(--font-mono);
+    font-size: 7px;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+  .dark  .cement-stat-label { color: var(--mist); }
+  .light .cement-stat-label { color: #4a5068; }
+
+  /* ── Sub-sectors ── */
+  .ind-subsectors {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+    padding: 8px 0;
+    flex-wrap: wrap;
+  }
+  .dark  .ind-subsectors { border-top: 1px solid rgba(51,96,184,.12); border-bottom: 1px solid rgba(51,96,184,.12); }
+  .light .ind-subsectors { border-top: 1px solid rgba(8,56,146,.1);   border-bottom: 1px solid rgba(8,56,146,.1);   }
+
+  .ind-sub {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    min-width: calc(50% - 1px);
+    padding: 5px 4px;
+  }
+  .dark  .ind-sub { border-right: 1px solid rgba(51,96,184,.12); }
+  .light .ind-sub { border-right: 1px solid rgba(8,56,146,.1); }
+  .ind-sub:last-child { border-right: none; }
+
+  .ind-sub svg { width: 18px; height: 18px; opacity: .8; }
+  .dark  .ind-sub svg { color: #7ab0ff; }
+  .light .ind-sub svg { color: var(--crimson); }
+
+  .ind-sub-label {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .dark  .ind-sub-label { color: var(--mist); }
+  .light .ind-sub-label { color: #4a5068; }
+
+  /* ── Trust badge ── */
+  .ind-trust {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex-shrink: 0;
+    border-left: 3px solid var(--crimson);
+    padding: 9px 12px;
+    margin-bottom: 12px;
+  }
+  .dark  .ind-trust { background: rgba(13,26,58,.7);   border: 1px solid rgba(51,96,184,.2); border-left: 3px solid var(--crimson); }
+  .light .ind-trust { background: rgba(8,56,146,.05);  border: 1px solid rgba(8,56,146,.12); border-left: 3px solid var(--crimson); }
+
+  .ind-trust svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+  .dark  .ind-trust svg { color: var(--crimson-l); }
+  .light .ind-trust svg { color: var(--crimson); }
+
+  .ind-trust-text {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    line-height: 1.5;
+  }
+  .dark  .ind-trust-text { color: var(--fog); }
+  .light .ind-trust-text { color: #4a5068; }
+
+  /* ── Products title ── */
+  .ind-products-title {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    flex-shrink: 0;
+  }
+  .dark  .ind-products-title { color: #ff7070; }
+  .light .ind-products-title { color: var(--crimson); }
+
+  /* ── Product tags ── */
+  .ind-products { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
+  .ind-product-tag {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+  }
+  .dark  .ind-product-tag { background: rgba(13,26,58,.8); border: 1px solid rgba(51,96,184,.25); color: #7ab0ff; }
+  .light .ind-product-tag { background: #ffffff;           border: 1px solid rgba(8,56,146,.14);  color: rgba(8,56,146,.75); }
+
+  /* ── CTA ── */
+  .ind-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color .2s;
+    margin-top: auto;
+    flex-shrink: 0;
+    padding-top: 8px;
+    min-height: 44px;
+  }
+  .dark  .ind-cta       { color: var(--crimson-l); }
+  .light .ind-cta       { color: var(--crimson); }
+  .dark  .ind-cta:hover { color: var(--white); }
+  .light .ind-cta:hover { color: #1a1d24; }
+  .ind-cta svg { width: 12px; height: 12px; }
+
+  /* ═══════════════════════════════════════════════════
+     MODE A — IMAGE PANEL
+  ═══════════════════════════════════════════════════ */
+  .ind-visual {
+    position: relative;
+    overflow: hidden;
+    background: var(--navy-deep);
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    flex-shrink: 0;
+  }
+  .ind-visual img {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform .7s ease, filter .4s;
+    filter: saturate(1.05) contrast(1.05);
+  }
+  .ind-block:hover .ind-visual img { transform: scale(1.03); }
+  .ind-visual::after {
+    content: '';
+    position: absolute;
+    inset: 0; z-index: 1;
+    background: linear-gradient(180deg, transparent 40%, rgba(10,12,18,.6) 100%);
+    pointer-events: none;
+  }
+
+  /* ── Image border tint by theme ── */
+  .dark  .ind-visual { border: none; }
+  .light .ind-visual { outline: 2px solid rgba(8,56,146,.12); outline-offset: -2px; }
+
+  /* ═══════════════════════════════════════════════════
+     MODE B — PRODUCT GRID PANEL
+  ═══════════════════════════════════════════════════ */
+  .ind-product-grid-panel {
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .dark  .ind-product-grid-panel { background: rgba(0,0,0,.2); }
+  .light .ind-product-grid-panel { background: #eef2f8; }
+
+  .pgp-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px 12px;
+  }
+  .dark  .pgp-header { border-bottom: 1px solid rgba(51,96,184,.15); }
+  .light .pgp-header { border-bottom: 1px solid rgba(8,56,146,.1); }
+
+  .pgp-header-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .dark  .pgp-header-title { color: var(--crimson-l); }
+  .light .pgp-header-title { color: rgba(8,56,146,.8); }
+
+  .pgp-header-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(8,56,146,.3) 0%, rgba(8,56,146,.7) 80%, var(--crimson) 100%);
+    position: relative;
+  }
+  .pgp-header-line::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--crimson);
+  }
+
+  .pgp-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+  }
+  .dark  .pgp-grid { background: rgba(51,96,184,.12); }
+  .light .pgp-grid { background: rgba(8,56,146,.08); }
+
+  .pgp-item {
+    display: flex;
+    flex-direction: column;
+    transition: background .2s;
+  }
+  .dark  .pgp-item       { background: rgba(13,26,58,.7); }
+  .dark  .pgp-item:hover { background: rgba(17,34,71,.9); }
+  .light .pgp-item       { background: #ffffff; }
+  .light .pgp-item:hover { background: #f8fafc; }
+
+  .pgp-photo {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+    filter: saturate(1.05);
+    transition: transform .5s ease;
+  }
+  .pgp-item:hover .pgp-photo { transform: scale(1.03); }
+
+  .pgp-info {
+    padding: 10px 12px 12px;
+    flex: 1;
+  }
+  .dark  .pgp-info { border-top: 2px solid rgba(51,96,184,.2); }
+  .light .pgp-info { border-top: 2px solid rgba(8,56,146,.1); }
+
+  .pgp-icon { width: 22px; height: 22px; margin-bottom: 5px; display: block; }
+  .dark  .pgp-icon { color: rgba(100,160,255,.5); }
+  .light .pgp-icon { color: rgba(8,56,146,.4); }
+
+  .pgp-name {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .dark  .pgp-name { color: var(--chrome); }
+  .light .pgp-name { color: #1a1d24; }
+
+  .pgp-desc {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+  .dark  .pgp-desc { color: var(--fog); }
+  .light .pgp-desc { color: #4a5568; }
+
+  /* ═══════════════════════════════════════════════════
+     DESKTOP ≥ 1024px
+  ═══════════════════════════════════════════════════ */
+  @media (min-width: 1024px) {
+    .ind-block {
+      display: grid;
+      grid-template-columns: 38fr 62fr;
+      grid-template-rows: 1fr;
+      height: 560px;
+      flex-direction: unset;
+    }
+    .ind-block--grid-mode { height: auto; align-items: stretch; }
+    .ind-block--reverse   { grid-template-columns: 62fr 38fr; }
+
+    .ind-block--reverse .ind-copy              { order: 2; }
+    .ind-block--reverse .ind-visual            { order: 1; }
+    .ind-block--reverse .ind-product-grid-panel { order: 1; }
+
+    .ind-visual {
+      aspect-ratio: unset;
+      height: 100%;
+      width: 100%;
+    }
+    .ind-visual::after {
+      background: linear-gradient(270deg, transparent 55%, rgba(10,12,18,.45) 100%);
+    }
+    .ind-block--reverse .ind-visual::after {
+      background: linear-gradient(90deg, transparent 55%, rgba(10,12,18,.45) 100%);
+    }
+
+    .ind-product-grid-panel { overflow-y: auto; }
+    .pgp-grid { grid-template-columns: repeat(4, 1fr); }
+
+    .ind-copy {
+      height: 100%;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      padding: 32px 36px;
+    }
+    .dark  .ind-copy { scrollbar-color: rgba(192,24,30,.3) transparent; }
+    .light .ind-copy { scrollbar-color: rgba(8,56,146,.2) transparent; }
+    .ind-copy--grid-mode { height: auto; min-height: 100%; overflow-y: visible; }
+    .ind-copy::-webkit-scrollbar       { width: 3px; }
+    .ind-copy::-webkit-scrollbar-thumb { background: rgba(192,24,30,.3); border-radius: 2px; }
+    .ind-copy--right { border-left: none; border-right: 4px solid var(--crimson); }
+    .cement-stats { grid-template-columns: repeat(4, 1fr); }
+    .ind-sub { min-width: unset; }
+  }
+
+  @media (min-width: 1280px) {
+    .ind-block:not(.ind-block--grid-mode) { height: 580px; }
+  }
+</style>

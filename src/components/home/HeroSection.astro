@@ -3,6 +3,8 @@
  * HeroSection.astro — DARK navy gradient
  * Mobile-first: single column → 2-col at 900px
  * yearsOld passed from index.astro frontmatter — zero client JS
+ * Flow animation: adapted from WhatWeDo.astro pipeline approach
+ * Runs along the divider line behind the stat cards (desktop only)
  */
 interface Props { yearsOld: number; }
 const { yearsOld } = Astro.props;
@@ -43,28 +45,43 @@ const { yearsOld } = Astro.props;
       </div>
     </div>
 
-    <!-- Right: stat cards -->
-    <div class="hero-stats" aria-label="Key company statistics">
-      <div class="hero-stat-card">
-        <div class="stat-number">{yearsOld}<span class="unit">+</span></div>
-        <div class="stat-label">Years of Engineering</div>
-        <div class="stat-desc">Founded 1987 in Bengaluru</div>
+    <!-- Right: stat cards + flow column -->
+    <div class="hero-stats-wrap" aria-label="Key company statistics">
+
+      <!-- Flow column — sits left of the cards, mirrors the divider line -->
+      <div class="hero-flow-col" id="hero-flow-col" aria-hidden="true">
+        <div class="hero-flow-line"></div>
+        <div class="hero-flow-glow" id="hero-flow-glow"></div>
+        <!-- Dot anchors — one per stat card, positioned by JS -->
+        <div class="hero-flow-dot" id="hfd-0"></div>
+        <div class="hero-flow-dot" id="hfd-1"></div>
+        <div class="hero-flow-dot" id="hfd-2"></div>
+        <div class="hero-flow-dot" id="hfd-3"></div>
       </div>
-      <div class="hero-stat-card">
-        <div class="stat-number">90<span class="unit">K</span></div>
-        <div class="stat-label">Sq.ft Manufacturing</div>
-        <div class="stat-desc">Machining, Fabrication, Assembly &amp; Testing</div>
+
+      <div class="hero-stats" id="hero-stats">
+        <div class="hero-stat-card" data-stat="0">
+          <div class="stat-number">{yearsOld}<span class="unit">+</span></div>
+          <div class="stat-label">Years of Engineering</div>
+          <div class="stat-desc">Founded 1987 in Bengaluru</div>
+        </div>
+        <div class="hero-stat-card" data-stat="1">
+          <div class="stat-number">90<span class="unit">K</span></div>
+          <div class="stat-label">Sq.ft Manufacturing</div>
+          <div class="stat-desc">Machining, Fabrication, Assembly &amp; Testing</div>
+        </div>
+        <div class="hero-stat-card" data-stat="2">
+          <div class="stat-number">4<span class="unit">+</span></div>
+          <div class="stat-label">Industries Served</div>
+          <div class="stat-desc">Cement · Mining · Food · Waste</div>
+        </div>
+        <div class="hero-stat-card" data-stat="3">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Product Lines</div>
+          <div class="stat-desc">Handling · Processing · Ancillary Equipment</div>
+        </div>
       </div>
-      <div class="hero-stat-card">
-        <div class="stat-number">4<span class="unit">+</span></div>
-        <div class="stat-label">Industries Served</div>
-        <div class="stat-desc">Cement · Mining · Food · Waste</div>
-      </div>
-      <div class="hero-stat-card">
-        <div class="stat-number">3</div>
-        <div class="stat-label">Product Lines</div>
-        <div class="stat-desc">Handling · Processing · Ancillary Equipment</div>
-      </div>
+
     </div>
 
   </div>
@@ -82,7 +99,7 @@ const { yearsOld } = Astro.props;
     min-height: 82svh;
     display: flex;
     align-items: center;
-    padding-top: 70px;    /* nav height */
+    padding-top: 70px;
     overflow: hidden;
   }
 
@@ -95,12 +112,6 @@ const { yearsOld } = Astro.props;
       linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
     z-index: 0;
   }
-  .hero-bg::after {
-    content: '';
-    position: absolute;
-    top: 0; right: 22%; width: 1px; height: 100%;
-    background: linear-gradient(180deg, transparent, rgba(208,212,220,.16) 30%, rgba(208,212,220,.06) 70%, transparent);
-  }
 
   /* ── Inner layout — mobile-first ── */
   .hero-inner {
@@ -111,14 +122,12 @@ const { yearsOld } = Astro.props;
     margin: 0 auto;
     padding: clamp(28px,5vh,56px) clamp(16px,4vw,56px);
     display: grid;
-    grid-template-columns: 1fr;            /* mobile: single column */
+    grid-template-columns: 1fr;
     gap: clamp(32px,4vw,56px);
     align-items: center;
   }
   @media (min-width: 900px) {
-    .hero-inner {
-      grid-template-columns: 1.1fr minmax(260px,360px);   /* desktop: 2 col */
-    }
+    .hero-inner { grid-template-columns: 1.1fr minmax(280px,380px); }
   }
 
   /* ── Eyebrow ── */
@@ -129,11 +138,7 @@ const { yearsOld } = Astro.props;
     margin-bottom: clamp(16px,2vh,22px);
     animation: fadeUp .8s ease .2s both;
   }
-  .hero-eyebrow-line {
-    width: 44px; height: 2px;
-    background: var(--crimson);
-    flex-shrink: 0;
-  }
+  .hero-eyebrow-line { width: 44px; height: 2px; background: var(--crimson); flex-shrink: 0; }
   .hero-eyebrow span {
     font-family: var(--font-mono);
     font-size: 12px;
@@ -154,8 +159,8 @@ const { yearsOld } = Astro.props;
     margin-bottom: clamp(18px,2.5vh,26px);
     animation: fadeUp .8s ease .35s both;
   }
-  .h-block   { display: block; color: var(--white); }
-  .accent    { color: var(--crimson-l); }
+  .h-block    { display: block; color: var(--white); }
+  .accent     { color: var(--crimson-l); }
   .chrome-grad {
     background: linear-gradient(135deg, var(--chrome-l) 0%, var(--chrome) 40%, var(--chrome-d) 100%);
     -webkit-background-clip: text;
@@ -182,57 +187,112 @@ const { yearsOld } = Astro.props;
     flex-wrap: wrap;
     animation: fadeUp .8s ease .65s both;
   }
-
   .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--crimson);
-    color: var(--white);
-    font-family: var(--font-head);
-    font-weight: 700;
-    font-size: clamp(13px,1.4vw,15px);
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--crimson); color: var(--white);
+    font-family: var(--font-head); font-weight: 700;
+    font-size: clamp(13px,1.4vw,15px); letter-spacing: .1em;
+    text-transform: uppercase; text-decoration: none;
     padding: clamp(12px,1.5vh,14px) clamp(24px,3vw,32px);
     clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
     transition: background .2s, transform .2s;
-    white-space: nowrap;
-    min-height: 44px;
+    white-space: nowrap; min-height: 44px;
   }
   .btn-primary:hover { background: var(--crimson-l); transform: translateX(3px); }
   .btn-primary svg   { width: 16px; height: 16px; flex-shrink: 0; }
-
   .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    background: transparent;
-    color: var(--chrome);
-    font-family: var(--font-head);
-    font-weight: 600;
-    font-size: clamp(13px,1.4vw,15px);
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 9px;
+    background: transparent; color: var(--chrome);
+    font-family: var(--font-head); font-weight: 600;
+    font-size: clamp(13px,1.4vw,15px); letter-spacing: .1em;
+    text-transform: uppercase; text-decoration: none;
     padding: clamp(12px,1.5vh,13px) clamp(20px,2.5vw,32px);
     border: 1px solid rgba(208,212,220,.2);
     transition: color .2s, border-color .2s;
-    white-space: nowrap;
-    min-height: 44px;
+    white-space: nowrap; min-height: 44px;
   }
   .btn-secondary:hover { color: var(--white); border-color: rgba(208,212,220,.5); }
+
+  /* ── Stats wrap — holds flow column + cards side by side ── */
+  .hero-stats-wrap {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    animation: fadeIn 1s ease .8s both;
+  }
+
+  /* ── Flow column — hidden on mobile, visible ≥ 900px ── */
+  .hero-flow-col {
+    display: none;
+    position: relative;
+    width: 24px;
+    flex-shrink: 0;
+    margin-right: 8px;
+  }
+  @media (min-width: 900px) { .hero-flow-col { display: block; } }
+
+  /* Vertical line */
+  .hero-flow-line {
+    position: absolute;
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 1px;
+    transform: translateX(-50%);
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(208,212,220,.14) 10%,
+      rgba(208,212,220,.14) 90%,
+      transparent 100%
+    );
+  }
+
+  /* Travelling glow — positioned by JS */
+  .hero-flow-glow {
+    position: absolute;
+    left: 50%;
+    margin-left: -3px;
+    top: 0;
+    width: 6px;
+    height: 80px;
+    opacity: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(106,166,255,.15) 10%,
+      rgba(106,166,255,.95) 40%,
+      rgba(180,220,255,1)   50%,
+      rgba(106,166,255,.95) 60%,
+      rgba(106,166,255,.15) 90%,
+      transparent 100%
+    );
+    border-radius: 3px;
+    z-index: 3;
+    will-change: top, opacity;
+  }
+
+  /* Dot anchors — positioned by JS to align with card centres */
+  .hero-flow-dot {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--crimson);
+    box-shadow: 0 0 0 2px rgba(192,24,30,.5), 0 0 6px rgba(192,24,30,.3);
+    z-index: 4;
+    will-change: box-shadow;
+  }
 
   /* ── Stat cards ── */
   .hero-stats {
     display: grid;
-    grid-template-columns: 1fr 1fr;   /* mobile: 2 col */
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
-    animation: fadeIn 1s ease .8s both;
+    flex: 1;
   }
   @media (min-width: 900px) {
-    .hero-stats { grid-template-columns: 1fr; gap: 2px; } /* desktop: stack */
+    .hero-stats { grid-template-columns: 1fr; gap: 2px; }
   }
 
   .hero-stat-card {
@@ -258,16 +318,15 @@ const { yearsOld } = Astro.props;
     letter-spacing: -.02em;
   }
   .stat-number .unit { font-size: .55em; color: #ff7070; }
-  .stat-label  { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #b8c0d0; margin-top: 5px; }
-  .stat-desc   { font-size: 12px; color: #8e9ab0; margin-top: 2px; font-weight: 300; line-height: 1.4; }
+  .stat-label { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #b8c0d0; margin-top: 5px; }
+  .stat-desc  { font-size: 12px; color: #8e9ab0; margin-top: 2px; font-weight: 300; line-height: 1.4; }
 
   /* ── Scroll indicator ── */
   .hero-scroll {
     position: absolute;
-    bottom: 28px;
-    left: 50%;
+    bottom: 28px; left: 50%;
     transform: translateX(-50%);
-    display: none;           /* hidden on mobile */
+    display: none;
     flex-direction: column;
     align-items: center;
     gap: 7px;
@@ -285,7 +344,112 @@ const { yearsOld } = Astro.props;
 
   @media (prefers-reduced-motion: reduce) {
     .hero-eyebrow, .hero-headline, .hero-sub,
-    .hero-actions, .hero-stats, .hero-scroll { animation: none; }
-    .scroll-line { animation: none; }
+    .hero-actions, .hero-stats-wrap, .hero-scroll { animation: none; }
+    .scroll-line, .hero-flow-glow { display: none; }
+    .hero-flow-dot { box-shadow: 0 0 0 2px rgba(192,24,30,.5); }
   }
 </style>
+
+<script>
+(function () {
+  const CYCLE_MS    = 4000;  // full loop ms — slightly faster than pipeline
+  const FLOW_HEIGHT = 80;    // px — glow element height
+  const DOT_PULSE   = 500;   // ms — dot burst duration
+
+  const section  = document.querySelector('.hero') as HTMLElement | null;
+  const flowCol  = document.getElementById('hero-flow-col');
+  const glow     = document.getElementById('hero-flow-glow');
+  const statsEl  = document.getElementById('hero-stats');
+  if (!section || !flowCol || !glow || !statsEl) return;
+
+  const cards = [...statsEl.querySelectorAll<HTMLElement>('.hero-stat-card')];
+  const dots  = [0,1,2,3].map(i => document.getElementById(`hfd-${i}`)).filter(Boolean) as HTMLElement[];
+
+  // Position each dot to vertically align with its card's centre
+  function positionDots() {
+    const colTop = flowCol.getBoundingClientRect().top;
+    cards.forEach((card, i) => {
+      if (!dots[i]) return;
+      const r = card.getBoundingClientRect();
+      const centre = (r.top + r.height / 2) - colTop;
+      dots[i].style.top = `${centre - 5}px`; // -5 = half dot height (10px)
+    });
+  }
+
+  function getDotOffsets(): number[] {
+    const colTop = flowCol.getBoundingClientRect().top;
+    return dots.map(dot => {
+      const r = dot.getBoundingClientRect();
+      return (r.top + r.height / 2) - colTop;
+    });
+  }
+
+  function pulseDot(dot: HTMLElement) {
+    dot.animate([
+      { boxShadow: '0 0 0 2px rgba(192,24,30,.5), 0 0 6px rgba(192,24,30,.3)' },
+      { boxShadow: '0 0 0 4px rgba(192,24,30,.9), 0 0 0 12px rgba(192,24,30,.4), 0 0 24px rgba(192,24,30,.7)' },
+      { boxShadow: '0 0 0 2px rgba(192,24,30,.6), 0 0 0 20px rgba(192,24,30,0)' },
+      { boxShadow: '0 0 0 2px rgba(192,24,30,.5), 0 0 6px rgba(192,24,30,.3)' },
+    ], { duration: DOT_PULSE, easing: 'ease-out' });
+  }
+
+  let rafId:     number | null = null;
+  let startTime: number | null = null;
+  let lastCycle  = new Array(dots.length).fill(-1);
+
+  function frame(now: number) {
+    if (!startTime) startTime = now;
+
+    const elapsed      = now - startTime;
+    const cycleIndex   = Math.floor(elapsed / CYCLE_MS);
+    const cycleElapsed = elapsed % CYCLE_MS;
+    const progress     = cycleElapsed / CYCLE_MS;
+
+    const colH        = flowCol.offsetHeight;
+    const totalTravel = colH + FLOW_HEIGHT;
+    const y           = -FLOW_HEIGHT + totalTravel * progress;
+    glow.style.top    = `${y}px`;
+
+    const flowCentre = y + FLOW_HEIGHT / 2;
+    const offsets    = getDotOffsets();
+
+    offsets.forEach((offset, i) => {
+      if (flowCentre >= offset && lastCycle[i] < cycleIndex) {
+        lastCycle[i] = cycleIndex;
+        pulseDot(dots[i]);
+      }
+    });
+
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function start() {
+    if (rafId) return;
+    positionDots();
+    glow.style.opacity = '1';
+    startTime = null;
+    lastCycle.fill(-1);
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function stop() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    glow.style.opacity = '0';
+    glow.style.top     = '0px';
+    dots.forEach(d => (d.style.boxShadow = ''));
+  }
+
+  // Only run when hero is in view — stop when scrolled past
+  const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) { start(); } else { stop(); }
+  }, { threshold: 0.1 });
+
+  observer.observe(section);
+
+  // Re-position dots on resize (e.g. orientation change)
+  window.addEventListener('resize', positionDots, { passive: true });
+
+  // Clean up on Astro page transitions
+  document.addEventListener('astro:before-swap', stop);
+})();
+</script>

@@ -1,0 +1,186 @@
+/* ═══════════════════════════════════════════════════
+   ABOUT PAGE — SHARED STYLES
+   Place at: public/styles/about-shared.css
+   Import via <link> in about.astro (inside BaseLayout slot
+   this goes into <body>, not <head> — so instead import
+   it from src/styles/about-shared.css in about.astro's
+   frontmatter: import '../styles/about-shared.css';
+   ═══════════════════════════════════════════════════ */
+
+/* ── Keyframes ── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(192, 24, 30, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(192, 24, 30, 0);
+  }
+}
+@keyframes dotPop {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes rippleDot {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+@keyframes diamondGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(192, 24, 30, 0.5);
+    transform: rotate(45deg) scale(1);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(192, 24, 30, 0.3);
+    transform: rotate(45deg) scale(1.2);
+  }
+}
+
+/* ── Shared section inner container ── */
+.about-inner {
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 16px;
+  box-sizing: border-box;
+  width: 100%;
+}
+@media (min-width: 480px) {
+  .about-inner {
+    padding-inline: 20px;
+  }
+}
+@media (min-width: 768px) {
+  .about-inner {
+    padding-inline: 32px;
+  }
+}
+@media (min-width: 1024px) {
+  .about-inner {
+    padding-inline: 48px;
+  }
+}
+
+/* ── Shared section tag ── */
+.about-section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.about-section-tag .line {
+  width: 28px;
+  height: 2px;
+  background: var(--crimson);
+  flex-shrink: 0;
+}
+.about-section-tag span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ff7070;
+}
+
+/* ── Shared section headline ── */
+.about-section-headline {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: clamp(34px, 4.5vw, 56px);
+  text-transform: uppercase;
+  line-height: 0.97;
+  margin-bottom: 14px;
+  color: var(--white);
+}
+
+/* ── Shared section sub ── */
+.about-section-sub {
+  font-size: clamp(14px, 1.6vw, 16px);
+  font-weight: 300;
+  color: var(--fog);
+  line-height: 1.75;
+  max-width: 640px;
+}
+
+/* ── Shared buttons ── */
+.about-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--crimson);
+  color: var(--white);
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 14px 32px;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  transition:
+    background 0.2s,
+    transform 0.2s;
+  white-space: nowrap;
+}
+.about-btn-primary:hover {
+  background: var(--crimson-l);
+  transform: translateX(3px);
+}
+
+.about-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: transparent;
+  color: var(--chrome, #d0d4dc);
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 13px 32px;
+  border: 1px solid rgba(208, 212, 220, 0.2);
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+  white-space: nowrap;
+}
+.about-btn-secondary:hover {
+  color: var(--white);
+  border-color: rgba(208, 212, 220, 0.5);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

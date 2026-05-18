@@ -1,4 +1,207 @@
 ---
+/**
+ * src/pages/about.astro
+ * ─────────────────────
+ * About Us page orchestrator.
+ * Imports all section components and handles SEO/schema.
+ *
+ * FOLDER STRUCTURE:
+ *   src/
+ *     pages/
+ *       about.astro                      ← this file
+ *     components/
+ *       about/
+ *         AboutHero.astro
+ *         AboutFounder.astro
+ *         AboutTimeline.astro
+ *         AboutMissionValues.astro
+ *         AboutTeam.astro
+ *         AboutRecognition.astro
+ *         AboutCTA.astro
+ *     styles/
+ *       about-shared.css                 ← keyframes + shared tokens
+ *       global.css                       ← already exists, unchanged
+ */
+
+import BaseLayout         from '../layouts/BaseLayout.astro';
+import AboutHero          from '../components/about/AboutHero.astro';
+import AboutFounder       from '../components/about/AboutFounder.astro';
+import AboutTimeline      from '../components/about/AboutTimeline.astro';
+import AboutMissionValues from '../components/about/AboutMissionValues.astro';
+import AboutTeam          from '../components/about/AboutTeam.astro';
+import AboutRecognition   from '../components/about/AboutRecognition.astro';
+import AboutCTA           from '../components/about/AboutCTA.astro';
+import '../styles/about-shared.css';
+
+// ── Dynamic year for SEO strings ──────────────────
+const currentYear   = new Date().getFullYear();
+const yearsInBiz    = currentYear - 1987;
+
+const seoTitle       = `About Jayveecons Group — ${yearsInBiz} Years of Bulk Material Handling Equipment Manufacturing`;
+const seoDesc        = `Jayveecons Group was established in 1987 in Bengaluru, India as an engineering consultancy and has grown into a full-scale manufacturer of VECTOMEC™ bulk material handling and process equipment. Learn about our history, leadership, mission, and values.`;
+const seoKeywords    = [
+  'Jayveecons Group about us',
+  'bulk material handling equipment manufacturer India',
+  'industrial equipment manufacturer Bengaluru',
+  'cement plant equipment manufacturer since 1987',
+  'VSK vertical shaft kiln manufacturer India',
+  'VECTOMEC equipment manufacturer',
+  'VECTRIX design platform',
+  'K R Subramanian Jayveecons',
+  'Rama Subramanian Jayveecons',
+  'engineering company Malur Karnataka',
+  'material handling equipment manufacturer Bengaluru',
+  'industrial fabrication company India',
+  'Priyadarshini Award winner',
+  'women entrepreneur award manufacturing India',
+  'AkshayVipra El-Mec',
+  'JV Group India',
+  '90000 sqft fabrication facility Bengaluru',
+].join(', ');
+
+const ogImage = 'https://www.jayveecons.com/images/og-about.jpg';
+const canonicalPath = '/about';
+---
+
+<BaseLayout
+  title={seoTitle}
+  description={seoDesc}
+  keywords={seoKeywords}
+  currentPath={canonicalPath}
+  ogImage={ogImage}
+>
+
+  <!-- ══════════════════════════════════════════════
+       STRUCTURED DATA
+       Organization (matches contact.astro schema)
+       + BreadcrumbList + AboutPage + Person entities
+  ══════════════════════════════════════════════ -->
+  <script type="application/ld+json" is:inline>{JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.jayveecons.com/#org",
+        "name": "Jayveecons Group",
+        "alternateName": "Jayveecons",
+        "url": "https://www.jayveecons.com",
+        "logo": "https://www.jayveecons.com/images/logo.png",
+        "foundingDate": "1987",
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Bengaluru, Karnataka, India"
+        },
+        "description": "Manufacturer of VECTOMEC™ bulk material handling and processing equipment for cement, mining, food, waste, steel and fertilizer industries. Est. 1987, Bengaluru, India.",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "1st Phase, Plot 87/D2, Mcnally Road, Industrial Estate",
+          "addressLocality": "Malur",
+          "addressRegion": "Karnataka",
+          "postalCode": "563130",
+          "addressCountry": "IN"
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+91-94480-88230",
+          "email": "sales@jayveecons.com",
+          "contactType": "sales",
+          "areaServed": "IN",
+          "availableLanguage": ["English", "Kannada", "Hindi"]
+        },
+        "numberOfEmployees": {
+          "@type": "QuantitativeValue",
+          "minValue": 50
+        },
+        "knowsAbout": [
+          "Bulk material handling equipment",
+          "Vertical Shaft Kiln systems",
+          "Screw conveyors",
+          "Bucket elevators",
+          "Ball mills",
+          "Belt conveyors",
+          "Industrial crushers",
+          "Storage silos",
+          "Dust collectors"
+        ],
+        "award": [
+          "Priyadarshini Award 2012",
+          "Women Entrepreneur Award 2015 — NVDP Exhibition, Kolar"
+        ],
+        "sameAs": []
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home",     "item": "https://www.jayveecons.com" },
+          { "@type": "ListItem", "position": 2, "name": "About Us", "item": "https://www.jayveecons.com/about" }
+        ]
+      },
+      {
+        "@type": "AboutPage",
+        "@id": "https://www.jayveecons.com/about",
+        "name": seoTitle,
+        "description": seoDesc,
+        "url": "https://www.jayveecons.com/about",
+        "inLanguage": "en-IN",
+        "isPartOf": { "@id": "https://www.jayveecons.com/#org" },
+        "about": { "@id": "https://www.jayveecons.com/#org" },
+        "dateModified": new Date().toISOString().split('T')[0]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.jayveecons.com/#founder",
+        "name": "K. R. Subramanian",
+        "jobTitle": "Founder & Managing Director",
+        "worksFor": { "@id": "https://www.jayveecons.com/#org" },
+        "knowsAbout": ["Vertical Shaft Kiln technology", "Cement plant engineering", "Bulk material handling"]
+      },
+      {
+        "@type": "Person",
+        "name": "Rama Subramanian",
+        "jobTitle": "Director",
+        "worksFor": { "@id": "https://www.jayveecons.com/#org" },
+        "award": [
+          "Priyadarshini Award 2012",
+          "Women Entrepreneur Award 2015"
+        ]
+      }
+    ]
+  })}</script>
+
+  <!-- ══ SECTIONS — in DOM order ══ -->
+  <AboutHero />
+  <AboutFounder />
+  <AboutTimeline />
+  <AboutMissionValues />
+  <AboutTeam />
+  <AboutRecognition />
+  <AboutCTA />
+
+  <!-- ══ Scroll-reveal catch-up island ══ -->
+  <script>
+    (() => {
+      // Re-observe any .reveal elements BaseLayout may have missed
+      // (components that render after BaseLayout's DOMContentLoaded)
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('visible');
+              obs.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.07, rootMargin: '0px 0px -28px 0px' }
+      );
+      document.querySelectorAll('.reveal:not(.visible)').forEach((el) => obs.observe(el));
+    })();
+  </script>
+
+</BaseLayout>
+
+
+
+---
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout
@@ -494,218 +697,7 @@ footer{background:var(--black);border-top:1px solid rgba(51,96,184,.14);padding:
   </div>
 </div>
 
-<!-- FOUNDER / OUR STORY -->
-<section class="founder" id="about">
-  <div class="section-inner">
 
-    <!-- Full-width lead paragraph -->
-    <div class="founder-lead-wrap reveal">
-      <div class="section-tag founder-lead-tag"><div class="line"></div><span>The Founding</span></div>
-      <h2 class="founder-lead-headline">Built from<br>the <span class="accent">Ground Up</span></h2>
-      <p class="founder-lead-p">In 1987, K. R. Subramanian established Jayveecons, Consultants and Engineers in Bengaluru as a process engineering consultancy committed to enhancing efficiency, reliability, and process performance in small-scale cement plants, with deep expertise in Vertical Shaft Kiln technology. What began as a specialized advisory practice quickly evolved into something far more significant—driven by the growing need for practical, reliable, and performance-oriented engineering solutions.</p>
-      <div class="founder-lead-divider"></div>
-      <p class="founder-lead-sub">The strength of those early engagements—and the trust earned through them—expanded our footprint across industries including mining, food processing, steel, and waste management. As client requirements became more complex and execution-driven, it became clear that consultancy alone would not deliver comprehensive solutions to our customer's needs. This was our natural catalyst to build.</p>
-    </div>
-
-    <!-- Two-column body -->
-    <div class="founder-body">
-      <div class="founder-copy reveal">
-        <p>Jayveecons transitioned into a fully integrated design and manufacturing organization—investing in infrastructure, capability, and people. Today, we operate a <strong>90,000 sq.ft machining and fabrication facility</strong>, delivering end-to-end material handling and process equipment solutions under one roof.</p>
-        <div class="founder-quote">
-          <p>“At Jayveecons, Moving your world ahead is not a statement—it is a responsibility. Our role is to deliver engineering solutions that are not only cost-effective, but fundamentally reliable, efficient, and continuously improving through technology.”</p>
-          <cite>— Jayveecons Company Mission</cite>
-        </div>
-        <p>Over the past three decades, our greatest asset has been the feedback and trust of our customers. Every machine we design carries with it the lessons of real-world operation—refined through performance, iteration, and accountability in the field. This continuous feedback loop has shaped our engineering philosophy and remains the foundation of our growth.</p>
-        <p>Today, that experience is embedded into how we design the future. Through platforms like VECTRIX™, we are formalizing decades of practical knowledge into predictive engineering systems—enabling faster innovation, greater accuracy, and smarter equipment design.</p>
-        <p>As we look ahead, our focus remains clear: to build the next generation of industrial equipment under the VECTOMEC™ line—systems that reflect not just where the industry is today, but where it needs to go. Our commitment is to continue evolving with our customers, delivering solutions that move their operations—and the industries we serve—forward with confidence.</p>
-      </div>
-
-      <div class="reveal">
-        <!-- Engineering delivery process cards — non-repetitive from homepage -->
-        <div class="process-cards">
-          <div class="proc-card">
-            <div class="proc-num">01</div>
-            <div class="proc-content">
-              <div class="proc-title">Concept &amp; Engineering Design</div>
-              <div class="proc-desc">Every project starts with your process requirements. Our engineers design to your capacity, material, and site parameters — not to a generic catalogue spec.</div>
-            </div>
-          </div>
-          <div class="proc-card">
-            <div class="proc-num">02</div>
-            <div class="proc-content">
-              <div class="proc-title">In-House Fabrication</div>
-              <div class="proc-desc">90,000 sq.ft of machining and fabrication capability. We manufacture to our own drawings, under our own quality control. Nothing critical is subcontracted.</div>
-            </div>
-          </div>
-          <div class="proc-card">
-            <div class="proc-num">03</div>
-            <div class="proc-content">
-              <div class="proc-title">Erection &amp; Commissioning</div>
-              <div class="proc-desc">Our teams install and commission at your site — ensuring the equipment that leaves our floor arrives performing to specification in the field.</div>
-            </div>
-          </div>
-          <div class="proc-card">
-            <div class="proc-num">04</div>
-            <div class="proc-content">
-              <div class="proc-title">Parts, Spares &amp; After-Sales</div>
-              <div class="proc-desc">Because we manufacture the equipment, we stock the parts. Long-term support backed by the same team that built your machine.</div>
-            </div>
-          </div>
-        </div>
-        <div class="partner-strip">
-          <span class="label">Manufacturing partner</span>
-          <a href="https://akshayvipra.com" target="_blank" rel="noopener">AkshayVipra El-Mec Pvt. Ltd. ↗</a>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- TIMELINE -->
-<section class="timeline-section" id="history">
-  <div class="section-inner">
-    <div class="section-tag reveal"><div class="line"></div><span>Company History</span></div>
-    <h2 class="section-headline reveal">The Journey</h2>
-    <div class="timeline" id="timeline">
-
-      <div class="tl-item reveal" data-year="1987">
-        <div class="tl-year-col"><div class="tl-year">1987</div><div class="tl-era">Founding</div></div>
-        <div class="tl-mid"><div class="tl-diamond"></div><div class="tl-line"></div></div>
-        <div class="tl-content">
-          <div class="tl-title">Jayveecons Founded</div>
-          <p class="tl-text">K.R. Subramanian establishes Jayveecons as an engineering consultancy in Bengaluru, focused on Vertical Shaft Kiln (VSK) technology for small-scale cement plants. Early clients are local cement manufacturers seeking cost-effective process solutions.</p>
-          <span class="tl-tag">Bengaluru, Karnataka</span>
-        </div>
-      </div>
-
-      <div class="tl-item reveal" data-year="1990">
-        <div class="tl-year-col"><div class="tl-year">Early 1990s</div><div class="tl-era">Expansion</div></div>
-        <div class="tl-mid"><div class="tl-diamond"></div><div class="tl-line"></div></div>
-        <div class="tl-content">
-          <div class="tl-title">From Consulting to Manufacturing</div>
-          <p class="tl-text">Growing demand across sectors beyond cement motivates the transition from consulting to full manufacturing. Jayveecons Group invests in its first fabrication facility, expanding capability to design and build material handling equipment in-house.</p>
-          <span class="tl-tag">Manufacturing begins</span>
-        </div>
-      </div>
-
-      <div class="tl-item reveal" data-year="2000">
-        <div class="tl-year-col"><div class="tl-year">2000s</div><div class="tl-era">Growth</div></div>
-        <div class="tl-mid"><div class="tl-diamond"></div><div class="tl-line"></div></div>
-        <div class="tl-content">
-          <div class="tl-title">Multi-Sector Capability</div>
-          <p class="tl-text">Product range expands to serve mining, food processing, steel, and waste management industries. The 90,000 sq.ft facility is established, housing a versatile machining and fabrication shop capable of large-scale industrial builds.</p>
-          <span class="tl-tag">90,000 sq.ft facility</span>
-        </div>
-      </div>
-
-      <div class="tl-item reveal" data-year="2012">
-        <div class="tl-year-col"><div class="tl-year">2012</div><div class="tl-era">Recognition</div></div>
-        <div class="tl-mid"><div class="tl-diamond"></div><div class="tl-line"></div></div>
-        <div class="tl-content">
-          <div class="tl-title">Priyadarshini Award</div>
-          <p class="tl-text">Jayveecons Group receives the Priyadarshini Award in recognition of business excellence and community contribution. Mrs. Rama Subramanian leads the company's continued growth as Managing Director.</p>
-          <span class="tl-tag">National recognition</span>
-        </div>
-      </div>
-
-      <div class="tl-item reveal" data-year="2015">
-        <div class="tl-year-col"><div class="tl-year">2015</div><div class="tl-era">Recognition</div></div>
-        <div class="tl-mid"><div class="tl-diamond"></div><div class="tl-line"></div></div>
-        <div class="tl-content">
-          <div class="tl-title">Women Entrepreneur Award</div>
-          <p class="tl-text">Awarded at the National Vendor Development Programme cum Industrial Exhibition, Kolar, Bangalore — recognising entrepreneurial leadership and contribution to Indian manufacturing. Accepted by Managing Director Mrs. Rama Subramanian alongside Health Minister Mr. K.R. RameshKumar.</p>
-          <span class="tl-tag">NVDP Exhibition, Kolar</span>
-        </div>
-      </div>
-
-      <div class="tl-item reveal" data-year="2016">
-        <div class="tl-year-col"><div class="tl-year">2016</div><div class="tl-era">Digital</div></div>
-        <div class="tl-mid"><div class="tl-diamond"></div><div class="tl-line"></div></div>
-        <div class="tl-content">
-          <div class="tl-title">Jayveecons Goes Online</div>
-          <p class="tl-text">Jayveecons Group launches its first website, enabling existing and new customers to engage digitally — marking the company's formal entry into the digital marketplace and signalling international ambition.</p>
-          <span class="tl-tag">First web presence</span>
-        </div>
-      </div>
-
-      <div class="tl-item reveal" data-year="now">
-        <div class="tl-year-col"><div class="tl-year">Now</div><div class="tl-era">Next Chapter</div></div>
-        <div class="tl-mid"><div class="tl-diamond"></div></div>
-        <div class="tl-content">
-          <div class="tl-title">VECTRIX™, VECTOMEC™ &amp; Global Expansion</div>
-          <p class="tl-text">Jayveecons Group introduces the <span style="color:rgba(233, 8, 15, 0.92); font-weight: 600; letter-spacing: 0.3px;">
-  VECTOMEC™
-</span>equipment brand and a fully modernised line designed to <span style="color: rgba(233, 8, 15, 0.92); font-weight: 600; letter-spacing: 0.3px;">
-  VECTRIX™
-</span> standards, targeting expansion into Oil &amp; Gas, Pharmaceuticals, and Agriculture Processing. The JV Group structure provides integrated design-manufacture-deliver capability through AkshayVipra El-Mec.</p>
-          <span class="tl-tag">VECTOMEC™ · Global ambition</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- MISSION & VALUES -->
-<section class="mission-values" id="values">
-  <div class="section-inner">
-    <div class="mv-grid">
-      <div class="reveal">
-        <div class="section-tag"><div class="line"></div><span>Mission &amp; Philosophy</span></div>
-        <h2 class="section-headline">What Drives Us</h2>
-        <div class="mission-block">
-          <div class="big-quote">"Moving Your <span>World Ahead"</span></div>
-          <p>Our commitment to engineering is not a matter of messaging — it is embedded in every system we design. Each piece of equipment is purpose-built to move material with precision, reliability, and efficiency—whether raw input, processed product, or the performance metrics of the plant itself.</p>
-          <p>Long before sustainability became an industry mandate, we adopted a <span style="color: rgba(8, 233, 27, 0.92); font-weight: 600; letter-spacing: 0.3px;">
-  “Go Green”</span> philosophy as a core engineering principle. Through lean system design, optimized energy consumption, and reduced material losses, our equipment consistently delivers lower operating costs alongside a smaller environmental footprint. This is not an added feature—it is a baseline standard.</p>
-          <p>Our quality framework extends beyond compliance. Every system is engineered to stringent specifications and validated through real-world performance, where exceeding customer expectations is the true measure of success. This engineering philosophy is formalized through <span style="color: rgba(233, 8, 15, 0.92); font-weight: 600; letter-spacing: 0.3px;">
-            VECTRIX™</span> Design Platform, our indigenously developed design and simulation environment.</br>
-           <span style="color: rgba(233, 8, 15, 0.92); font-weight: 600; letter-spacing: 0.3px;">VECTRIX™ </span> captures decades of domain expertise—spanning material behavior, process dynamics, and mechanical design—and integrates it into a coupled, multi-physics engineering framework. This enables predictive design, rapid iteration, and continuous improvement across applications.</p>
-          <p>The result is a new generation of equipment under the <span style="color: rgba(233, 8, 15, 0.92); font-weight: 600; letter-spacing: 0.3px;">
-            VECTOMEC™</span> line—systems that are not only engineered for today’s requirements, but continuously refined through data-driven R&D and field performance feedback. Every <span style="color: rgba(233, 8, 15, 0.92); font-weight: 600; letter-spacing: 0.3px;">
-            VECTOMEC™</span> solution reflects a closed-loop engineering approach, where experience, simulation, and real-world validation converge to define the next standard in material handling and process equipment.</p>
-        </div>
-      </div>
-      <div class="reveal">
-        <div class="section-tag"><div class="line"></div><span>Core Values</span></div>
-        <h2 class="section-headline">How We Work</h2>
-        <div class="values-grid">
-          <div class="value-card">
-            <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <div class="value-name">Reliability</div>
-            <div class="value-desc">Equipment that performs to spec, every shift, every year.</div>
-          </div>
-          <div class="value-card">
-            <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-            <div class="value-name">Integrity</div>
-            <div class="value-desc">Honest engineering, honest pricing, honest timelines.</div>
-          </div>
-          <div class="value-card">
-            <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-            <div class="value-name">Diligence</div>
-            <div class="value-desc">Thorough engineering at every phase. No shortcuts on design, material, or execution.</div>
-          </div>
-          <div class="value-card">
-            <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            <div class="value-name">Innovation</div>
-            <div class="value-desc">Continuous improvement driven by customer feedback. VECTOMEC™ is the current expression of this commitment.</div>
-          </div>
-          <div class="value-card">
-            <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
-            <div class="value-name">Safety</div>
-            <div class="value-desc">Operator safety as a primary design constraint — not an afterthought.</div>
-          </div>
-          <div class="value-card">
-            <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zM2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
-            <div class="value-name">Go Green</div>
-            <div class="value-desc">Lean, efficient designs since before sustainability was mainstream.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- TEAM -->
 <section class="team-section" id="team">
@@ -753,44 +745,6 @@ footer{background:var(--black);border-top:1px solid rgba(51,96,184,.14);padding:
   </div>
 </section>
 
-<!-- RECOGNITION -->
-<section class="recognition" id="recognition">
-  <div class="section-inner">
-    <div class="section-tag reveal"><div class="line"></div><span>Recognition &amp; Awards</span></div>
-    <h2 class="section-headline reveal">Acknowledged Beyond the Factory Floor</h2>
-    <p class="section-sub reveal">Our awards reflect leadership, community contribution, and entrepreneurial excellence — the values that shape how we build, not just what we build.</p>
-    <div class="rec-grid">
-      <div class="rec-card reveal">
-        <div class="rec-year">2012</div>
-        <div class="rec-name">Priyadarshini Award</div>
-        <div class="rec-org">National Excellence Recognition</div>
-        <p class="rec-desc">Awarded in recognition of business leadership and excellence, reflecting Jayveecons Group's contribution to Indian manufacturing and the communities it operates in.</p>
-      </div>
-      <div class="rec-card reveal">
-        <div class="rec-year">2015</div>
-        <div class="rec-name">Women Entrepreneur Award</div>
-        <div class="rec-org">National Vendor Development Programme · Kolar, Karnataka</div>
-        <p class="rec-desc">Presented at the NVDP cum Industrial Exhibition, recognising entrepreneurial leadership by Managing Director Mrs. Rama Subramanian, accepted alongside Health Minister Mr. K.R. RameshKumar.</p>
-      </div>
-      <div class="rec-card rec-placeholder reveal">
-        <span>Additional awards &amp; milestones — coming soon</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="cta-band">
-  <div class="cta-inner">
-    <div class="cta-eyebrow reveal">Work with Us</div>
-    <h2 class="cta-headline reveal">Ready to Build<br><span class="accent">Something Great?</span></h2>
-    <p class="cta-sub reveal" id="cta-years-text">39 years of engineering experience, at your project's service.</p>
-    <div class="cta-actions reveal">
-      <a href="/contact" class="btn-primary">Request a Quote <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-      <a href="/products" class="btn-secondary">View Our Products →</a>
-    </div>
-  </div>
-</section>
 
 <script>
 /* ════════════════════════════════════════════════════
