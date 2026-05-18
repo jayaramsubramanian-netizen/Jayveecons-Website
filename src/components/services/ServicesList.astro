@@ -137,6 +137,25 @@
 
 </section>
 
+<script>
+(function () {
+  const blocks = document.querySelectorAll('.svc-block[id]'); // only numbered services, not header
+  if (!blocks.length) return;
+
+  const obs = new IntersectionObserver(
+    (entries) => entries.forEach(e =>
+      e.target.classList.toggle('svc-active', e.isIntersecting)
+    ),
+    {
+      threshold:   0.2,
+      rootMargin: '-5% 0px -40% 0px'   // fires when service is ~25-55% into view
+    }
+  );
+
+  blocks.forEach(block => obs.observe(block));
+})();
+</script>
+
 <style>
   /* ── Outer section — 1440px cap, centred ── */
   .sl-section {
@@ -430,4 +449,35 @@
   .dark  .svc-cta:hover { color: var(--white); }
   .light .svc-cta:hover { color: rgba(8,56,146,.9); }
   .svc-cta svg { width: 12px; height: 12px; }
+
+/* Border-left lights up when section scrolls in */
+  .svc-block.svc-active {
+    border-left-color: var(--crimson);
+  }
+
+  /* Ghost number brightens — same as .tl-active .tl-year */
+  .dark.svc-active  .svc-num { color: rgba(192,24,30,.65); transition: color .5s ease; }
+  .light.svc-active .svc-num { color: rgba(192,24,30,.75);  transition: color .5s ease; }
+
+  /* Icon pulses — same diamondGlow timing as timeline */
+  .svc-block.svc-active .svc-icon {
+    animation: iconPulse 2s ease infinite;
+  }
+
+  /* Service name accent brightens on dark sections */
+  .dark.svc-active .svc-name { color: var(--white); }
+
+  /* CTA link brightens */
+  .dark.svc-active  .svc-cta { color: var(--crimson-l); }
+  .light.svc-active .svc-cta { color: #c0181e; }
+
+  @keyframes iconPulse {
+    0%,100% { opacity: .9; filter: drop-shadow(0 0 0px rgba(192,24,30,0)); }
+    50%      { opacity: 1;  filter: drop-shadow(0 0 6px rgba(192,24,30,.7)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .svc-block.svc-active .svc-icon { animation: none; }
+  }
+
 </style>
