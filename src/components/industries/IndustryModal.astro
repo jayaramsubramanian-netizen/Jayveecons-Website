@@ -1,0 +1,402 @@
+---
+/**
+ * IndustryModal.astro — redesigned
+ * - Image: natural aspect ratio, centered, height auto
+ * - Products: horizontal pill list with accents
+ * - CTA: full site-style primary button
+ * - White bg, navy/crimson accents
+ */
+---
+
+<dialog class="im-dialog" id="industry-modal" aria-labelledby="im-title" aria-modal="true">
+  <div class="im-backdrop" id="im-backdrop"></div>
+
+  <div class="im-panel" role="document">
+
+    <!-- Close -->
+    <button class="im-close" id="im-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6"  y1="6" x2="18" y2="18"/>
+      </svg>
+      Close
+    </button>
+
+    <!-- Header -->
+    <div class="im-header">
+      <div class="im-status" id="im-status"></div>
+      <div class="im-sector" id="im-sector"></div>
+      <h2 class="im-title" id="im-title"></h2>
+    </div>
+
+    <!--
+      Image — natural aspect ratio preserved.
+      width:100% + height:auto lets the image set its own height.
+      Max-height on mobile prevents very tall composite images.
+    -->
+    <div class="im-img-wrap" id="im-img-wrap">
+      <img class="im-img" id="im-img" src="" alt="" loading="lazy" />
+    </div>
+
+    <!-- Products — horizontal pill grid -->
+    <div class="im-products-section">
+      <div class="im-label">VECTOMEC™ Equipment Available</div>
+      <div class="im-products" id="im-products"></div>
+    </div>
+
+    <!-- Trust + CTA -->
+    <div class="im-footer">
+      <div class="im-trust" id="im-trust"></div>
+      <div class="im-actions" id="im-actions"></div>
+    </div>
+
+  </div>
+</dialog>
+
+<style>
+  /* ── Dialog reset ── */
+  .im-dialog {
+    position: fixed;
+    inset: 0;
+    width: 100%; height: 100%;
+    max-width: 100%; max-height: 100%;
+    margin: 0; padding: 0; border: none;
+    background: transparent;
+    z-index: 9999;
+    overflow: hidden;
+  }
+  .im-dialog:not([open]) { display: none; }
+
+  /* Backdrop */
+  .im-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(4,6,12,.78);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    cursor: pointer;
+  }
+
+  /* ── Panel — WHITE, mobile-first ── */
+  .im-panel {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    max-height: 92svh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #ffffff;
+    border-top: 4px solid #c0181e;
+    border-radius: 16px 16px 0 0;
+    padding: clamp(16px,2.5vh,24px) clamp(16px,4vw,32px) clamp(24px,4vh,40px);
+    animation: imSlideUp .3s cubic-bezier(.4,0,.2,1) both;
+    z-index: 1;
+  }
+
+  /* Desktop — centred, 1440px cap */
+  @media (min-width: 640px) {
+    .im-panel {
+      top: 50%; bottom: auto;
+      left: 50%; right: auto;
+      transform: translate(-50%, -50%);
+      width: min(96vw, 1440px);
+      max-height: 90svh;
+      border-radius: 12px;
+      border-top: none;
+      border-left: 4px solid #c0181e;
+      animation: imFadeScale .28s cubic-bezier(.4,0,.2,1) both;
+    }
+  }
+
+  /* ── Close button ── */
+  .im-close {
+    display: flex; align-items: center; gap: 6px;
+    float: right;
+    background: none;
+    border: 1px solid rgba(8,56,146,.15);
+    border-radius: 4px;
+    cursor: pointer;
+    color: #5a6a88;
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    padding: 6px 12px;
+    margin-bottom: clamp(10px,1.5vh,16px);
+    transition: color .2s, border-color .2s;
+    min-height: 36px;
+  }
+  .im-close:hover { color: #c0181e; border-color: rgba(192,24,30,.3); }
+  .im-close:focus-visible { outline: 2px solid #c0181e; outline-offset: 2px; }
+  .im-close svg { width: 14px; height: 14px; }
+
+  /* ── Header ── */
+  .im-header { clear: both; margin-bottom: clamp(12px,1.5vh,18px); }
+
+  .im-status {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+    background: rgba(192,24,30,.08);
+    color: #c0181e;
+    border: 1px solid rgba(192,24,30,.2);
+    padding: 3px 10px; border-radius: 2px;
+    margin-bottom: 8px;
+  }
+  .im-sector {
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+    color: #c0181e; margin-bottom: 6px;
+  }
+  .im-title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(20px,3vw,36px);
+    text-transform: uppercase;
+    line-height: .97; letter-spacing: .01em;
+    color: rgba(8,56,146,.9);
+    margin: 0;
+  }
+
+  /* ════════════════════════════════════════
+     IMAGE
+     - Natural aspect ratio (width:100%, height:auto)
+     - Centered horizontally
+     - max-height on mobile so composite images don't overflow
+  ════════════════════════════════════════ */
+  .im-img-wrap {
+    width: 100%;
+    /* Let image set its own height */
+    max-height: 60svh;  /* cap on small screens */
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid rgba(8,56,146,.1);
+    margin-bottom: clamp(16px,2.5vh,24px);
+    background: #f0f4fb;
+    display: none;          /* hidden until JS sets src */
+    align-items: center;
+    justify-content: center;
+  }
+  .im-img-wrap.has-image { display: flex; }
+
+  @media (min-width: 640px) {
+    .im-img-wrap { max-height: none; }  /* desktop: full natural height */
+  }
+
+  .im-img {
+    width: 100%;
+    height: auto;           /* preserve natural aspect ratio */
+    display: block;
+    object-fit: contain;    /* never crop — show full composite image */
+    object-position: center;
+  }
+
+  /* ════════════════════════════════════════
+     PRODUCTS — horizontal pill grid
+  ════════════════════════════════════════ */
+  .im-products-section {
+    margin-bottom: clamp(16px,2vh,24px);
+  }
+
+  .im-label {
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+    color: #c0181e;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(192,24,30,.2);
+    margin-bottom: 12px;
+  }
+
+  /* Horizontal wrapping pill list */
+  .im-products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .im-product-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: clamp(9px,1vw,11px);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgba(8,56,146,.85);
+    background: rgba(8,56,146,.05);
+    border: 1px solid rgba(8,56,146,.18);
+    padding: 6px 12px;
+    border-radius: 2px;
+    transition: background .2s, border-color .2s, color .2s;
+  }
+  .im-product-pill:hover {
+    background: rgba(8,56,146,.1);
+    border-color: rgba(8,56,146,.35);
+    color: rgba(8,56,146,1);
+  }
+  /* Diamond bullet before each pill */
+  .im-product-pill::before {
+    content: '';
+    width: 5px; height: 5px; flex-shrink: 0;
+    background: #c0181e;
+    clip-path: polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+  }
+
+  /* ════════════════════════════════════════
+     FOOTER — trust + CTA side by side
+  ════════════════════════════════════════ */
+  .im-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  @media (min-width: 640px) {
+    .im-footer {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+  }
+
+  .im-trust {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: .09em; line-height: 1.7;
+    color: #4a5068;
+    background: rgba(8,56,146,.04);
+    border-left: 3px solid #c0181e;
+    padding: 12px 16px;
+    border-radius: 0 4px 4px 0;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  /* ── CTA button ── */
+  .im-actions { flex-shrink: 0; }
+
+  .im-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #c0181e;
+    color: #ffffff;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(13px,1.4vw,15px);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: clamp(13px,1.5vh,16px) clamp(28px,2.8vw,40px);
+    border-radius: 2px;
+    transition: background .2s;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+    min-height: 48px;
+    /* No clip-path, no transform — both cause SVG child to escape dialog bounds */
+  }
+  .im-btn-primary:hover { background: #e02428; }
+
+  .im-btn-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Arrow: render as HTML entity inside a span — not an SVG at all */
+  .im-btn-arrow-char {
+    font-size: 1em;
+    line-height: 1;
+    display: inline-block;
+  }
+
+  /* ── Scrollbar ── */
+  .im-panel::-webkit-scrollbar       { width: 4px; }
+  .im-panel::-webkit-scrollbar-track { background: #f0f4fb; }
+  .im-panel::-webkit-scrollbar-thumb { background: rgba(8,56,146,.2); border-radius: 2px; }
+
+  @keyframes imSlideUp   { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes imFadeScale {
+    from { opacity: 0; transform: translate(-50%,-48%) scale(.97); }
+    to   { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) { .im-panel { animation: none; } }
+</style>
+
+<script>
+  const dialog   = document.getElementById('industry-modal') as HTMLDialogElement;
+  const backdrop = document.getElementById('im-backdrop') as HTMLElement;
+  const closeBtn = document.getElementById('im-close') as HTMLButtonElement;
+
+  const elStatus  = document.getElementById('im-status')!;
+  const elSector  = document.getElementById('im-sector')!;
+  const elTitle   = document.getElementById('im-title')!;
+  const elImgWrap = document.getElementById('im-img-wrap')!;
+  const elImg     = document.getElementById('im-img') as HTMLImageElement;
+  const elProds   = document.getElementById('im-products')!;
+  const elTrust   = document.getElementById('im-trust')!;
+  const elActions = document.getElementById('im-actions')!;
+
+  function openModal(id: string) {
+    const data = (window as any).__INDUSTRIES__?.[id];
+    if (!data) { console.warn('[IndustryModal] No data for:', id); return; }
+
+    elStatus.textContent = data.status;
+    elSector.textContent = data.sector;
+    elTitle.textContent  = data.headline;
+
+    // Image — natural size, centred
+    if (data.image) {
+      elImg.src = data.image;
+      elImg.alt = data.sector;
+      elImgWrap.classList.add('has-image');
+    } else {
+      elImgWrap.classList.remove('has-image');
+    }
+
+    // Products — horizontal pills with diamond bullet
+    elProds.innerHTML = (data.products as string[])
+      .map(p => `<span class="im-product-pill">${p}</span>`)
+      .join('');
+
+    // Trust bar
+    elTrust.textContent = data.trust ?? '';
+
+    // CTA — SVG arrow rendered as separate element, no clip-path inheritance
+    elActions.innerHTML = `
+      <a href="${data.ctaHref}" class="im-btn-primary">
+        <span class="im-btn-inner">
+          ${data.ctaText}
+          <span class="im-btn-arrow-char" aria-hidden="true">&#8594;</span>
+        </span>
+      </a>`;
+
+    document.body.style.overflow = 'hidden';
+    dialog.showModal();
+    closeBtn.focus();
+  }
+
+  function closeModal() {
+    dialog.close();
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('open-industry-modal', (e: Event) => {
+    openModal((e as CustomEvent<{ id: string }>).detail.id);
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  dialog.addEventListener('cancel', (e) => { e.preventDefault(); closeModal(); });
+
+  // Focus trap
+  dialog.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key !== 'Tab') return;
+    const focusable = Array.from(
+      dialog.querySelectorAll<HTMLElement>('button,[href],[tabindex]:not([tabindex="-1"])')
+    ).filter(el => !el.hidden && el.offsetParent !== null);
+    if (!focusable.length) return;
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+</script>
