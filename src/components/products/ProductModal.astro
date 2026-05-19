@@ -1,52 +1,63 @@
 ---
 /**
- * ProductModal.astro — single <dialog> island
- * Populated from window.__PRODUCTS__ (injected by ProductGrid).
- * Listens for 'open-product-modal' custom event from ProductGrid.
- * No framework — vanilla JS only.
+ * ProductModal.astro — restyled to match IndustryModal
+ * White background · navy/crimson accents · image + placeholder
+ * CTA uses HTML entity arrow (no SVG — escapes dialog bounds in Chrome)
  */
 ---
 
 <dialog class="pm-dialog" id="product-modal" aria-labelledby="pm-title" aria-modal="true">
-  <div class="pm-backdrop"></div>
+  <div class="pm-backdrop" id="pm-backdrop-el"></div>
 
   <div class="pm-panel" role="document">
 
-    <!-- Close button -->
+    <!-- Close -->
     <button class="pm-close" id="pm-close" aria-label="Close product details">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
         <line x1="18" y1="6" x2="6" y2="18"/>
-        <line x1="6" y1="6" x2="18" y2="18"/>
+        <line x1="6"  y1="6" x2="18" y2="18"/>
       </svg>
-      <span>Close</span>
+      Close
     </button>
 
-    <!-- Content — swapped by JS -->
-    <div class="pm-content" id="pm-content">
+    <!-- Header -->
+    <div class="pm-header">
+      <div class="pm-tag"   id="pm-tag"></div>
+      <h2 class="pm-title"  id="pm-title"></h2>
+      <p  class="pm-desc"   id="pm-desc"></p>
+    </div>
 
-      <div class="pm-header">
-        <div class="pm-tag" id="pm-tag"></div>
-        <h2 class="pm-title" id="pm-title"></h2>
-        <p  class="pm-desc"  id="pm-desc"></p>
+    <!-- Image / placeholder -->
+    <div class="pm-img-wrap" id="pm-img-wrap">
+      <img class="pm-img" id="pm-img" src="" alt="" loading="lazy" />
+      <div class="pm-img-placeholder" id="pm-img-placeholder" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2">
+          <rect x="4" y="12" width="56" height="40" rx="3"/>
+          <path d="M4 36l14-10 12 8 10-14 20 18"/>
+          <circle cx="20" cy="24" r="4"/>
+        </svg>
+        <span id="pm-placeholder-label"></span>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="pm-body">
+
+      <!-- Left: specs + features -->
+      <div class="pm-left">
+        <div class="pm-label">Typical Specifications</div>
+        <dl class="pm-specs" id="pm-specs"></dl>
+
+        <div class="pm-label" id="pm-feat-label" hidden>Key Design Features</div>
+        <dl class="pm-specs" id="pm-features"></dl>
       </div>
 
-      <div class="pm-body">
-        <!-- Left: specs + features -->
-        <div class="pm-left">
-          <div class="pm-section-label">Typical Specifications</div>
-          <dl class="pm-specs" id="pm-specs"></dl>
+      <!-- Right: applications + actions -->
+      <div class="pm-right">
+        <div class="pm-label">Industries &amp; Applications</div>
+        <div class="pm-apps" id="pm-apps"></div>
 
-          <div class="pm-section-label" id="pm-feat-label" hidden>Key Design Features</div>
-          <dl class="pm-specs" id="pm-features"></dl>
-        </div>
-
-        <!-- Right: apps + actions -->
-        <div class="pm-right">
-          <div class="pm-section-label">Industries &amp; Applications</div>
-          <ul class="pm-apps" id="pm-apps" aria-label="Applications"></ul>
-
-          <div class="pm-actions" id="pm-actions"></div>
-        </div>
+        <div class="pm-actions" id="pm-actions"></div>
       </div>
 
     </div>
@@ -54,382 +65,375 @@
 </dialog>
 
 <style>
-  /* ── Native <dialog> reset + overlay ── */
+  /* ── Dialog reset ── */
   .pm-dialog {
     position: fixed;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
-    margin: 0;
-    padding: 0;
-    border: none;
+    width: 100%; height: 100%;
+    max-width: 100%; max-height: 100%;
+    margin: 0; padding: 0; border: none;
     background: transparent;
-    z-index: 200;
+    z-index: 9999;
     overflow: hidden;
-    /* Hidden by default — shown via JS .showModal() */
   }
   .pm-dialog:not([open]) { display: none; }
 
-  /* Semi-transparent backdrop */
+  /* Backdrop */
   .pm-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(4,6,12,.82);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    cursor: pointer; /* click outside to close */
+    background: rgba(4,6,12,.78);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    cursor: pointer;
   }
 
-  /* ── Panel — slides up from bottom on mobile, centered on desktop ── */
+  /* ── Panel — WHITE, mobile-first ── */
   .pm-panel {
     position: absolute;
     bottom: 0; left: 0; right: 0;
     max-height: 92svh;
     overflow-y: auto;
     overscroll-behavior: contain;
-    background:
-      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.88) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
-      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
-    border-top: 3px solid var(--crimson);
+    background: #ffffff;
+    border-top: 4px solid #c0181e;
     border-radius: 16px 16px 0 0;
-    padding: clamp(20px, 3vh, 36px) clamp(16px, 4vw, 40px) clamp(24px, 4vh, 48px);
-    animation: slideUp .3s cubic-bezier(.4,0,.2,1) both;
+    padding: clamp(16px,2.5vh,24px) clamp(16px,4vw,32px) clamp(24px,4vh,40px);
+    animation: pmSlideUp .3s cubic-bezier(.4,0,.2,1) both;
     z-index: 1;
   }
-
-  @media (min-width: 768px) {
+  @media (min-width: 640px) {
     .pm-panel {
       top: 50%; bottom: auto;
       left: 50%; right: auto;
-      transform: translate(-50%, -50%);
-      width: min(92vw, 1000px);
-      max-height: 88svh;
+      transform: translate(-50%,-50%);
+      width: min(96vw, 1100px);
+      max-height: 90svh;
       border-radius: 12px;
       border-top: none;
-      border-left: 3px solid var(--crimson);
-      animation: fadeScale .28s cubic-bezier(.4,0,.2,1) both;
+      border-left: 4px solid #c0181e;
+      animation: pmFadeScale .28s cubic-bezier(.4,0,.2,1) both;
     }
   }
 
-  /* ── Close button ── */
+  /* ── Close ── */
   .pm-close {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--mist);
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    padding: 4px 0;
-    margin-bottom: clamp(16px, 2vh, 24px);
-    transition: color .2s;
+    display: flex; align-items: center; gap: 6px;
     float: right;
-    clear: both;
+    background: none;
+    border: 1px solid rgba(8,56,146,.15);
+    border-radius: 4px;
+    cursor: pointer;
+    color: #5a6a88;
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    padding: 6px 12px;
+    margin-bottom: clamp(10px,1.5vh,16px);
+    transition: color .2s, border-color .2s;
+    min-height: 36px;
   }
-  .pm-close:hover { color: var(--white); }
-  .pm-close:focus-visible { outline: 2px solid var(--crimson); outline-offset: 3px; }
-  .pm-close svg   { width: 14px; height: 14px; }
+  .pm-close:hover { color: #c0181e; border-color: rgba(192,24,30,.3); }
+  .pm-close:focus-visible { outline: 2px solid #c0181e; outline-offset: 2px; }
+  .pm-close svg { width: 14px; height: 14px; }
 
   /* ── Header ── */
-  .pm-header { clear: both; margin-bottom: clamp(18px, 2.5vh, 28px); }
+  .pm-header { clear: both; margin-bottom: clamp(12px,1.8vh,18px); }
 
   .pm-tag {
     display: inline-block;
     font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    background: var(--crimson);
-    color: var(--white);
-    padding: 3px 10px;
-    margin-bottom: 10px;
+    font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+    background: rgba(192,24,30,.1);
+    color: #c0181e;
+    border: 1px solid rgba(192,24,30,.25);
+    padding: 3px 10px; border-radius: 2px;
+    margin-bottom: 8px;
   }
-
   .pm-title {
     font-family: var(--font-head);
     font-weight: 800;
-    font-size: clamp(24px, 3.5vw, 40px);
+    font-size: clamp(20px,3vw,36px);
     text-transform: uppercase;
-    letter-spacing: .02em;
-    color: var(--white);
-    line-height: .97;
-    margin-bottom: 12px;
+    line-height: .97; letter-spacing: .01em;
+    color: rgba(8,56,146,.9);
+    margin-bottom: 10px;
   }
-
   .pm-desc {
     font-family: var(--font-body);
-    font-size: clamp(13px, 1.4vw, 15px);
-    font-weight: 300;
-    color: var(--fog);
+    font-size: clamp(13px,1.4vw,15px);
+    font-weight: 400;
+    color: #3a4560;
     line-height: 1.8;
-    max-width: 860px;
+    max-width: 900px;
+    margin: 0;
   }
 
-  /* ── Body: two columns on desktop ── */
+  /* ════════════════════════════════════════
+     IMAGE / PLACEHOLDER
+  ════════════════════════════════════════ */
+  .pm-img-wrap {
+    width: 100%;
+    height: clamp(160px,28vh,320px);
+    border-radius: 8px;
+    border: 1px solid rgba(8,56,146,.1);
+    margin-bottom: clamp(16px,2.5vh,24px);
+    overflow: hidden;
+    position: relative;
+    background: #f0f4fb;
+  }
+
+  /* Real image */
+  .pm-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: none;   /* shown by JS when src is set */
+  }
+  .pm-img.loaded { display: block; }
+
+  /* Placeholder shown when no image */
+  .pm-img-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background:
+      linear-gradient(rgba(8,56,146,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .pm-img-placeholder svg {
+    width: 56px; height: 56px;
+    color: rgba(8,56,146,.2);
+  }
+  .pm-img-placeholder span {
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(8,56,146,.35);
+  }
+
+  /* ════════════════════════════════════════
+     BODY — two columns
+  ════════════════════════════════════════ */
   .pm-body {
     display: grid;
     grid-template-columns: 1fr;
-    gap: clamp(20px, 3vw, 48px);
-    margin-top: clamp(16px, 2.5vh, 28px);
+    gap: clamp(16px,3vw,40px);
   }
-  @media (min-width: 640px) {
-    .pm-body { grid-template-columns: 1fr 1fr; }
-  }
+  @media (min-width: 640px) { .pm-body { grid-template-columns: 1.2fr 1fr; } }
 
-  /* ── Section label ── */
-  .pm-section-label {
+  /* Section labels */
+  .pm-label {
     font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: #ff7070;
+    font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+    color: #c0181e;
     padding-bottom: 8px;
-    border-bottom: 1px solid rgba(51,96,184,.15);
-    margin-bottom: 12px;
-    margin-top: 20px;
+    border-bottom: 2px solid rgba(192,24,30,.2);
+    margin-bottom: 12px; margin-top: 18px;
   }
-  .pm-section-label:first-child { margin-top: 0; }
+  .pm-label:first-child { margin-top: 0; }
 
-  /* ── Spec rows ── */
-  .pm-specs {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    margin-bottom: 4px;
-  }
+  /* Spec rows */
+  .pm-specs { display: flex; flex-direction: column; gap: 0; margin-bottom: 4px; }
   .pm-spec-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 16px;
     padding: 8px 0;
-    border-bottom: 1px solid rgba(51,96,184,.1);
+    border-bottom: 1px solid rgba(8,56,146,.08);
   }
   .pm-spec-row:last-child { border-bottom: none; }
   .pm-spec-key {
     font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: .06em;
-    color: var(--chrome-d);
-    flex-shrink: 0;
-    min-width: 110px;
-    font-weight: 500;
+    font-size: 11px; letter-spacing: .06em;
+    color: #5a6a88; flex-shrink: 0; min-width: 110px; font-weight: 500;
   }
   .pm-spec-val {
     font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 300;
-    color: var(--fog);
-    text-align: right;
-    line-height: 1.45;
+    font-size: 13px; font-weight: 300;
+    color: #3a4560; text-align: right; line-height: 1.45;
   }
 
-  /* ── App pills ── */
+  /* Application pills */
   .pm-apps {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    list-style: none;
-    padding: 0; margin: 0 0 24px;
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 24px;
   }
-  .pm-app-tag {
+  .pm-app-pill {
+    display: inline-flex; align-items: center; gap: 6px;
     font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    background: rgba(13,26,58,.8);
-    border: 1px solid rgba(51,96,184,.3);
-    color: #7ab0ff;
-    padding: 5px 12px;
+    font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+    background: rgba(8,56,146,.05);
+    border: 1px solid rgba(8,56,146,.15);
+    color: rgba(8,56,146,.8);
+    padding: 5px 12px; border-radius: 2px;
+  }
+  .pm-app-pill::before {
+    content: '';
+    width: 5px; height: 5px; flex-shrink: 0;
+    background: #c0181e;
+    clip-path: polygon(50% 0%,100% 50%,50% 100%,0% 50%);
   }
 
-  /* ── Action buttons ── */
-  .pm-actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
+  /* Actions */
+  .pm-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* Primary CTA — solid crimson, no clip-path/transform (SVG escapes dialog) */
   .pm-btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--crimson);
-    color: var(--white);
-    font-family: var(--font-head);
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #c0181e; color: #ffffff;
+    font-family: var(--font-head); font-weight: 700;
+    font-size: clamp(13px,1.4vw,15px);
+    letter-spacing: .1em; text-transform: uppercase;
     text-decoration: none;
-    padding: 13px 28px;
-    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-    transition: background .2s, transform .15s;
-    white-space: nowrap;
-    border: none;
-    cursor: pointer;
+    padding: clamp(12px,1.5vh,15px) clamp(22px,2.5vw,32px);
+    border-radius: 2px;
+    transition: background .2s;
+    white-space: nowrap; border: none; cursor: pointer; min-height: 46px;
   }
-  .pm-btn-primary:hover { background: var(--crimson-l); transform: translateX(2px); }
-  .pm-btn-primary svg   { width: 14px; height: 14px; }
+  .pm-btn-primary:hover { background: #e02428; }
 
+  /* Secondary */
   .pm-btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    background: transparent;
-    color: var(--chrome);
-    font-family: var(--font-head);
-    font-weight: 600;
-    font-size: 14px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: rgba(8,56,146,.9);
+    font-family: var(--font-head); font-weight: 600;
+    font-size: clamp(13px,1.4vw,15px);
+    letter-spacing: .1em; text-transform: uppercase;
     text-decoration: none;
-    padding: 12px 28px;
-    border: 1px solid rgba(208,212,220,.2);
-    transition: color .2s, border-color .2s;
-    white-space: nowrap;
+    padding: clamp(12px,1.5vh,15px) clamp(22px,2.5vw,32px);
+    border: 1px solid rgba(8,56,146,.25); border-radius: 2px;
+    transition: background .2s, border-color .2s; white-space: nowrap; min-height: 46px;
   }
-  .pm-btn-secondary:hover { color: var(--white); border-color: rgba(208,212,220,.5); }
+  .pm-btn-secondary:hover { background: rgba(8,56,146,.06); border-color: rgba(8,56,146,.4); }
 
-  /* ── Animations ── */
-  @keyframes slideUp {
-    from { transform: translateY(100%); opacity: 0; }
-    to   { transform: translateY(0);    opacity: 1; }
-  }
-  @keyframes fadeScale {
-    from { opacity: 0; transform: translate(-50%, -48%) scale(.96); }
-    to   { opacity: 1; transform: translate(-50%, -50%) scale(1);   }
-  }
-
-  /* Scrollbar styling */
+  /* Scrollbar */
   .pm-panel::-webkit-scrollbar       { width: 4px; }
-  .pm-panel::-webkit-scrollbar-track { background: transparent; }
-  .pm-panel::-webkit-scrollbar-thumb { background: rgba(51,96,184,.3); border-radius: 2px; }
+  .pm-panel::-webkit-scrollbar-track { background: #f0f4fb; }
+  .pm-panel::-webkit-scrollbar-thumb { background: rgba(8,56,146,.2); border-radius: 2px; }
 
-  @media (prefers-reduced-motion: reduce) {
-    .pm-panel { animation: none; }
+  @keyframes pmSlideUp   { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes pmFadeScale {
+    from { opacity: 0; transform: translate(-50%,-48%) scale(.97); }
+    to   { opacity: 1; transform: translate(-50%,-50%) scale(1); }
   }
+  @media (prefers-reduced-motion: reduce) { .pm-panel { animation: none; } }
 </style>
 
 <script>
   type Product = {
-    id:       string;
-    name:     string;
-    series:   string;
-    fullDesc: string;
-    specs:    { key: string; val: string }[];
+    id:        string;
+    name:      string;
+    series:    string;
+    image?:    string;
+    fullDesc:  string;
+    specs:     { key: string; val: string }[];
     features?: { key: string; val: string }[];
     modalApps: string[];
   };
 
-  const dialog   = document.getElementById('product-modal') as HTMLDialogElement;
-  const backdrop = dialog.querySelector('.pm-backdrop') as HTMLElement;
-  const closeBtn = document.getElementById('pm-close') as HTMLButtonElement;
+  const dialog    = document.getElementById('product-modal') as HTMLDialogElement;
+  const backdrop  = document.getElementById('pm-backdrop-el') as HTMLElement;
+  const closeBtn  = document.getElementById('pm-close') as HTMLButtonElement;
 
-  // Elements to populate
-  const elTag      = document.getElementById('pm-tag')!;
-  const elTitle    = document.getElementById('pm-title')!;
-  const elDesc     = document.getElementById('pm-desc')!;
-  const elSpecs    = document.getElementById('pm-specs')!;
-  const elFeatures = document.getElementById('pm-features')!;
-  const elFeatLabel= document.getElementById('pm-feat-label') as HTMLElement;
-  const elApps     = document.getElementById('pm-apps')!;
-  const elActions  = document.getElementById('pm-actions')!;
+  const elTag         = document.getElementById('pm-tag')!;
+  const elTitle       = document.getElementById('pm-title')!;
+  const elDesc        = document.getElementById('pm-desc')!;
+  const elImgWrap     = document.getElementById('pm-img-wrap')!;
+  const elImg         = document.getElementById('pm-img') as HTMLImageElement;
+  const elPlaceholder = document.getElementById('pm-img-placeholder')!;
+  const elPhLabel     = document.getElementById('pm-placeholder-label')!;
+  const elSpecs       = document.getElementById('pm-specs')!;
+  const elFeatures    = document.getElementById('pm-features')!;
+  const elFeatLabel   = document.getElementById('pm-feat-label') as HTMLElement;
+  const elApps        = document.getElementById('pm-apps')!;
+  const elActions     = document.getElementById('pm-actions')!;
 
-  function specRowHTML(key: string, val: string) {
+  function specRow(key: string, val: string) {
     return `<div class="pm-spec-row">
       <dt class="pm-spec-key">${key}</dt>
       <dd class="pm-spec-val">${val}</dd>
     </div>`;
   }
 
-  function open(id: string) {
+  function openModal(id: string) {
     const products: Product[] = (window as any).__PRODUCTS__ ?? [];
     const p = products.find(x => x.id === id);
     if (!p) return;
 
-    // Populate
     elTag.textContent   = p.series;
     elTitle.textContent = p.name;
     elDesc.textContent  = p.fullDesc;
 
-    elSpecs.innerHTML = p.specs.map(s => specRowHTML(s.key, s.val)).join('');
+    // Image or placeholder
+    if (p.image) {
+      elImg.src = p.image;
+      elImg.alt = p.name;
+      elImg.onload = () => elImg.classList.add('loaded');
+      elPlaceholder.style.display = 'none';
+    } else {
+      elImg.classList.remove('loaded');
+      elImg.src = '';
+      elPhLabel.textContent = p.name;
+      elPlaceholder.style.display = 'flex';
+    }
 
-    if (p.features && p.features.length) {
-      elFeatures.innerHTML = p.features.map(f => specRowHTML(f.key, f.val)).join('');
+    // Specs
+    elSpecs.innerHTML = p.specs.map(s => specRow(s.key, s.val)).join('');
+
+    // Features
+    if (p.features?.length) {
+      elFeatures.innerHTML = p.features.map(f => specRow(f.key, f.val)).join('');
       elFeatLabel.hidden   = false;
     } else {
       elFeatures.innerHTML = '';
       elFeatLabel.hidden   = true;
     }
 
+    // App pills
     elApps.innerHTML = p.modalApps
-      .map(a => `<li class="pm-app-tag">${a}</li>`)
+      .map(a => `<span class="pm-app-pill">${a}</span>`)
       .join('');
 
+    // CTA — HTML entity arrow, no SVG (SVG escapes dialog bounds in Chrome)
     elActions.innerHTML = `
       <a href="/contact?product=${p.id}" class="pm-btn-primary">
-        Request a Quote
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Request a Quote &#8594;
       </a>
-      <a href="/contact" class="pm-btn-secondary">Technical Enquiry</a>
-    `;
+      <a href="/contact" class="pm-btn-secondary">
+        Technical Enquiry
+      </a>`;
 
-    // Prevent body scroll
     document.body.style.overflow = 'hidden';
     dialog.showModal();
-
-    // Focus the close button for keyboard users
     closeBtn.focus();
   }
 
-  function close() {
+  function closeModal() {
     dialog.close();
     document.body.style.overflow = '';
   }
 
-  // Listen for open event from ProductGrid
   document.addEventListener('open-product-modal', (e: Event) => {
-    open((e as CustomEvent<{ id: string }>).detail.id);
+    openModal((e as CustomEvent<{ id: string }>).detail.id);
   });
 
-  // Close on button click
-  closeBtn.addEventListener('click', close);
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  dialog.addEventListener('cancel', (e) => { e.preventDefault(); closeModal(); });
 
-  // Close on backdrop click
-  backdrop.addEventListener('click', close);
-
-  // Close on Escape (native dialog behaviour, but we also need to restore scroll)
-  dialog.addEventListener('cancel', (e) => {
-    e.preventDefault();
-    close();
-  });
-
-  // Trap focus inside modal
   dialog.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key !== 'Tab') return;
     const focusable = Array.from(
-      dialog.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      )
+      dialog.querySelectorAll<HTMLElement>('button,[href],[tabindex]:not([tabindex="-1"])')
     ).filter(el => !el.hidden && el.offsetParent !== null);
-
     if (!focusable.length) return;
-    const first = focusable[0];
-    const last  = focusable[focusable.length - 1];
-
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
-    }
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
 </script>

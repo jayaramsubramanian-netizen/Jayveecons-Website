@@ -9,14 +9,13 @@ export type ProductCategory = 'handling' | 'processing' | 'ancillary' | 'accesso
 
 export interface SpecRow  { key: string; val: string; }
 export interface Product {
-  id:          string;           // used for anchor + modal lookup
+  id:          string;
   category:    ProductCategory;
   name:        string;
-  series:      string;           // badge text on card image
-  shortDesc:   string;           // card body description
-  image?:      string;           // path relative to /public
-  apps:        string[];         // pill tags on card
-  // Modal content
+  series:      string;
+  shortDesc:   string;
+  image?:      string;
+  apps:        string[];
   fullDesc:    string;
   specs:       SpecRow[];
   features?:   SpecRow[];
@@ -276,7 +275,7 @@ export const products: Product[] = [
      ANCILLARY EQUIPMENT
   ════════════════════════════════ */
   {
-    id:        'hoppers-bins',
+    id:        'hopper',
     category:  'ancillary',
     name:      'Hoppers & Bins',
     series:    'VECTOMEC™',
@@ -289,11 +288,17 @@ export const products: Product[] = [
       { key: 'Wall slope',    val: 'Engineered; typically 55°–70° from horizontal' },
       { key: 'Construction',  val: 'MS fabricated; AR liner available for abrasive materials' },
     ],
-    modalApps: ['Raw material reception', 'Crusher feed hoppers', 'Mill feed bins', 'Kiln feed hoppers', 'Finished product bins', 'Day storage bins'],
+    features: [
+      { key: 'Bin activators',  val: 'Vibrating or air-pad activators to promote flow in difficult materials' },
+      { key: 'Level indicators', val: 'Rotary paddle, ultrasonic, or radar level sensors' },
+      { key: 'Liner options',   val: 'UHMWPE, ceramic tile, AR steel for abrasive or sticky materials' },
+      { key: 'Dust control',    val: 'Vent nozzle for connection to central dust collection system' },
+    ],
+    modalApps: ['Raw material reception', 'Crusher feed hoppers', 'Mill feed bins', 'Kiln feed hoppers', 'Finished product bins', 'Day storage bins', 'Blending silos'],
   },
 
   {
-    id:        'silos',
+    id:        'silo',
     category:  'ancillary',
     name:      'Silos & Storage Tanks',
     series:    'VECTOMEC™',
@@ -306,11 +311,17 @@ export const products: Product[] = [
       { key: 'Bottom type', val: 'Flat with aeration floor (powders) or cone (granules)' },
       { key: 'Discharge',   val: 'Rotary airlock, slide gate, or knife gate valve' },
     ],
-    modalApps: ['Cement storage & despatch', 'Fly ash storage', 'Raw meal buffer silo', 'Clinker intermediate storage', 'Grain storage', 'Chemical powder storage'],
+    features: [
+      { key: 'Aeration system',    val: 'Fabric aeration pads in sectors + roots blower for powder silos' },
+      { key: 'Level measurement',  val: 'Radar or ultrasonic continuous level + high/low point switches' },
+      { key: 'Roof filter',        val: 'Bin vent filter (pulse-jet cleaned) for dust-free filling' },
+      { key: 'Access',             val: 'Caged ladder, roof manhole, and inspection hatch at cone/flat bottom' },
+    ],
+    modalApps: ['Cement storage & despatch', 'Fly ash storage', 'Raw meal buffer silo', 'Clinker intermediate storage', 'Grain storage', 'Chemical powder storage', 'Lime storage'],
   },
 
   {
-    id:        'pressure-vessels',
+    id:        'pressure-vessel',
     category:  'ancillary',
     name:      'Pressure Vessels',
     series:    'VECTOMEC™',
@@ -324,7 +335,13 @@ export const products: Product[] = [
       { key: 'Material',         val: 'MS (SA 516 Gr 70), SS 304/316, alloy steel' },
       { key: 'Testing',          val: 'Hydrostatic test at 1.5× design pressure' },
     ],
-    modalApps: ['Compressed air receivers', 'Pneumatic conveying blow tanks', 'Instrument air buffers', 'Process gas vessels', 'Separator vessels'],
+    features: [
+      { key: 'Design calculations', val: 'Shell, head, nozzle, and support calculations per applicable code' },
+      { key: 'Material certificates', val: 'Mill test certificates for all pressure-retaining parts' },
+      { key: 'Weld records',        val: 'Weld map, WPS, PQR, and welder qualification records' },
+      { key: 'Test certificate',    val: 'Hydrostatic test certificate with third-party witness option' },
+    ],
+    modalApps: ['Compressed air receivers', 'Pneumatic conveying blow tanks', 'Instrument air buffers', 'Process gas vessels', 'Separator vessels', 'Heat exchangers (shell side)'],
   },
 
   {
@@ -336,13 +353,63 @@ export const products: Product[] = [
     apps:      ['Cement', 'Pneumatic systems'],
     fullDesc:  'A rotary airlock uses a slowly rotating multi-vane rotor inside a close-tolerance housing to transfer bulk material from one pressure zone to another while minimising air leakage. They are indispensable wherever a pneumatic conveying system, dust collector, or pressurised process must accept or discharge material without losing its pressure seal.',
     specs: [
-      { key: 'Rotor diameter',       val: '150mm – 600mm' },
-      { key: 'Pressure differential', val: 'Up to 1.0 bar across the valve' },
-      { key: 'Rotor vanes',          val: '6 or 8 vane; open or closed-end rotor' },
-      { key: 'Housing material',     val: 'Cast iron, MS fabricated, or SS 304/316' },
-      { key: 'Drive',                val: 'Gearbox motor; VFD for variable throughput' },
+      { key: 'Rotor diameter',        val: '150mm – 600mm' },
+      { key: 'Pressure differential',  val: 'Up to 1.0 bar across the valve' },
+      { key: 'Rotor vanes',           val: '6 or 8 vane; open or closed-end rotor' },
+      { key: 'Housing material',      val: 'Cast iron, MS fabricated, or SS 304/316' },
+      { key: 'Drive',                 val: 'Gearbox motor; VFD for variable throughput' },
     ],
-    modalApps: ['Dust collector discharge', 'Pneumatic conveying inlet', 'Cyclone separator outlet', 'Kiln ESP/baghouse discharge', 'Silo bottom metering'],
+    features: [
+      { key: 'Drop-through type', val: 'Material falls straight through — standard for most duties' },
+      { key: 'Blow-through type', val: 'Conveying air passes through the valve body — for direct injection into pneumatic line' },
+      { key: 'Air purge',         val: 'Purge connection to prevent material packing in end plates' },
+    ],
+    modalApps: ['Dust collector discharge', 'Pneumatic conveying inlet', 'Cyclone separator outlet', 'Kiln ESP/baghouse discharge', 'Silo bottom metering', 'Food powder handling'],
+  },
+
+  {
+    id:        'chimney',
+    category:  'ancillary',
+    name:      'Chimney & Flue Stacks',
+    series:    'VECTOMEC™',
+    shortDesc: 'Fabricated mild steel and stainless steel chimney stacks and flue gas ducts for industrial kilns, dryers, and furnaces. Insulated and refractory-lined to process temperature requirements.',
+    apps:      ['Cement', 'Mining', 'Steel'],
+    fullDesc:  'Jayveecons designs and fabricates self-supporting and guyed steel chimney stacks, flue gas ducts, and expansion joints for cement kilns, rotary dryers, coal-fired furnaces, and waste-heat recovery systems. Our stacks are designed to IS 6533 and sized for the required gas velocity and dispersion height. Internal refractory lining and external insulation are applied where required to manage shell temperature and thermal expansion.',
+    specs: [
+      { key: 'Stack height',     val: '10m – 80m (taller with structural design)' },
+      { key: 'Flue gas temp.',   val: 'Up to 450°C; refractory-lined for higher temperatures' },
+      { key: 'Shell material',   val: 'MS IS 2062; SS 304/316 for corrosive gases' },
+      { key: 'Lining',           val: 'Castable refractory or ceramic fibre blanket to process requirement' },
+      { key: 'Design standard',  val: 'IS 6533 for self-supporting stacks; wind load per IS 875' },
+    ],
+    features: [
+      { key: 'Flue gas ducts',   val: 'Rectangular or circular; insulated; expansion joints included' },
+      { key: 'Access platforms', val: 'Sampling port platforms and caged ladder to stack top' },
+      { key: 'Dampers',          val: 'Manually or pneumatically operated flue gas dampers' },
+    ],
+    modalApps: ['VSK & rotary kiln exhausts', 'Rotary dryer stacks', 'Boiler flue stacks', 'Coal-fired furnace exhausts', 'Waste-heat recovery ducting', 'Acid fume stacks (SS)'],
+  },
+
+  {
+    id:        'grinding-media',
+    category:  'ancillary',
+    name:      'Grinding Media',
+    series:    'VECTOMEC™',
+    shortDesc: 'Steel grinding balls and cylpebs for ball mill and rod mill applications. Supplied in various grades and sizes to match your mill configuration, material hardness, and target product fineness.',
+    apps:      ['Ball mills', 'Cement', 'Mining'],
+    fullDesc:  'Grinding media are the steel balls or cylpebs that tumble inside a ball mill and break down feed material into fine powder. They are a consumable item — they wear down through attrition and impact and must be replenished regularly. Jayveecons supplies forged and cast grinding balls and cylpebs matched to your mill dimensions, liner type, feed material hardness, and target product fineness.',
+    specs: [
+      { key: 'Ball diameter range', val: '17mm – 125mm' },
+      { key: 'Ball hardness',       val: '55–65 HRC (forged); 48–58 HRC (cast high-chrome)' },
+      { key: 'Types',               val: 'Forged steel (higher impact resistance) · Cast high-chrome (higher wear resistance)' },
+      { key: 'Packing',             val: 'Steel drums or bulk bags; loose or in specified charge weights' },
+    ],
+    features: [
+      { key: 'Cylpebs dimensions', val: 'Diameter × length: 16×16mm – 40×40mm typical' },
+      { key: 'Cylpebs advantage',  val: 'Higher surface area contact — better for fine finish grinding chambers' },
+      { key: 'Cylpebs material',   val: 'Cast high-chrome iron; hardness 55–62 HRC' },
+    ],
+    modalApps: ['Cement ball mills — coarse chamber', 'Cement ball mills — finish chamber', 'Raw meal grinding', 'Coal mills', 'Mineral ore grinding', 'Ceramic & chemical grinding'],
   },
 
   /* ════════════════════════════════
@@ -364,6 +431,69 @@ export const products: Product[] = [
       { key: 'Seals',          val: 'Multi-lip labyrinth seal; dust and water ingress protection' },
     ],
     modalApps: ['New conveyor builds', 'OEM replacement', 'Mining conveyors', 'Cement plant conveyors', 'Port & bulk terminal', 'Aggregate plants'],
+  },
+
+  {
+    id:        'rollers-pulleys',
+    category:  'accessories',
+    name:      'Rollers & Pulleys',
+    series:    'VECTOMEC™',
+    shortDesc: 'Drive, tail, snub, and bend pulleys for belt conveyor systems. Rubber-lagged for drive grip, precision-balanced shafts — manufactured in-house to customer drawings or OEM specifications.',
+    apps:      ['Belt conveyors', 'OEM replacement'],
+    fullDesc:  'Conveyor pulleys transmit drive force to the belt, maintain tension, and change direction of travel. Jayveecons manufactures all standard conveyor pulley types in-house: shells rolled from plate and welded to machined end discs; shafts machined from forged or rolled bar; each pulley dynamically balanced before lagging is applied.',
+    specs: [
+      { key: 'Drive (head) pulley', val: 'Transmits motor torque to belt; rubber-lagged; heaviest-duty construction' },
+      { key: 'Tail pulley',         val: 'Belt return end; plain or rubber-lagged; integral take-up option' },
+      { key: 'Snub pulley',         val: 'Increases belt wrap angle on drive pulley; improves traction' },
+      { key: 'Bend pulley',         val: 'Changes belt direction in take-up or transfer arrangements' },
+      { key: 'Shell diameter',      val: '150mm – 1,000mm' },
+      { key: 'Face width',          val: 'Belt width + 100mm standard' },
+      { key: 'Lagging',             val: 'Plain rubber, diamond-groove, herringbone — cold-bonded or vulcanised' },
+      { key: 'Balancing',           val: 'Dynamic balance to ISO 1940 G6.3 or better' },
+    ],
+    modalApps: ['New conveyor builds', 'OEM replacement pulleys', 'Mining & quarry conveyors', 'Cement plant conveyors', 'Port & bulk terminal'],
+  },
+
+  {
+    id:        'gearbox',
+    category:  'accessories',
+    name:      'Gearboxes & Speed Reducers',
+    series:    'VECTOMEC™',
+    shortDesc: 'Helical, bevel-helical, and worm gear reducers for conveyor, mill, kiln, and feeder drive applications. Custom gear ratios to match process speed and torque requirements.',
+    apps:      ['Conveyors', 'Mills', 'Kilns', 'Elevators'],
+    fullDesc:  'Every driven piece of equipment in a bulk handling plant runs at a specific shaft speed much lower than the electric motor driving it. Jayveecons supplies helical, bevel-helical, and worm-and-wheel gear reducers, and can pair them with motor and coupling as a complete matched drive package for any of our conveying or processing equipment.',
+    specs: [
+      { key: 'Helical',       val: 'High efficiency (98%+); low noise; suited to conveyors, mills, elevators' },
+      { key: 'Bevel-helical', val: 'Right-angle output; suited to conveyors with perpendicular drive arrangement' },
+      { key: 'Worm & wheel',  val: 'Compact; high reduction ratio in single stage; suited to feeders, mixers' },
+      { key: 'Planetary',     val: 'Very high torque density; suited to kiln and ball mill drives' },
+    ],
+    features: [
+      { key: 'Standalone gearbox', val: 'Supplied with oil fill, breather, dipstick, and output coupling' },
+      { key: 'Motor + gearbox',    val: 'Matched motor, flexible coupling, and gearbox as complete drive unit' },
+      { key: 'VFD-rated',          val: 'Inverter-duty motors and gearboxes for variable-speed applications' },
+    ],
+    modalApps: ['Belt conveyor head drives', 'Bucket elevator drives', 'Screw conveyor drives', 'Ball mill pinion drives', 'VSK discharge drives', 'Rotary feeder drives', 'Nodulizer drives'],
+  },
+
+  {
+    id:        'shafts',
+    category:  'accessories',
+    name:      'Shafts & Spindles',
+    series:    'VECTOMEC™',
+    shortDesc: 'Precision-machined drive shafts, stub shafts, conveyor head and tail shafts, and idler spindles. Manufactured to drawing or reverse-engineered from sample for OEM replacement.',
+    apps:      ['Conveyors', 'Elevators', 'Mills', 'OEM replacement'],
+    fullDesc:  'Jayveecons machines shafts on CNC lathes and milling centres, working to tolerances of ±0.01mm on bearing journal diameters. We can manufacture from your drawings, reverse-engineer from a sample or sketch, or design from your load and speed data. Material selection — from EN8/EN24 carbon and alloy steels to 316 stainless — is matched to the duty, environment, and service life requirement.',
+    specs: [
+      { key: 'Conveyor head shafts', val: 'Drive pulley shafts; keyways, interference fits, flange bores' },
+      { key: 'Tail & snub shafts',   val: 'Non-drive pulley shafts; plain or with take-up arrangement' },
+      { key: 'Idler spindles',       val: 'Fixed spindles for idler roller assemblies; hex or round end' },
+      { key: 'Elevator head shafts', val: 'Head drum shafts for belt and chain elevators' },
+      { key: 'Material grades',      val: 'EN8, EN24, EN36 (case-hardened), SS 304/316, custom alloy' },
+      { key: 'Diameter range',       val: '20mm – 300mm' },
+      { key: 'Tolerances',           val: 'Bearing journals h6/k6; keyways to IS 2048; Ra 0.8–1.6μm' },
+    ],
+    modalApps: ['Belt conveyor pulleys', 'Bucket elevator drums', 'Screw conveyor drives', 'Ball mill trunnion shafts', 'Nodulizer pan shafts', 'OEM replacement'],
   },
 
   {
@@ -403,6 +533,29 @@ export const products: Product[] = [
   },
 
   {
+    id:        'elevator-belts-chains',
+    category:  'accessories',
+    name:      'Elevator Belts & Chains',
+    series:    'VECTOMEC™',
+    shortDesc: 'Replacement elevator belts (rubber or PVC), elevator chains (forged and cast link), casing panels, head and boot section fabrications for elevator refurbishment.',
+    apps:      ['Bucket elevators', 'OEM replacement'],
+    fullDesc:  'Jayveecons supplies replacement elevator belts cut to your elevator\'s loop length and bucket pitch, and elevator chains matched to your existing chain pitch and breaking load specification. We also fabricate replacement casing panels, head drums, boot assemblies, and take-up frames where the original structure has corroded or worn beyond repair.',
+    specs: [
+      { key: 'Elevator belts',      val: 'EP fabric ply with rubber or PVC covers; pre-punched bucket bolt holes' },
+      { key: 'Belt tension rating', val: 'Matched to elevator head tension and safety factor' },
+      { key: 'Forged link chain',   val: 'Higher strength; suited to heavy, abrasive, or hot materials' },
+      { key: 'Cast link chain',     val: 'Standard duty grain and fertiliser elevators' },
+      { key: 'Pitch range',         val: '100mm – 400mm pitch; single or double strand' },
+    ],
+    features: [
+      { key: 'Casing panels', val: 'Replacement trunk section panels; standard or wear-lined' },
+      { key: 'Head section',  val: 'Fabricated head drum housing with inspection doors' },
+      { key: 'Boot section',  val: 'Boot housing with take-up arrangement and clean-out door' },
+    ],
+    modalApps: ['Cement plant elevators', 'Grain elevators', 'Mining ore elevators', 'Fertiliser handling', 'Coal & coke elevators'],
+  },
+
+  {
     id:        'screw-flights',
     category:  'accessories',
     name:      'Screw Flights & Wear Parts',
@@ -411,12 +564,58 @@ export const products: Product[] = [
     apps:      ['Screw conveyors', 'OEM replacement', 'Upgrades'],
     fullDesc:  'Jayveecons fabricates replacement screw flights to match your existing conveyor\'s pitch, diameter, shaft size, and hand. For high-wear duties — fly ash, cement raw meal, sand, clinker grit — we offer hard-faced flights and full AR steel (Hardox 400/450) flighting that lasts significantly longer than standard mild steel.',
     specs: [
-      { key: 'Mild steel flights',  val: 'Standard duty; cement, grain, general powders' },
-      { key: 'AR steel (Hardox)',   val: 'Abrasive materials; 3–5× longer life than MS' },
-      { key: 'Hard-faced flights',  val: 'Tungsten carbide or chrome carbide weld overlay' },
-      { key: 'Stainless steel',     val: 'SS 304/316; food-grade or corrosive duty' },
-      { key: 'Ribbon flights',      val: 'Open-centre ribbon for sticky or viscous materials' },
+      { key: 'Mild steel flights', val: 'Standard duty; cement, grain, general powders' },
+      { key: 'AR steel (Hardox)',  val: 'Abrasive materials; 3–5× longer life than MS' },
+      { key: 'Hard-faced flights', val: 'Tungsten carbide or chrome carbide weld overlay' },
+      { key: 'Stainless steel',    val: 'SS 304/316; food-grade or corrosive duty' },
+      { key: 'Ribbon flights',     val: 'Open-centre ribbon for sticky or viscous materials' },
     ],
     modalApps: ['Cement & fly ash conveyors', 'Sand & mineral fines', 'Grain & food processing', 'Coal & ash handling', 'Chemical powders'],
   },
+
+  {
+    id:        'sensors',
+    category:  'accessories',
+    name:      'Sensors & Instrumentation',
+    series:    'VECTOMEC™',
+    shortDesc: 'Conveyor safety and monitoring instrumentation: belt speed sensors, misalignment switches, zero-speed switches, level sensors, pull-cord emergency stops, and proximity switches.',
+    apps:      ['Conveyors', 'Elevators', 'Silos', 'All systems'],
+    fullDesc:  'Jayveecons supplies the full range of conveyor safety and process monitoring instrumentation, sourced from quality manufacturers and configured for your specific equipment. We supply individual devices, pre-assembled marshalling panels, or complete pre-wired conveyor control panels ready for connection to your PLC or DCS.',
+    specs: [
+      { key: 'Pull-cord switch',          val: 'Emergency stop along full conveyor length; latching; IP65' },
+      { key: 'Belt misalignment switch',  val: 'Detects belt tracking off-centre; first warning and trip settings' },
+      { key: 'Zero-speed switch',         val: 'Detects belt/elevator stall; trips drive before material packs' },
+      { key: 'Belt speed sensor',         val: 'Continuous speed monitoring; slip detection; 4–20mA or pulse output' },
+      { key: 'Chute blockage detector',   val: 'Paddle or ultrasonic; detects material backup in transfer chutes' },
+      { key: 'Level sensors',             val: 'Rotary paddle (point level), ultrasonic and radar (continuous)' },
+      { key: 'Proximity switches',        val: 'Inductive and capacitive; position detection on gates, valves, chutes' },
+    ],
+    modalApps: ['Belt conveyors — safety', 'Bucket elevators — safety', 'Silo & hopper level', 'Screw conveyor monitoring', 'Process control integration'],
+  },
+
+  {
+    id:        'custom-fabrications',
+    category:  'accessories',
+    name:      'Custom Fabrications & Wear Parts',
+    series:    'VECTOMEC™',
+    shortDesc: 'Chutes, transition pieces, skirt boards, wear liners (UHMWPE, ceramic, AR steel), shaft sleeves, and any other non-standard component. Fabricated to drawing, sample, or reverse-engineered.',
+    apps:      ['Custom fabrication', 'OEM replacement'],
+    fullDesc:  'Over nearly four decades of serving cement, mining, and mineral processing plants, Jayveecons has developed the fabrication capability and material knowledge to produce virtually any non-standard steel component your plant needs. Bring us a drawing, a sample, a sketch on paper, or simply a photograph of the worn part — our engineers will reverse-engineer the geometry, select the appropriate material, and return a fabricated replacement that fits and lasts.',
+    specs: [
+      { key: 'Transfer chutes',     val: 'Shaped MS or AR steel chutes; wear-lined interiors; inspection doors' },
+      { key: 'Skirt boards',        val: 'Conveyor load zone containment; rubber-tipped steel or full rubber' },
+      { key: 'Transition pieces',   val: 'Duct and chute transitions between equipment of different sizes/shapes' },
+      { key: 'Shaft sleeves',       val: 'Sacrificial sleeves to protect shaft journals from wear or corrosion' },
+      { key: 'Wear liners',         val: 'UHMWPE sheet, ceramic tile, or Hardox plate cut and drilled to fit' },
+      { key: 'Structural brackets', val: 'Support frames, mounting plates, stiffener brackets to drawing' },
+    ],
+    features: [
+      { key: 'From drawings',    val: 'Send us your GA or detail drawing — we fabricate to spec' },
+      { key: 'From sample',      val: 'Send the worn or failed part — we measure and reproduce it' },
+      { key: 'From photos+dims', val: 'Good photos plus key dimensions are usually sufficient to quote' },
+      { key: 'From site visit',  val: 'Our engineers can visit your plant to measure and specify on-site' },
+    ],
+    modalApps: ['Conveyor transfer points', 'Mill feed chutes', 'Kiln feed transitions', 'Elevator boot chutes', 'Screen feed boxes', 'Any fabricated replacement part'],
+  },
+
 ];
