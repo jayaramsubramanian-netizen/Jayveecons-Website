@@ -32,24 +32,68 @@ export const products: Product[] = [
     category:  'handling',
     name:      'Screw Conveyor',
     series:    'VECTOMEC™',
-    shortDesc: 'Rotating helical screw blade within a trough or tube, moving bulk material horizontally or on incline. Sealed design suits dusty, abrasive, and food-grade applications.',
-    image:     'images/screw_con1.jpg',
+    shortDesc: 'Rotating helical screw blade within a trough or tube, moving bulk material horizontally, on incline, or vertically. Sealed design suits dusty, abrasive, and food-grade applications.',
+    image:     '/public/images/products/screw_con1.png',   // ← corrected path
     apps:      ['Cement', 'Food', 'Mining', 'Waste'],
-    fullDesc:  'The screw conveyor remains one of the most versatile and cost-effective bulk material handling devices in modern industry. Jayveecons designs and fabricates screw conveyors for horizontal, inclined, and vertical orientations, engineered to your material\'s specific bulk density, particle size, abrasiveness, and moisture content. Our sealed trough designs are particularly effective in dusty environments such as cement and mineral processing.',
+ 
+    fullDesc:  'The screw conveyor is one of the most adaptable bulk material handling systems in industrial use — suited equally to fine powders, granules, wet sludge, and abrasive materials across every major process industry. Jayveecons designs and fabricates screw conveyors for horizontal, inclined, and vertical orientations, engineered precisely to your material\'s bulk density, particle size distribution, abrasiveness, moisture content, and throughput requirement. Every VECTOMEC™ screw conveyor is engineered on the VECTRIX™ Design Platform, Jayveecons\' proprietary process calculation and fabrication environment built on nearly four decades of screw conveyor design knowledge.',
+ 
     specs: [
-      { key: 'Diameter range',  val: '100mm – 600mm' },
-      { key: 'Capacity',        val: 'Up to 200 m³/hr depending on material' },
-      { key: 'Orientation',     val: 'Horizontal, inclined (up to 45°), vertical' },
-      { key: 'Materials',       val: 'MS, SS 304/316, abrasion-resistant steel' },
-      { key: 'Drive',           val: 'Gearbox motor, variable speed available' },
+      { key: 'Diameter range',   val: '100 mm – 1000 mm' },
+      { key: 'Capacity',         val: 'Up to 200 m³/hr depending on material' },
+      { key: 'Orientation',      val: 'Horizontal · Inclined (up to 45°) · Vertical' },
+      { key: 'Trough material',  val: 'MS · SS 304/316 · Abrasion-resistant (AR) steel Abrasion-resistant (AR) liners' },
+      { key: 'Drive',            val: 'Direct-coupled gearmotor · VFD variable speed' },
+      { key: 'Bearing type',     val: 'End bearings: sealed-for-life flanged · Hanger: bronze, nylon, or roller' },
+      { key: 'Sealing',          val: 'Lip seals · Gland packing · Labyrinth seals' },
+      { key: 'Shaft coupling',   val: 'Bolt-together flanged sections; no centre bearing on short units' },
+      { key: 'Surface finish',   val: 'Epoxy-painted standard; SS electropolish for food duty' },
+      { key: 'Temperature',      val: 'Standard to 80°C; high-temp AR/SS configurations to 350°C' },
     ],
-    features: [
-      { key: 'Flighting types', val: 'Standard, ribbon, paddle, cut & folded' },
-      { key: 'Sealing',         val: 'End seals, intermediate hanger bearings' },
-      { key: 'Trough options',  val: 'U-trough, tubular, live-bottom' },
-      { key: 'Certifications',  val: 'Food-grade options available (SS, FG coatings)' },
+ 
+    // Application configuration cards — shown as visual grid in modal
+    configs: [
+      {
+        name: 'Standard Trough',
+        desc: 'U-trough with solid flighting. The default configuration for free-flowing dry powders and granules — cement, grain, fertiliser, mineral fines.',
+      },
+      {
+        name: 'Variable Pitch',
+        desc: 'Increasing pitch from inlet to discharge zone reduces material packing at the feed end and controls loading on inclined conveyors.',
+      },
+      {
+        name: 'Ribbon Flight',
+        desc: 'Open-centre helical ribbon for sticky, viscous, or wet materials. Prevents centre-plug clogging — suited to sludge, pastes, and wet biomass.',
+      },
+      {
+        name: 'Paddle & Cut-Fold',
+        desc: 'Paddles or cut-and-folded flights agitate material as it travels — used for mixing, conditioning, heat transfer, and aeration duties.',
+      },
+      {
+        name: 'Multi-Screw',
+        desc: 'Twin- or triple-screw arrangement in a common trough — uniform feed across wide openings, mixing of multiple streams, or high-capacity throughput.',
+      },
+      {
+        name: 'Pipe Conveyor',
+        desc: 'Fully enclosed tubular screw for pressure-tight or fully dust-sealed conveying — fly ash, toxic powders, and pharma-grade materials.',
+      },
     ],
-    modalApps: ['Cement powder', 'Raw meal', 'Grain & pulses', 'Wood chips', 'Fly ash', 'Boiler ash', 'Mineral fines', 'Municipal solid waste', 'Animal feed', 'Chemical powders'],
+ 
+    // Vectrix platform callout text (HTML allowed)
+    platform: 'Every VECTOMEC™ Screw Conveyor is designed on the <strong>VECTRIX™ Design Platform</strong> — Jayveecons\' proprietary engineering environment built on nearly four decades of accumulated calculation methodologies, material flow data, flight geometry libraries, and field performance records across cement, mining, food processing, and waste management applications. VECTRIX™ enables precise capacity modelling, horsepower prediction, and flight geometry optimisation for each material and orientation — ensuring the conveyor delivered to your plant is not a catalogue adaptation, but an engineered solution.',
+ 
+    modalApps: [
+      'Cement raw meal & powder',
+      'Portland cement',
+      'Fly ash & boiler ash',
+      'Grain & pulses',
+      'Sugar & food powders',
+      'Wood chips & biomass',
+      'Mineral fines & sand',
+      'Municipal solid waste',
+      'Chemical powders',
+      'Wet sludge & pastes',
+    ],
   },
 
   {
