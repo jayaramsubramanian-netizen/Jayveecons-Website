@@ -223,7 +223,6 @@ const { yearsOld } = Astro.props;
 
   /* ── Flow column — hidden on mobile, visible ≥ 900px ── */
   .hero-flow-col {
-    display: none;
     position: relative;
     width: 24px;
     flex-shrink: 0;
@@ -346,7 +345,7 @@ const { yearsOld } = Astro.props;
   @media (prefers-reduced-motion: reduce) {
     .hero-eyebrow, .hero-headline, .hero-sub,
     .hero-actions, .hero-stats-wrap, .hero-scroll { animation: none; }
-    .scroll-line, .hero-flow-glow { display: none; }
+    .scroll-line, .hero-flow-glow { }
     .hero-flow-dot { box-shadow: 0 0 0 2px rgba(192,24,30,.5); }
   }
 </style>

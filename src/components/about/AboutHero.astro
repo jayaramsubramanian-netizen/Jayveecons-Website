@@ -28,7 +28,6 @@
 
   /* ── Flow column — right edge, desktop only ── */
   .ch-flow-col {
-    display: none;
     position: absolute;
     top: 0; bottom: 0;
     right: calc(clamp(48px, 6vw, 96px) + 200px);
@@ -153,7 +152,6 @@
 
   @media (prefers-reduced-motion: reduce) {
     .page-eyebrow, .page-title, .page-sub, .header-era-badge { animation: none; }
-    .ch-flow-glow { display: none; }
     .era-indicator { animation: none; }
     .g-dot .ripple { animation: none; }
   }
@@ -233,7 +231,7 @@
     const col     = section?.querySelector('.ch-flow-col');
     const glow    = document.getElementById('about-flow-glow');
     if (!section || !col || !glow) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+   
 
     let rafId = null, startTime = null;
     function frame(now) {
