@@ -9,6 +9,11 @@
     <div class="ch-flow-glow" id="contact-flow-glow"></div>
   </div>
 
+  <!-- Blueprint background image -->
+  <div class="ch-blueprint" aria-hidden="true">
+    <img src="/images/ScrewConv_blueprint.png" alt="" draggable="false" />
+  </div>
+
   <div class="sph-inner">
 
     <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -28,8 +33,7 @@
     </h1>
 
     <p class="page-sub">
-      Whether you have a project brief, a technical question, or just want to explore
-      what's possible — our engineering team is ready to respond.
+      Have a project brief, a technical question, or equipment requirement ? <br>Explore what's possible — our engineering team is ready to help design the right solution.
     </p>
 
   </div>
@@ -53,6 +57,40 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(192,24,30,.3) 50%, transparent);
     pointer-events: none;
+  }
+
+  /* ── Blueprint image ── */
+  .ch-blueprint {
+    position: absolute;
+    /* Anchor to the right side, vertically centered */
+    top: calc(50%+100px);
+    right: -1%;
+    transform: translateY(-50%);
+    /* Show roughly 55% of the image width — hides the title block on the right */
+    width: clamp(380px, 52vw, 780px);
+    z-index: 0;
+    pointer-events: none;
+    /* Fade out the left edge so it blends into the text area */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 20%, rgba(0,0,0,1) 50%);
+    mask-image:         linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 20%, rgba(0,0,0,1) 50%);
+  }
+  .ch-blueprint img {
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 0.25;          /* ← tweak between 0.15–0.20 to taste */
+    object-fit: contain;
+    /* Desaturate so it reads as a technical watermark, not a colour photo */
+    filter: grayscale(30%) brightness(1.15);
+    user-select: none;
+  }
+
+  /* Hide on narrow viewports — not enough room */
+  @media (max-width: 700px) {
+    .ch-blueprint { display: none; }
+    .ch-flow-col {
+      right:calc(clamp(48px, 6vw,96px)+200px - 180px);
+    }
   }
 
   /* Flow column */
@@ -119,7 +157,6 @@
 
   @media (prefers-reduced-motion: reduce) {
     .page-eyebrow, .page-title, .page-sub { animation: none; }
-    
   }
 </style>
 
@@ -130,7 +167,6 @@
   const col     = section?.querySelector('.ch-flow-col');
   const glow    = document.getElementById('contact-flow-glow');
   if (!section || !col || !glow) return;
-  
 
   let rafId = null, startTime = null;
   function frame(now) {
