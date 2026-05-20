@@ -33,7 +33,7 @@ export const products: Product[] = [
     name:      'Screw Conveyor',
     series:    'VECTOMEC™',
     shortDesc: 'Rotating helical screw blade within a trough or tube, moving bulk material horizontally, on incline, or vertically. Sealed design suits dusty, abrasive, and food-grade applications.',
-    image:     '/public/images/products/screw_con1.png',   // ← corrected path
+    image:     '/images/products/screw_con1.png',   // ← corrected path
     apps:      ['Cement', 'Food', 'Mining', 'Waste'],
  
     fullDesc:  'The screw conveyor is one of the most adaptable bulk material handling systems in industrial use — suited equally to fine powders, granules, wet sludge, and abrasive materials across every major process industry. Jayveecons designs and fabricates screw conveyors for horizontal, inclined, and vertical orientations, engineered precisely to your material\'s bulk density, particle size distribution, abrasiveness, moisture content, and throughput requirement. Every VECTOMEC™ screw conveyor is engineered on the VECTRIX™ Design Platform, Jayveecons\' proprietary process calculation and fabrication environment built on nearly four decades of screw conveyor design knowledge.',

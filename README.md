@@ -59,7 +59,7 @@ Before running the site, copy your images into the right place:
 
 1. Copy `logo.png` into the **`public/`** folder
 2. If you have an `images/` folder with product photos, copy the whole
-   `images/` folder into **`public/`** so it becomes `public/images/`
+   `images/` folder into **`public/`** so it becomes `/images/`
 
 ---
 

@@ -118,7 +118,7 @@ No JavaScript needed at all for this.
 ## 3️⃣ VISUAL IMPROVEMENTS — Quick Wins
 
 ### A. Add an OG/social image
-Create a `public/images/og-default.jpg` (1200×630px) for social sharing previews.
+Create a `/images/og-default.jpg` (1200×630px) for social sharing previews.
 Use a screenshot of your hero section with the logo overlaid.
 
 ### B. Favicon set
@@ -388,7 +388,7 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
 | Bug | File | Fix |
 |-----|------|-----|
-| Logo path `public/images/logo.png` (wrong — 404 on live) | `Nav.astro` | Changed to `/images/logo.png` |
+| Logo path `/images/logo.png` (wrong — 404 on live) | `Nav.astro` | Changed to `/images/logo.png` |
 | Footer logo also wrong path | `Footer.astro` | Change to `/images/logo.png` |
 | `keywords` prop passed to BaseLayout but not used | `BaseLayout.astro` | Added `<meta name="keywords">` |
 | No `<link rel="canonical">` | `BaseLayout.astro` | Added |
