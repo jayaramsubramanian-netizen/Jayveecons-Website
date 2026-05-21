@@ -169,36 +169,48 @@
   }
 
   /* ── Image / placeholder ── */
-  .pm-img-wrap {
-    width: 100%;
-    height: clamp(180px,30vh,340px);
-    border-radius: 8px;
-    border: 1px solid rgba(8,56,146,.1);
-    margin-bottom: clamp(16px,2.5vh,24px);
-    overflow: hidden; position: relative;
-    background: #f0f4fb;
-  }
-  .pm-img {
-    width: 100%; height: 100%;
-    object-fit: cover; object-position: center;
-    display: none;
-  }
-  .pm-img.pm-img--loaded { display: block; }
-  .pm-img-placeholder {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 12px;
-    background:
-      linear-gradient(rgba(8,56,146,.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(8,56,146,.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-  .pm-img-placeholder svg { width: 56px; height: 56px; color: rgba(8,56,146,.2); }
-  .pm-img-placeholder span {
-    font-family: var(--font-mono);
-    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
-    color: rgba(8,56,146,.35);
-  }
+.pm-img-wrap {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid rgba(8,56,146,.1);
+  margin-bottom: clamp(16px,2.5vh,24px);
+  background: #f0f4fb;
+  overflow: hidden;
+  position: relative;
+}
+.pm-img {
+  width: 100%;
+  height: auto;
+  display: block;           /* always block — never none */
+  visibility: hidden;       /* hidden until loaded, but still occupies space */
+}
+.pm-img.pm-img--loaded {
+  visibility: visible;
+}
+.pm-img-placeholder {
+  /* Only shown when no image — absolutely overlays the wrap */
+  position: absolute;
+  inset: 0;
+  min-height: 180px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background:
+    linear-gradient(rgba(8,56,146,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8,56,146,.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.pm-img-placeholder.pm-ph--visible {
+  display: flex;
+}
+.pm-img-placeholder svg  { width: 56px; height: 56px; color: rgba(8,56,146,.2); }
+.pm-img-placeholder span {
+  font-family: var(--font-mono);
+  font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(8,56,146,.35);
+}
 
   /* ── Body: 2-col ── */
   .pm-body {
@@ -410,8 +422,8 @@
     fullDesc:     string;
     specs:        { key: string; val: string }[];
     features?:    { key: string; val: string }[];
-    configs?:     ConfigCard[];          // application configuration cards
-    platform?:    string;               // Vectrix platform note
+    configs?:     ConfigCard[];
+    platform?:    string;
     modalApps:    string[];
   };
 
@@ -448,56 +460,75 @@
     </div>`;
   }
 
+  function resetImage() {
+    // Fully reset: kill src, remove loaded class, clear handlers
+    elImg.onload  = null;
+    elImg.onerror = null;
+    elImg.classList.remove('pm-img--loaded');
+    elImg.removeAttribute('src');
+    elImg.style.display    = 'none';
+    elPhWrap.style.display = 'none';
+  }
+
+  function showPlaceholder(label: string) {
+    elImg.style.display    = 'none';
+    elPhWrap.style.display = 'flex';
+    elPhLabel.textContent  = label;
+  }
+
+  function loadImage(path: string, altText: string) {
+    // Always normalise to /images/products/<filename>
+    // Strip any existing path prefix and rebuild cleanly
+    const filename = path.split('/').pop() ?? path;
+    const src = `/images/products/${filename}`;
+
+    // Assign handlers BEFORE src — avoids the cached-image missed-load race
+    elImg.onload = () => {
+      elPhWrap.style.display = 'none';
+      elImg.style.display    = 'block';
+      elImg.classList.add('pm-img--loaded');
+    };
+    elImg.onerror = () => {
+      console.warn(`[ProductModal] Image failed to load: ${src}`);
+      showPlaceholder(altText);
+    };
+    elImg.alt = altText;
+    elImg.src = src;
+  }
+
   function openModal(id: string) {
     const products: Product[] = (window as any).__PRODUCTS__ ?? [];
     const p = products.find(x => x.id === id);
-    if (!p) return;
+    if (!p) {
+      console.warn(`[ProductModal] Product not found: ${id}`);
+      return;
+    }
 
     elTag.textContent   = p.series;
     elTitle.textContent = p.name;
     elDesc.textContent  = p.fullDesc;
 
-    // ── Image — robust loading, reset state each call ──
-    elImg.classList.remove('pm-img--loaded');
-    elImg.src = '';
-
+    // ── Image ──
+    resetImage();
     if (p.image) {
-      elPhWrap.style.display = 'none';
-      elImg.style.display    = 'none'; // wait for load
-      elImg.onload = () => {
-        elImg.style.display = 'block';
-        elImg.classList.add('pm-img--loaded');
-      };
-      elImg.onerror = () => {
-        elImg.style.display    = 'none';
-        elPhWrap.style.display = 'flex';
-        elPhLabel.textContent  = p.name;
-      };
-      elImg.alt = p.name;
-      elImg.src = p.image;
+      loadImage(p.image, p.name);
     } else {
-      elImg.style.display    = 'none';
-      elPhWrap.style.display = 'flex';
-      elPhLabel.textContent  = p.name;
+      showPlaceholder(p.name);
     }
 
     // ── Spec table ──
     const tbody = elSpecs.querySelector('tbody')!;
     tbody.innerHTML = p.specs.map(s => specRow(s.key, s.val)).join('');
 
-    // ── Config cards (application configurations) ──
-    // Use configs array if present, fall back to features
+    // ── Config cards ──
     const configs: ConfigCard[] = (p as any).configs ?? [];
     if (configs.length) {
-      elConfigs.innerHTML   = configs.map(configCard).join('');
-      elFeatHead.hidden     = false;
+      elConfigs.innerHTML    = configs.map(configCard).join('');
+      elFeatHead.hidden      = false;
       elFeatHead.textContent = 'Application Configurations';
     } else if (p.features?.length) {
-      // Render features as config cards too
-      elConfigs.innerHTML = p.features.map(f =>
-        configCard({ name: f.key, desc: f.val })
-      ).join('');
-      elFeatHead.hidden     = false;
+      elConfigs.innerHTML    = p.features.map(f => configCard({ name: f.key, desc: f.val })).join('');
+      elFeatHead.hidden      = false;
       elFeatHead.textContent = 'Key Design Features';
     } else {
       elConfigs.innerHTML = '';
@@ -508,7 +539,7 @@
     elApps.innerHTML = p.modalApps
       .map(a => `<span class="pm-app-pill">${a}</span>`).join('');
 
-    // ── CTA buttons — entity arrow, no SVG ──
+    // ── CTAs ──
     elActions.innerHTML = `
       <a href="/contact?product=${p.id}" class="pm-btn-primary">
         Request a Quote &#8594;
@@ -517,7 +548,7 @@
         Technical Enquiry
       </a>`;
 
-    // ── Vectrix platform callout ──
+    // ── Vectrix callout ──
     if ((p as any).platform) {
       elPlatformTx.innerHTML = (p as any).platform;
       elPlatform.hidden      = false;
@@ -533,6 +564,7 @@
   function closeModal() {
     dialog.close();
     document.body.style.overflow = '';
+    resetImage(); // clean up so stale src doesn't flash on next open
   }
 
   document.addEventListener('open-product-modal', (e: Event) => {
@@ -550,7 +582,7 @@
     ).filter(el => !el.hidden && el.offsetParent !== null);
     if (!focusable.length) return;
     const first = focusable[0], last = focusable[focusable.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    if (e.shiftKey && document.activeElement === first)  { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
 </script>

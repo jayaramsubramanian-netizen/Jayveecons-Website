@@ -127,7 +127,7 @@ export const products: Product[] = [
     name:      'Bucket Elevator — Belt Type',
     series:    'VECTOMEC™',
     shortDesc: 'Vertical elevation of flowable bulk materials using buckets mounted on a continuous belt. Ideal for light-to-medium density materials at high throughput.',
-    image:     'images/be-belt.jpg',
+    image:     'images/products/bucket_elevator.png',
     apps:      ['Cement', 'Grain', 'Fertiliser'],
     fullDesc:  'Belt-type bucket elevators are used extensively in cement, grain, and fertiliser industries to elevate bulk materials vertically with minimal material degradation. Jayveecons designs and fabricates complete elevator assemblies including casing, head and boot sections, belting, buckets, drive and tensioning arrangements.',
     specs: [
