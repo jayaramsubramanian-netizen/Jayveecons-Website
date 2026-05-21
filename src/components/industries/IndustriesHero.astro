@@ -9,6 +9,11 @@
     <div class="ch-flow-glow" id="ind-flow-glow"></div>
   </div>
 
+  <!-- Blueprint background image -->
+  <div class="ih-blueprint" aria-hidden="true">
+    <img src="/images/ball_mill_bp.png" alt="" draggable="false" />
+  </div>
+
   <div class="ih-inner">
 
     <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -57,67 +62,164 @@
     background: linear-gradient(90deg, transparent, rgba(192,24,30,.3) 50%, transparent);
   }
 
-  /* Flow column */
+  /* ── Blueprint image ──
+     Ball mill is landscape/wide — same approach as the screw conveyor.
+     Anchored right, vertically centred, fades in from the left edge.     */
+  .ih-blueprint {
+    position: absolute;
+    top: 60%;
+    right: -1%;
+    transform: translateY(-50%);
+    width: clamp(480px, 62vw, 960px);
+    z-index: 0;
+    pointer-events: none;
+    /* Fade left edge into text area, keep right portion fully visible */
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent     0%,
+      rgba(0,0,0,.45) 18%,
+      rgba(0,0,0,1)   42%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent     0%,
+      rgba(0,0,0,.45) 18%,
+      rgba(0,0,0,1)   42%
+    );
+  }
+  .ih-blueprint img {
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 0.25;
+    object-fit: contain;
+    filter: grayscale(30%) brightness(1.15);
+    user-select: none;
+  }
+  @media (max-width: 700px) {
+    .ih-blueprint { display: none; }
+  }
+
+  /* ── Flow column ── */
   .ch-flow-col {
     position: absolute;
     top: 0; bottom: 0;
     right: calc(clamp(48px, 6vw, 96px) + 200px);
-    width: 2px; z-index: 0; pointer-events: none;
+    width: 2px;
+    z-index: 0;
+    pointer-events: none;
   }
   @media (min-width: 900px) { .ch-flow-col { display: block; } }
+
   .ch-flow-line {
-    position: absolute; inset: 0;
-    background: linear-gradient(to bottom, transparent 0%, rgba(208,212,220,.12) 8%, rgba(208,212,220,.12) 92%, transparent 100%);
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(208,212,220,.12) 8%,
+      rgba(208,212,220,.12) 92%,
+      transparent 100%
+    );
   }
   .ch-flow-glow {
-    position: absolute; left: 50%; margin-left: -3px;
+    position: absolute;
+    left: 50%; margin-left: -3px;
     top: 0; width: 6px; height: 100px; opacity: 0;
-    background: linear-gradient(to bottom, transparent 0%, rgba(106,166,255,.12) 10%, rgba(106,166,255,.9) 40%, rgba(180,220,255,1) 50%, rgba(106,166,255,.9) 60%, rgba(106,166,255,.12) 90%, transparent 100%);
-    border-radius: 3px; z-index: 3; will-change: top, opacity;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(106,166,255,.12) 10%,
+      rgba(106,166,255,.9)  40%,
+      rgba(180,220,255,1)   50%,
+      rgba(106,166,255,.9)  60%,
+      rgba(106,166,255,.12) 90%,
+      transparent 100%
+    );
+    border-radius: 3px;
+    z-index: 3;
+    will-change: top, opacity;
   }
 
+  /* ── Inner container ── */
   .ih-inner {
-    position: relative; z-index: 1;
-    max-width: 1440px; margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    max-width: 1440px;
+    margin: 0 auto;
     padding: 0 clamp(16px, 4vw, 48px);
   }
 
+  /* ── Breadcrumb ── */
   .breadcrumb {
-    display: flex; align-items: center; gap: 8px; margin-bottom: 28px;
-    flex-wrap: wrap; font-family: var(--font-mono);
-    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
   }
   .breadcrumb a        { color: #7a8499; text-decoration: none; transition: color .2s; min-height: 44px; display: flex; align-items: center; }
   .breadcrumb a:hover  { color: var(--fog); }
   .breadcrumb .sep     { color: #3a4255; }
   .breadcrumb .current { color: #ff7070; }
 
-  .page-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; animation: fadeUp .7s ease .1s both; }
+  /* ── Eyebrow ── */
+  .page-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    animation: fadeUp .7s ease .1s both;
+  }
   .page-eyebrow-line { width: 40px; height: 2px; background: var(--crimson); flex-shrink: 0; }
-  .page-eyebrow span { font-family: var(--font-mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #ff7070; }
+  .page-eyebrow span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #ff7070;
+  }
 
+  /* ── H1 ── */
   .page-title {
-    font-family: var(--font-head); font-weight: 800;
+    font-family: var(--font-head);
+    font-weight: 800;
     font-size: clamp(40px, 7vw, 84px);
-    text-transform: uppercase; line-height: .93; letter-spacing: -.01em;
-    margin-bottom: 22px; animation: fadeUp .7s ease .2s both;
+    text-transform: uppercase;
+    line-height: .93;
+    letter-spacing: -.01em;
+    margin-bottom: 22px;
+    animation: fadeUp .7s ease .2s both;
   }
   .page-title .accent { color: var(--crimson-l); }
   .page-title .chrome {
     background: linear-gradient(135deg, var(--chrome-l, #e8eaec), var(--chrome, #d0d4dc));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
+  /* ── Sub copy ── */
   .page-sub {
-    font-size: clamp(14px, 1.7vw, 17px); font-weight: 300;
-    color: var(--fog); max-width: 800px; line-height: 1.75;
+    font-size: clamp(14px, 1.7vw, 17px);
+    font-weight: 300;
+    color: var(--fog);
+    max-width: 800px;
+    line-height: 1.75;
     animation: fadeUp .7s ease .3s both;
   }
 
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(26px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .page-eyebrow, .page-title, .page-sub { animation: none; }
-    
   }
 </style>
 
@@ -128,17 +230,26 @@
   const col     = section?.querySelector('.ch-flow-col');
   const glow    = document.getElementById('ind-flow-glow');
   if (!section || !col || !glow) return;
- 
 
   let rafId = null, startTime = null;
+
   function frame(now) {
     if (!startTime) startTime = now;
     const y = -FLOW_HEIGHT + (col.offsetHeight + FLOW_HEIGHT) * ((now - startTime) % CYCLE_MS / CYCLE_MS);
     glow.style.top = y + 'px';
     rafId = requestAnimationFrame(frame);
   }
-  function start() { if (rafId) return; glow.style.opacity = '1'; startTime = null; rafId = requestAnimationFrame(frame); }
-  function stop()  { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } glow.style.opacity = '0'; glow.style.top = '0px'; }
+  function start() {
+    if (rafId) return;
+    glow.style.opacity = '1';
+    startTime = null;
+    rafId = requestAnimationFrame(frame);
+  }
+  function stop() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    glow.style.opacity = '0';
+    glow.style.top = '0px';
+  }
 
   new IntersectionObserver(e => { e[0].isIntersecting ? start() : stop(); }, { threshold: 0.05 }).observe(section);
   document.addEventListener('astro:before-swap', stop);

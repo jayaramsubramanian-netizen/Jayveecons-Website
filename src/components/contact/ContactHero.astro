@@ -63,9 +63,9 @@
   .ch-blueprint {
     position: absolute;
     /* Anchor to the right side, vertically centered */
-    top: calc(50%+100px);
-    right: -1%;
-    transform: translateY(-50%);
+    top: 30%;
+    right: -10%;
+    transform: translateY(-40%);
     /* Show roughly 55% of the image width — hides the title block on the right */
     width: clamp(380px, 52vw, 780px);
     z-index: 0;
@@ -76,9 +76,9 @@
   }
   .ch-blueprint img {
     display: block;
-    width: 100%;
+    width: 80%;
     height: auto;
-    opacity: 0.25;          /* ← tweak between 0.15–0.20 to taste */
+    opacity: 0.35;          /* ← tweak between 0.15–0.20 to taste */
     object-fit: contain;
     /* Desaturate so it reads as a technical watermark, not a colour photo */
     filter: grayscale(30%) brightness(1.15);

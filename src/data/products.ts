@@ -235,7 +235,73 @@ export const products: Product[] = [
     ],
     modalApps: ['Cement grinding', 'Raw meal grinding', 'Coal grinding', 'Mineral grinding', 'Ceramics', 'Chemical powders'],
   },
+{
+    id:        'air-classifier',
+    category:  'processing',
+    name:      'Air Classifier',
+    series:    'VECTOMEC™',
+    shortDesc: 'Dynamic rotor-based air classifier that separates fine particles from coarse by centrifugal and aerodynamic forces. Delivers precise cut-point control from 10 to 300 microns for cement, mineral, and chemical powder finishing.',
+    image:     '/images/products/classifier.png',
+    apps:      ['Cement', 'Mining', 'Chemicals', 'Food'],
 
+    fullDesc:  'The VECTOMEC™ Air Classifier is a high-efficiency dynamic separator that uses a precision-speed rotating rotor to impose a centrifugal force field on an ascending air-particle stream. Fine particles whose aerodynamic drag exceeds the centrifugal force pass inward through the rotor and exit as product; coarse particles are rejected outward and returned for regrinding. The result is a sharp, controllable separation at any cut point between 10 and 300 microns — essential in closed-circuit cement and mineral grinding systems where product fineness directly governs quality and energy consumption. Every VECTOMEC™ Air Classifier is engineered on the VECTRIX™ Design Platform, sized to your airflow, throughput, and target Blaine or d97 specification.',
+
+    specs: [
+      { key: 'Model',              val: 'JV-AC series' },
+      { key: 'Rotor diameter',     val: '500 mm – 2,500 mm' },
+      { key: 'Rotor speed',        val: '200 – 1,500 RPM (VFD controlled)' },
+      { key: 'Cut point range',    val: '10 – 300 microns (d97)' },
+      { key: 'Capacity',           val: 'Up to 120 TPH depending on material and cut point' },
+      { key: 'Motor power',        val: '7.5 kW – 160 kW rotor drive' },
+      { key: 'Airflow',            val: 'Matched to mill circuit fan; typically 3,000 – 80,000 m³/hr' },
+      { key: 'Housing material',   val: 'MS fabricated; AR-lined interior for abrasive duties' },
+      { key: 'Bearing arrangement',val: 'Grease-lubricated or oil-bath; top-mounted or external pedestal' },
+      { key: 'Temperature',        val: 'Up to 300°C inlet gas (standard sealing); higher on request' },
+    ],
+
+    configs: [
+      {
+        name: 'Closed-Circuit Cement Grinding',
+        desc: 'Paired with a ball mill in a closed loop — coarse reject returns to the mill, fine product exits to the silo. Increases mill throughput by 20–40% versus open circuit at equivalent Blaine.',
+      },
+      {
+        name: 'Ultra-Fine Classification',
+        desc: 'High rotor speed and reduced airflow velocity achieve sub-20-micron cut points for specialty cements, calcium carbonate, and precipitated silica.',
+      },
+      {
+        name: 'Multi-Product Separation',
+        desc: 'Dual-outlet configuration produces two distinct product fractions simultaneously — coarse and fine cement grades from a single classifier unit.',
+      },
+      {
+        name: 'Raw Meal Separation',
+        desc: 'Classifies raw meal in the raw mill circuit, rejecting coarse limestone and shale back to the mill while passing correctly ground material to the kiln feed silo.',
+      },
+      {
+        name: 'Mineral Powder Finishing',
+        desc: 'Used downstream of vertical roller mills and Raymond mills for calcium carbonate, talc, barite, and kaolin to achieve tight d97 specifications for paint and coating grades.',
+      },
+      {
+        name: 'Coal Mill Circuit',
+        desc: 'Classifies pulverised coal in thermal power and cement kiln fuel preparation circuits — rejects coarse coal back to the mill, passes fine coal dust to the burner system.',
+      },
+    ],
+
+    platform: 'Every VECTOMEC™ Air Classifier is designed on the <strong>VECTRIX™ Design Platform</strong> — Jayveecons\' proprietary engineering environment integrating rotor aerodynamics, particle trajectory modelling, and cut-point prediction built on field performance data from cement, mineral, and chemical powder installations. VECTRIX™ enables precise rotor geometry selection, airflow balancing, and VFD speed mapping for each application — ensuring the classifier delivered to your plant achieves its specified Blaine or d97 target from day one.',
+
+    modalApps: [
+      'Cement finish grinding — closed circuit',
+      'Raw meal grinding circuit',
+      'Slag and fly ash grinding',
+      'Calcium carbonate classification',
+      'Talc and barite finishing',
+      'Kaolin and clay powders',
+      'Coal mill circuit separation',
+      'Silica and quartz powder',
+      'Chemical and pharmaceutical powders',
+      'Specialty cement grades (ultra-fine)',
+    ],
+  },
+  
   {
     id:        'crusher',
     category:  'processing',

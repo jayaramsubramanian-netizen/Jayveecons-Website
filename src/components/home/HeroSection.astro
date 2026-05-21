@@ -27,7 +27,7 @@ const { yearsOld } = Astro.props;
 
       <h1 class="hero-headline">
         <span class="h-block">High Performance</span>
-        <span class="h-block accent">Bulk Material Handling &amp;</span>
+        <span class="h-block accent">Material Handling &amp;</span>
         <span class="h-block chrome-grad">Processing Systems</span>
       </h1>
 
@@ -61,7 +61,7 @@ const { yearsOld } = Astro.props;
     <span class="btn-sub">Explore Equipment</span>
   </a>
 </div>
-
+</div>
     <!-- Right: stat cards + flow column -->
     <div class="hero-stats-wrap" aria-label="Key company statistics">
 
@@ -129,17 +129,17 @@ const { yearsOld } = Astro.props;
   }
 
   /* ── Blueprint image ── */
-  .hero-blueprint {
-    position: absolute;
-    top: calc(50% + 60px);
-    right: calc(-2% + 80px);
-    transform: translateY(-50%);
-    width: clamp(400px, 54vw, 820px);
-    z-index: 0;
-    pointer-events: none;
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 18%, rgba(0,0,0,1) 45%);
-    mask-image:         linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 18%, rgba(0,0,0,1) 45%);
-  }
+ .hero-blueprint {
+  position: absolute;
+  top: calc(50%);
+  right: calc(-10%);
+  transform: translateY(-50%);
+  width: clamp(400px, 54vw, 820px);
+  z-index: 0;                        /* ← was 0, now sits behind everything */
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 18%, rgba(0,0,0,1) 45%);
+  mask-image:         linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 18%, rgba(0,0,0,1) 45%);
+}
   .hero-blueprint img {
     display: block;
     width: 100%;
@@ -156,7 +156,7 @@ const { yearsOld } = Astro.props;
   /* ── Inner layout ── */
   .hero-inner {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     width: 100%;
     max-width: 1440px;
     margin: 0 auto;

@@ -11,6 +11,11 @@
     <div class="ch-flow-glow" id="svc-flow-glow"></div>
   </div>
 
+  <!-- Blueprint background image -->
+  <div class="sph-blueprint" aria-hidden="true">
+    <img src="/images/bucket_elevator_bp.png" alt="" draggable="false" />
+  </div>
+
   <div class="sph-inner">
 
     <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -40,7 +45,7 @@
 </section>
 
 <style>
-  /* ── Section shell — dark navy gradient ── */
+  /* ── Section shell ── */
   .sph-section {
     position: relative;
     isolation: isolate;
@@ -60,7 +65,47 @@
     pointer-events: none;
   }
 
-  /* ── Flow column — right edge, desktop only ── */
+  /* ── Blueprint image ──
+     The bucket elevator is portrait/tall, so we anchor it to the right,
+     let it be taller than the section, and clip via overflow:hidden on the section.
+     The mask fades the left edge so it dissolves into the text area.        */
+  .sph-blueprint {
+    position: absolute;
+    top: 30%;
+    right: 1%;
+    transform: translateY(-50%);
+    /* Tall portrait image — constrain by height so it fills the section vertically */
+    height: 130%;
+    width: auto;
+    z-index: 0;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent  0%,
+      rgba(0,0,0,0.4) 15%,
+      rgba(0,0,0,1)   40%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent  0%,
+      rgba(0,0,0,0.4) 15%,
+      rgba(0,0,0,1)   40%
+    );
+  }
+  .sph-blueprint img {
+    display: block;
+    height: 180%;
+    width: auto;
+    opacity: 0.25;
+    object-fit: contain;
+    filter: grayscale(30%) brightness(1.15);
+    user-select: none;
+  }
+  @media (max-width: 700px) {
+    .sph-blueprint { display: none; }
+  }
+
+  /* ── Flow column ── */
   .ch-flow-col {
     position: absolute;
     top: 0; bottom: 0;
@@ -82,7 +127,6 @@
       transparent 100%
     );
   }
-
   .ch-flow-glow {
     position: absolute;
     left: 50%;
@@ -109,7 +153,7 @@
   /* ── Inner container ── */
   .sph-inner {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     width: 100%;
     max-width: 1440px;
     margin-inline: auto;
@@ -131,7 +175,7 @@
   .breadcrumb a        { color: var(--mist); text-decoration: none; transition: color .2s; min-height: 44px; display: flex; align-items: center; }
   .breadcrumb a:hover  { color: var(--white); }
   .breadcrumb .sep     { color: var(--crimson); opacity: .6; }
-  .breadcrumb .current { color: #ff7070; }      /* ← unified: matches CareersHero */
+  .breadcrumb .current { color: #ff7070; }
 
   /* ── Eyebrow ── */
   .page-eyebrow {
@@ -141,20 +185,20 @@
     margin-bottom: 22px;
     animation: fadeUp .7s ease .1s both;
   }
-  .page-eyebrow-line { width: 40px; height: 2px; background: var(--crimson); flex-shrink: 0; }  /* ← 40px: unified */
+  .page-eyebrow-line { width: 40px; height: 2px; background: var(--crimson); flex-shrink: 0; }
   .page-eyebrow span {
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: .2em;
     text-transform: uppercase;
-    color: #ff7070;    /* ← unified: was var(--crimson-l) */
+    color: #ff7070;
   }
 
-  /* ── H1 — unified size matches CareersHero ── */
+  /* ── H1 ── */
   .page-title {
     font-family: var(--font-head);
     font-weight: 800;
-    font-size: clamp(40px, 7vw, 84px);   /* ← unified: was clamp(44px,6.5vw,84px) */
+    font-size: clamp(40px, 7vw, 84px);
     text-transform: uppercase;
     line-height: .93;
     letter-spacing: -.01em;
@@ -188,7 +232,6 @@
 
   @media (prefers-reduced-motion: reduce) {
     .page-eyebrow, .page-title, .page-sub { animation: none; }
-    
   }
 </style>
 
@@ -201,7 +244,7 @@
   const col     = section?.querySelector('.ch-flow-col');
   const glow    = document.getElementById('svc-flow-glow');
   if (!section || !col || !glow) return;
-  
+
   let rafId = null, startTime = null;
 
   function frame(now) {
