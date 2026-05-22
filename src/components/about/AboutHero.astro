@@ -1,11 +1,8 @@
 ---
-// AboutHero.astro — unified with CareersHero pattern
-// Globe animation preserved exactly. Flow line added to right edge.
-// Unified: breadcrumb .current → #ff7070, eyebrow line 40px, eyebrow color #ff7070, H1 clamp(40px,7vw,84px)
+import WorldMap from './WorldMap.astro';
 ---
 
 <style>
-  /* ── Section shell ── */
   .about-hero {
     position: relative;
     isolation: isolate;
@@ -13,42 +10,73 @@
     z-index: 2;
     padding: clamp(110px, 16vh, 156px) 0 clamp(52px, 8vh, 80px);
     background:
-      radial-gradient(ellipse 60% 70% at 70% 50%, rgba(26,50,96,.55), transparent 65%),
+      radial-gradient(ellipse 90% 70% at 65% 40%, rgba(8,56,146,.85) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 5%  90%, rgba(192,24,30,.07) 0%, transparent 50%),
       linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
-    min-height: 100svh;
     display: flex;
     flex-direction: column;
   }
+
   .about-hero::after {
     content: '';
     position: absolute;
-    bottom: 0; left: 0; right: 0; height: 1px;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
     background: linear-gradient(90deg, transparent, rgba(192,24,30,.3) 50%, transparent);
   }
 
-  /* ── Flow column — right edge, desktop only ── */
+  /* ── Flow column — right side, desktop only ── */
   .ch-flow-col {
     position: absolute;
     top: 0; bottom: 0;
     right: calc(clamp(48px, 6vw, 96px) + 200px);
-    width: 2px; z-index: 0; pointer-events: none;
+    width: 2px;
+    z-index: 0;
+    pointer-events: none;
   }
   @media (min-width: 900px) { .ch-flow-col { display: block; } }
+
   .ch-flow-line {
-    position: absolute; inset: 0;
-    background: linear-gradient(to bottom, transparent 0%, rgba(208,212,220,.12) 8%, rgba(208,212,220,.12) 92%, transparent 100%);
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(208,212,220,.12) 8%,
+      rgba(208,212,220,.12) 92%,
+      transparent 100%
+    );
   }
+
   .ch-flow-glow {
-    position: absolute; left: 50%; margin-left: -3px;
-    top: 0; width: 6px; height: 100px; opacity: 0;
-    background: linear-gradient(to bottom, transparent 0%, rgba(106,166,255,.12) 10%, rgba(106,166,255,.9) 40%, rgba(180,220,255,1) 50%, rgba(106,166,255,.9) 60%, rgba(106,166,255,.12) 90%, transparent 100%);
-    border-radius: 3px; z-index: 3; will-change: top, opacity;
+    position: absolute;
+    left: 50%;
+    margin-left: -3px;
+    top: 0;
+    width: 6px;
+    height: 100px;
+    opacity: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(106,166,255,.12) 10%,
+      rgba(106,166,255,.9)  40%,
+      rgba(180,220,255,1)   50%,
+      rgba(106,166,255,.9)  60%,
+      rgba(106,166,255,.12) 90%,
+      transparent 100%
+    );
+    border-radius: 3px;
+    z-index: 3;
+    will-change: top, opacity;
   }
 
   /* ── Inner ── */
   .hero-inner {
-    position: relative; z-index: 1;
-    max-width: 1440px; margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    max-width: 1440px;
+    margin: 0 auto;
     padding: 0 clamp(16px, 4vw, 48px);
     display: grid;
     grid-template-columns: 1fr;
@@ -58,108 +86,92 @@
   }
   @media (min-width: 1024px) { .hero-inner { grid-template-columns: 1fr 1fr; } }
 
+  /* Breadcrumb */
   .breadcrumb {
-    display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
-    flex-wrap: wrap; font-family: var(--font-mono);
-    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
   }
   .breadcrumb a        { color: #7a8499; text-decoration: none; transition: color .2s; min-height: 44px; display: flex; align-items: center; }
   .breadcrumb a:hover  { color: var(--fog); }
   .breadcrumb .sep     { color: #3a4255; }
-  .breadcrumb .current { color: #ff7070; }   /* ← unified */
+  .breadcrumb .current { color: #ff7070; }
 
-  .page-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; animation: fadeUp .7s ease .1s both; }
-  .page-eyebrow-line { width: 40px; height: 2px; background: var(--crimson); flex-shrink: 0; }  /* ← 40px unified */
-  .page-eyebrow span { font-family: var(--font-mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #ff7070; }  /* ← unified */
+  /* Eyebrow */
+  .page-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    animation: fadeUp .7s ease .1s both;
+  }
+  .page-eyebrow-line { width: 40px; height: 2px; background: var(--crimson); flex-shrink: 0; }
+  .page-eyebrow span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #ff7070;
+  }
 
+  /* H1 */
   .page-title {
-    font-family: var(--font-head); font-weight: 800;
-    font-size: clamp(40px, 7vw, 84px);   /* ← unified */
-    text-transform: uppercase; line-height: .92; letter-spacing: -.01em;
-    margin-bottom: 22px; animation: fadeUp .7s ease .2s both;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(40px, 7vw, 84px);
+    text-transform: uppercase;
+    line-height: .93;
+    letter-spacing: -.01em;
+    margin-bottom: 22px;
+    animation: fadeUp .7s ease .2s both;
   }
   .page-title .accent { color: var(--crimson-l); }
   .page-title .chrome {
     background: linear-gradient(135deg, var(--chrome-l, #e8eaec), var(--chrome, #d0d4dc));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
+  /* Subtext */
   .page-sub {
-    font-size: clamp(14px, 1.7vw, 17px); font-weight: 300;
-    color: var(--fog); line-height: 1.75; margin-bottom: 28px;
+    font-family: var(--font-body);
+    font-size: clamp(14px, 1.7vw, 17px);
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.75;
+    margin-bottom: 28px;
     animation: fadeUp .7s ease .3s both;
   }
 
-  .header-era-badge {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: rgba(13,26,58,.6);
-    border: 1px solid rgba(192,24,30,.3);
-    border-left: 3px solid var(--crimson);
-    padding: 10px 16px; animation: fadeUp .7s ease .45s both; flex-wrap: wrap;
+  /* Map container */
+  .header-map {
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    animation: fadeUp .8s ease .4s both;
+    width: 150%;
   }
-  .header-era-badge .label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #7a8aaa; }
-  .header-era-badge .value { font-family: var(--font-head); font-weight: 700; font-size: 16px; color: var(--chrome, #d0d4dc); letter-spacing: .06em; }
-  .era-indicator { width: 8px; height: 8px; background: var(--crimson); border-radius: 50%; animation: pulse 1.8s ease infinite; flex-shrink: 0; }
 
-  /* Globe — preserved exactly from original */
-  .header-globe { display: flex; flex-direction: column; align-items: center; gap: 16px; animation: fadeUp .8s ease .4s both; }
-  .globe-wrap { position: relative; width: clamp(220px, 40vw, 440px); aspect-ratio: 1; flex-shrink: 0; }
-  @media (max-width: 640px) { .globe-wrap { width: clamp(200px, 80vw, 300px); } }
-  .globe-scene { width: 100%; height: 100%; perspective: 800px; perspective-origin: 50% 50%; }
-  .globe-sphere { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
-  .globe-ball {
-    width: 100%; height: 100%; border-radius: 50%; position: absolute; inset: 0;
-    background: radial-gradient(circle at 35% 35%, rgba(42,74,138,.9) 0%, rgba(17,34,71,.8) 40%, rgba(10,18,42,.95) 100%);
-    box-shadow: inset -20px -20px 60px rgba(0,0,0,.7), inset 10px 10px 40px rgba(51,96,184,.2), 0 0 60px rgba(13,26,58,.8), 0 0 120px rgba(192,24,30,.08);
-    overflow: hidden;
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(26px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
-  .globe-ball::before {
-    content: ''; position: absolute; inset: 0; border-radius: 50%;
-    background: repeating-linear-gradient(0deg, transparent, transparent calc(16.67% - 0.5px), rgba(51,96,184,.18) calc(16.67% - 0.5px), rgba(51,96,184,.18) 16.67%);
-  }
-  .globe-ball::after {
-    content: ''; position: absolute; inset: 0; border-radius: 50%;
-    background: repeating-conic-gradient(from 0deg, transparent 0deg, transparent 14.4deg, rgba(51,96,184,.12) 14.4deg, rgba(51,96,184,.12) 15deg);
-  }
-  .globe-sheen { position: absolute; width: 55%; height: 45%; top: 8%; left: 18%; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: radial-gradient(ellipse, rgba(255,255,255,.1) 0%, transparent 70%); pointer-events: none; z-index: 10; }
-  .globe-ring { position: absolute; inset: -3px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(51,96,184,.25), 0 0 40px rgba(51,96,184,.12); pointer-events: none; z-index: 11; }
-  .globe-equator { position: absolute; left: 0; right: 0; top: calc(50% - 0.5px); height: 1px; background: linear-gradient(90deg, transparent, rgba(192,24,30,.35) 30%, rgba(192,24,30,.5) 50%, rgba(192,24,30,.35) 70%, transparent); pointer-events: none; z-index: 9; }
-  .globe-dots { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; z-index: 8; }
-  #globe-zoom { width: 100%; height: 100%; transition: transform 1.2s cubic-bezier(.4,0,.2,1); transform-origin: center center; }
-  .g-dot { position: absolute; transform: translate(-50%, -50%); opacity: 0; transition: opacity .5s ease; }
-  .g-dot.visible { opacity: 1; }
-  .g-dot .core { width: 8px; height: 8px; border-radius: 50%; position: relative; z-index: 2; animation: dotPop .4s cubic-bezier(.34,1.56,.64,1) both; }
-  .g-dot .core.home   { background: #ff4444; width: 10px; height: 10px; box-shadow: 0 0 12px rgba(255,68,68,.8); }
-  .g-dot .core.india  { background: #e02428; box-shadow: 0 0 8px rgba(224,36,40,.6); }
-  .g-dot .core.intl   { background: var(--teal-l, #14a898); box-shadow: 0 0 8px rgba(20,168,152,.5); }
-  .g-dot .core.target { background: transparent; border: 1.5px dashed rgba(20,168,152,.7); width: 9px; height: 9px; }
-  .g-dot .ripple { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: inherit; top: 0; left: 0; opacity: 0; transform: scale(1); animation: rippleDot 2s ease-out infinite; }
-  .g-dot .ripple2 { animation-delay: .8s; }
-  .g-dot-label { position: absolute; font-family: var(--font-mono); font-size: 9px; color: #c8cdd8; letter-spacing: .06em; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .4s ease .2s; z-index: 20; }
-  .g-dot.visible .g-dot-label { opacity: 1; }
-  .globe-era-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #7a8aaa; text-align: center; min-height: 18px; transition: opacity .3s; }
-  .globe-era-label .era-name { color: #ff7070; font-weight: 500; }
-  .globe-era-dots { display: flex; gap: 8px; align-items: center; }
-  .era-pip { width: 8px; height: 8px; border-radius: 50%; background: rgba(51,96,184,.3); border: 1px solid rgba(51,96,184,.4); cursor: pointer; transition: background .25s, transform .25s; padding: 0; position: relative; }
-  .era-pip::before { content: ''; position: absolute; inset: -8px; }
-  .era-pip.active { background: var(--crimson); border-color: var(--crimson); transform: scale(1.3); }
-  .era-pip:hover  { background: rgba(192,24,30,.5); }
-
-  @keyframes fadeUp    { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes dotPop    { from { transform: scale(0); } to { transform: scale(1); } }
-  @keyframes rippleDot { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(3); opacity: 0; } }
-  @keyframes pulse     { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: .7; } }
 
   @media (prefers-reduced-motion: reduce) {
-    .page-eyebrow, .page-title, .page-sub, .header-era-badge { animation: none; }
-    .era-indicator { animation: none; }
-    .g-dot .ripple { animation: none; }
+    .page-eyebrow, .page-title, .page-sub, .header-map { animation: none; }
   }
 </style>
 
 <header class="about-hero" role="banner">
 
-  <!-- Flow line — right edge, desktop only -->
   <div class="ch-flow-col" aria-hidden="true">
     <div class="ch-flow-line"></div>
     <div class="ch-flow-glow" id="about-flow-glow"></div>
@@ -181,7 +193,7 @@
       </div>
 
       <h1 class="page-title">
-        <span id="hdr-years" class="accent">39 Years</span> of<br>
+        <span id="hdr-years" class="accent">38 Years</span> of<br>
         Moving<br>
         <span class="chrome">Industry Forward</span>
       </h1>
@@ -190,152 +202,56 @@
         From a single-room consulting firm in Bengaluru to a manufacturing company serving
         clients across India and internationally — this is the Jayveecons story.
       </p>
-
-      <div class="header-era-badge" aria-live="polite">
-        <div class="era-indicator" aria-hidden="true"></div>
-        <span class="label">Currently viewing</span>
-        <span class="value" id="header-era-name">1987 — The Founding</span>
-      </div>
     </div>
 
-    <!-- RIGHT: Globe — preserved exactly -->
-    <div class="header-globe" aria-label="Interactive map showing Jayveecons' geographic reach over time" role="img">
-      <div class="globe-wrap">
-        <div class="globe-scene">
-          <div class="globe-sphere">
-            <div id="globe-zoom">
-              <div class="globe-ball" id="globe-ball">
-                <div class="globe-equator" aria-hidden="true"></div>
-                <div class="globe-dots" id="globe-dots" aria-hidden="true"></div>
-              </div>
-              <div class="globe-sheen" aria-hidden="true"></div>
-              <div class="globe-ring"  aria-hidden="true"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="globe-era-label" id="globe-era-label" aria-live="polite">
-        <span class="era-name">1987–1995</span> · Bengaluru, Karnataka
-      </div>
-      <div class="globe-era-dots" id="era-pips" role="tablist" aria-label="Select time era"></div>
+    <!-- RIGHT: World Map -->
+    <div class="header-map">
+      <WorldMap />
     </div>
 
   </div>
 </header>
 
 <script>
-  // ── Flow line animation ──────────────────────────────────────────────────
-  (function () {
-    const CYCLE_MS = 5500, FLOW_HEIGHT = 100;
-    const section = document.querySelector('.about-hero');
-    const col     = section?.querySelector('.ch-flow-col');
-    const glow    = document.getElementById('about-flow-glow');
-    if (!section || !col || !glow) return;
-   
+(function () {
+  const CYCLE_MS    = 5500;
+  const FLOW_HEIGHT = 100;
 
-    let rafId = null, startTime = null;
-    function frame(now) {
-      if (!startTime) startTime = now;
-      const y = -FLOW_HEIGHT + (col.offsetHeight + FLOW_HEIGHT) * ((now - startTime) % CYCLE_MS / CYCLE_MS);
-      glow.style.top = y + 'px';
-      rafId = requestAnimationFrame(frame);
-    }
-    function start() { if (rafId) return; glow.style.opacity = '1'; startTime = null; rafId = requestAnimationFrame(frame); }
-    function stop()  { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } glow.style.opacity = '0'; glow.style.top = '0px'; }
-    new IntersectionObserver(e => { e[0].isIntersecting ? start() : stop(); }, { threshold: 0.05 }).observe(section);
-    document.addEventListener('astro:before-swap', stop);
-  })();
+  const section = document.querySelector('.about-hero') as HTMLElement | null;
+  const col     = section?.querySelector('.ch-flow-col') as HTMLElement | null;
+  const glow    = document.getElementById('about-flow-glow');
+  if (!section || !col || !glow) return;
 
-  // ── Globe animation — preserved exactly from original ───────────────────
-  (() => {
-    const GLOBE_LON_OFFSET = -77;
-    const GLOBE_LAT_OFFSET = -13;
+  let rafId:     number | null = null;
+  let startTime: number | null = null;
 
-    function latLonToXY(lat, lon) {
-      const adjLon = (lon + GLOBE_LON_OFFSET) * Math.PI / 180;
-      const adjLat = (lat + GLOBE_LAT_OFFSET) * Math.PI / 180;
-      const x3 = Math.cos(adjLat) * Math.sin(adjLon);
-      const y3 = -Math.sin(adjLat);
-      const z3 = Math.cos(adjLat) * Math.cos(adjLon);
-      return { px: 50 + x3 * 45, py: 50 + y3 * 45, visible: z3 > -0.1 };
-    }
+  function frame(now: number) {
+    if (!startTime) startTime = now;
+    const y = -FLOW_HEIGHT + (col.offsetHeight + FLOW_HEIGHT) * ((now - startTime) % CYCLE_MS / CYCLE_MS);
+    glow.style.top = `${y}px`;
+    rafId = requestAnimationFrame(frame);
+  }
 
-    const GLOBE_ERAS = [
-      { name: '1987–1995', desc: 'Bengaluru, Karnataka · Founding', zoom: 2.6, zoomX: -12, zoomY: 6, locs: [{ lat:12.97, lon:77.59, type:'home', label:'Bengaluru' }] },
-      { name: '1996–2005', desc: 'South & Central India · Manufacturing begins', zoom: 1.9, zoomX: -8, zoomY: 4, locs: [{ lat:12.97, lon:77.59, type:'home', label:'Bengaluru' },{ lat:13.08, lon:80.27, type:'india', label:'Chennai' },{ lat:17.38, lon:78.48, type:'india', label:'Hyderabad' },{ lat:19.07, lon:72.87, type:'india', label:'Mumbai' },{ lat:18.52, lon:73.86, type:'india', label:'Pune' }] },
-      { name: '2006–2015', desc: 'Pan-India · First exports', zoom: 1.3, zoomX: -5, zoomY: 2, locs: [{ lat:12.97, lon:77.59, type:'home', label:'Bengaluru' },{ lat:13.08, lon:80.27, type:'india', label:'Chennai' },{ lat:17.38, lon:78.48, type:'india', label:'Hyderabad' },{ lat:19.07, lon:72.87, type:'india', label:'Mumbai' },{ lat:28.61, lon:77.21, type:'india', label:'Delhi' },{ lat:22.57, lon:88.36, type:'india', label:'Kolkata' },{ lat:23.02, lon:72.57, type:'india', label:'Gujarat' },{ lat:25.31, lon:55.37, type:'intl', label:'Gulf Region' }] },
-      { name: '2016–Present', desc: 'India + International', zoom: 1.0, zoomX: 0, zoomY: 0, locs: [{ lat:12.97, lon:77.59, type:'home', label:'Bengaluru' },{ lat:13.08, lon:80.27, type:'india', label:'Chennai' },{ lat:17.38, lon:78.48, type:'india', label:'Hyderabad' },{ lat:19.07, lon:72.87, type:'india', label:'Mumbai' },{ lat:28.61, lon:77.21, type:'india', label:'Delhi' },{ lat:25.31, lon:55.37, type:'intl', label:'Gulf' },{ lat:7.87, lon:80.77, type:'intl', label:'Sri Lanka' },{ lat:23.68, lon:90.35, type:'intl', label:'Bangladesh' },{ lat:-1.29, lon:36.82, type:'intl', label:'East Africa' }] },
-      { name: 'Future Targets', desc: 'Global · Oil & Gas · Pharma · Agri', zoom: 1.0, zoomX: 0, zoomY: 0, locs: [{ lat:12.97, lon:77.59, type:'home', label:'Bengaluru' },{ lat:25.31, lon:55.37, type:'intl', label:'Gulf' },{ lat:48.86, lon:2.35, type:'target', label:'Europe' },{ lat:37.77, lon:-122.4, type:'target', label:'N. America' },{ lat:14.06, lon:108.27, type:'target', label:'SE Asia' },{ lat:-33.87, lon:151.21, type:'target', label:'Australia' },{ lat:-1.29, lon:36.82, type:'target', label:'Africa' }] }
-    ];
+  function start() {
+    if (rafId) return;
+    glow.style.opacity = '1';
+    startTime = null;
+    rafId = requestAnimationFrame(frame);
+  }
 
-    let currentEraIdx = 0, globeAutoTimer = null;
+  function stop() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    glow.style.opacity = '0';
+    glow.style.top     = '0px';
+  }
 
-    function renderGlobe(idx, animate) {
-      const era = GLOBE_ERAS[idx];
-      const dotsEl = document.getElementById('globe-dots');
-      if (!dotsEl) return;
-      dotsEl.innerHTML = '';
-      const zoom = document.getElementById('globe-zoom');
-      if (zoom) zoom.style.transform = `scale(${era.zoom}) translate(${era.zoomX}%, ${era.zoomY}%)`;
-      era.locs.forEach((loc, i) => {
-        const pos = latLonToXY(loc.lat, loc.lon);
-        if (!pos.visible) return;
-        const wrap = document.createElement('div');
-        wrap.className = 'g-dot';
-        wrap.style.left = pos.px + '%'; wrap.style.top = pos.py + '%';
-        if (animate) { wrap.style.opacity = '0'; setTimeout(() => { wrap.style.opacity = '1'; }, i * 120 + 80); } else { wrap.style.opacity = '1'; }
-        const core = document.createElement('div');
-        core.className = `core ${loc.type}`;
-        if (animate) core.style.animation = `dotPop .4s cubic-bezier(.34,1.56,.64,1) ${i*120+80}ms both`;
-        wrap.appendChild(core);
-        if (loc.type === 'home' || loc.type === 'intl') {
-          const rip = document.createElement('div');
-          rip.className = 'ripple';
-          rip.style.background = loc.type === 'home' ? 'rgba(233,8,15,0.92)' : 'var(--teal-l,#14a898)';
-          rip.style.animationDelay = (i * 0.3) + 's';
-          wrap.appendChild(rip);
-          if (loc.type === 'home') { const rip2 = document.createElement('div'); rip2.className = 'ripple ripple2'; rip2.style.background = 'rgba(233,8,15,0.92)'; wrap.appendChild(rip2); }
-        }
-        const lbl = document.createElement('div');
-        lbl.className = 'g-dot-label'; lbl.textContent = loc.label;
-        lbl.style.left = '12px'; lbl.style.top = '-3px';
-        if (pos.px > 72) { lbl.style.left = 'auto'; lbl.style.right = '12px'; lbl.style.textAlign = 'right'; }
-        wrap.appendChild(lbl);
-        setTimeout(() => wrap.classList.add('visible'), i * 120 + 200);
-        dotsEl.appendChild(wrap);
-      });
-      const eraLabel = document.getElementById('globe-era-label');
-      if (eraLabel) eraLabel.innerHTML = `<span class="era-name">${era.name}</span> · ${era.desc}`;
-      const eraName = document.getElementById('header-era-name');
-      if (eraName) eraName.textContent = `${era.name} — ${era.desc}`;
-      document.querySelectorAll('.era-pip').forEach((p, i) => p.classList.toggle('active', i === idx));
-    }
+  new IntersectionObserver(entries => {
+    entries[0].isIntersecting ? start() : stop();
+  }, { threshold: 0.05 }).observe(section);
 
-    const pipContainer = document.getElementById('era-pips');
-    if (pipContainer) {
-      GLOBE_ERAS.forEach((era, i) => {
-        const pip = document.createElement('button');
-        pip.className = 'era-pip' + (i === 0 ? ' active' : '');
-        pip.title = era.name;
-        pip.setAttribute('aria-label', `View era: ${era.name}`);
-        pip.setAttribute('role', 'tab');
-        pip.addEventListener('click', () => { clearInterval(globeAutoTimer); globeAutoTimer = null; currentEraIdx = i; renderGlobe(i, true); });
-        pipContainer.appendChild(pip);
-      });
-    }
+  document.addEventListener('astro:before-swap', stop);
 
-    renderGlobe(0, false);
-
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setTimeout(() => {
-        globeAutoTimer = setInterval(() => {
-          currentEraIdx = (currentEraIdx + 1) % GLOBE_ERAS.length;
-          renderGlobe(currentEraIdx, true);
-        }, 2800);
-      }, 1400);
-    }
-
-    const hdrYears = document.getElementById('hdr-years');
-    if (hdrYears) hdrYears.textContent = (new Date().getFullYear() - 1987) + ' Years';
-  })();
+  const hdrYears = document.getElementById('hdr-years');
+  if (hdrYears) hdrYears.textContent = (new Date().getFullYear() - 1987) + ' Years';
+})();
 </script>

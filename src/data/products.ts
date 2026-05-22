@@ -224,7 +224,7 @@ export const products: Product[] = [
     name:      'Ball Mill / Grinding Mill',
     series:    'VECTOMEC™',
     shortDesc: 'Rotating cylindrical vessel with grinding media that reduces material to fine powder. Used in cement, mining, and mineral processing for particle size reduction.',
-    image:     'images/ball_mill.jpeg',
+    image:     'images/products/ball_mill.png',
     apps:      ['Cement', 'Mining', 'Ceramics'],
     fullDesc:  'Ball mills are the standard in cement and mineral grinding. A cylindrical mill shell lined with wear-resistant liners rotates on trunnion bearings, tumbling steel or ceramic grinding media against the feed material to produce fine powder. Jayveecons designs both overflow and grate-discharge configurations, with open-circuit and closed-circuit arrangements.',
     specs: [

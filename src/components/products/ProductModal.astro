@@ -177,6 +177,7 @@
   background: #f0f4fb;
   overflow: hidden;
   position: relative;
+  min-height: clamp(180px, 28vh, 320px);
 }
 .pm-img {
   width: 100%;
@@ -191,7 +192,6 @@
   /* Only shown when no image — absolutely overlays the wrap */
   position: absolute;
   inset: 0;
-  min-height: 180px;
   display: none;
   flex-direction: column;
   align-items: center;
@@ -261,10 +261,7 @@
     font-weight: 300; color: #2a3350;
   }
 
-  /* ════════════════════════════════════════
-     APPLICATION CONFIGURATIONS — card grid
-     Inspired by KWS conveyor type listing
-  ════════════════════════════════════════ */
+  
   .pm-configs {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -485,7 +482,7 @@
     // Assign handlers BEFORE src — avoids the cached-image missed-load race
     elImg.onload = () => {
       elPhWrap.style.display = 'none';
-      elImg.style.display    = 'block';
+      elImg.style.visibility  = 'visible';
       elImg.classList.add('pm-img--loaded');
     };
     elImg.onerror = () => {

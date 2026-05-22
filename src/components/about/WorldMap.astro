@@ -1,0 +1,163 @@
+---
+/**
+ * WorldMap.astro — labels positioned in ocean, connector lines to pins
+ * viewBox 800×400
+ */
+import { DOTS, PINS, VIEW_W, VIEW_H, DOT_RADIUS, CUSTOMER_DOTS } from '../../data/worldMapData';
+
+const BADGE_H = 22;
+
+function badgeWidth(label: string): number {
+  return label.length * 6.4 + 32;
+}
+
+// Each label has its own explicit badge corner position (bx, by)
+// and a connector origin (cx, cy) on the badge edge closest to the pin.
+// This avoids global offsets affecting both labels simultaneously.
+const OCEAN_LABELS = [
+  {
+    pinId: 'houston',
+    // Badge in Atlantic Ocean, east of North America
+    // Connector attaches from left edge of badge → pin in Texas
+    bx: 226, by: 183,
+    connEdge: 'left' as const,   // which badge edge the connector starts from
+  },
+  {
+    pinId: 'bengaluru',
+    // Badge in Bay of Bengal, east/south of India — close but in water
+    // Connector attaches from left edge of badge → pin in Bengaluru
+    bx: 538, by: 250,
+    connEdge: 'left' as const,
+  },
+];
+---
+
+<div class="wm-wrap" aria-label="World map showing Jayveecons locations" role="img">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+    class="wm-svg"
+    aria-hidden="true"
+  >
+    <!-- ── Background land dots ── -->
+    <g fill="#ffffff">
+      {DOTS.map(([cx, cy]) => (
+        <circle cx={cx} cy={cy} r={DOT_RADIUS} />
+      ))}
+    </g>
+
+    <!-- ── Customer region dots — solid green ── -->
+    <g fill="#22c55e">
+      {CUSTOMER_DOTS.map(([cx, cy]) => (
+        <circle cx={cx} cy={cy} r={DOT_RADIUS} />
+      ))}
+    </g>
+
+    <!-- ── Pin dots at actual geographic location ── -->
+    {PINS.map((pin, i) => (
+      <g class="wm-pin-dot" style={`animation-delay:${i * 0.3}s`}>
+        <circle cx={pin.cx} cy={pin.cy} r="5" fill="#c0181e" opacity="0">
+          <animate attributeName="r"       values="5;18"   dur="2.6s" begin={`${i * 0.5}s`}       repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.55;0" dur="2.6s" begin={`${i * 0.5}s`}       repeatCount="indefinite" />
+        </circle>
+        <circle cx={pin.cx} cy={pin.cy} r="5" fill="#c0181e" opacity="0">
+          <animate attributeName="r"       values="5;18"   dur="2.6s" begin={`${i * 0.5 + 1.3}s`} repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.4;0"  dur="2.6s" begin={`${i * 0.5 + 1.3}s`} repeatCount="indefinite" />
+        </circle>
+        <circle cx={pin.cx} cy={pin.cy} r="5"   fill="#c0181e" />
+        <circle cx={pin.cx} cy={pin.cy} r="2.2" fill="white"   />
+      </g>
+    ))}
+
+    <!-- ── Ocean labels with connector lines ── -->
+    {PINS.map((pin, i) => {
+      const ol = OCEAN_LABELS.find(o => o.pinId === pin.id);
+      if (!ol) return null;
+
+      const bw = badgeWidth(pin.label);
+      const bh = BADGE_H;
+
+      // Connector origin: left or right edge of badge, vertically centred
+      const connX = ol.connEdge === 'left'  ? ol.bx        : ol.bx + bw;
+      const connY = ol.by + bh / 2;
+
+      return (
+        <g class="wm-ocean-label" style={`animation-delay:${0.5 + i * 0.3}s`}>
+
+          {/* Dashed connector from badge edge to pin */}
+          <line
+            x1={connX}  y1={connY}
+            x2={pin.cx} y2={pin.cy}
+            stroke="rgba(192,24,30,0.65)"
+            stroke-width="0.85"
+            stroke-dasharray="3 2.5"
+            stroke-linecap="round"
+          />
+
+          {/* Small dot where connector meets badge */}
+          <circle cx={connX} cy={connY} r="2" fill="#c0181e" />
+
+          {/* Badge */}
+          <rect
+            x={ol.bx} y={ol.by}
+            width={bw} height={bh}
+            rx="4"
+            fill="rgba(6,12,32,0.93)"
+            stroke="rgba(192,24,30,0.52)"
+            stroke-width="0.9"
+          />
+          <text
+            x={ol.bx + 9}
+            y={ol.by + 14.5}
+            font-family="system-ui,-apple-system,sans-serif"
+            font-size="9"
+            font-weight="600"
+            fill="#e0e4ee"
+            letter-spacing="0.04em"
+          >
+            {pin.flag} {pin.label}
+          </text>
+        </g>
+      );
+    })}
+  </svg>
+</div>
+
+<style>
+  .wm-wrap {
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .wm-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .wm-pin-dot {
+    opacity: 0;
+    animation: wm-fade-scale 0.4s ease forwards;
+  }
+
+  .wm-ocean-label {
+    opacity: 0;
+    animation: wm-label-in 0.5s ease forwards;
+  }
+
+  @keyframes wm-fade-scale {
+    from { opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(0.5); }
+    to   { opacity: 1; transform-box: fill-box; transform-origin: center; transform: scale(1); }
+  }
+
+  @keyframes wm-label-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wm-pin-dot, .wm-ocean-label { animation: none; opacity: 1; }
+  }
+</style>
