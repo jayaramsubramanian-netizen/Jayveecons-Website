@@ -70,9 +70,9 @@ const cards = [
   .why-section {
     padding: clamp(56px,8vh,96px) 0;
     background:
-      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
-      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+      radial-gradient(ellipse 100% 60% at 20% -10%, rgba(140,180,255,.14) 0%, transparent 55%),
+      radial-gradient(ellipse 60%  80% at 90% 110%, rgba(8,56,146,.25) 0%, transparent 55%),
+      linear-gradient(145deg, #0e2454 0%, #163060 50%, #1a3875 100%);
     position: relative;
     z-index: 1;
     isolation: isolate;
@@ -113,6 +113,23 @@ const cards = [
     transition: border-top-color .25s, box-shadow .25s, transform .25s;
     position: relative;
     overflow: hidden;
+  }
+  /* metallic-sheen */
+  .why-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(180,210,255,.35) 25%,
+      rgba(200,225,255,.55) 50%,
+      rgba(180,210,255,.35) 75%,
+      transparent 100%
+    );
+    z-index: 1;
+    pointer-events: none;
   }
   .why-card:hover {
     border-top-color: #c0181e;

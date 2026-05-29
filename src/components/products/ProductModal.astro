@@ -2,6 +2,7 @@
 /**
  * ProductModal.astro — full redesign
  * White bg · 2-col spec table · config cards · Vectrix callout · proper CTAs
+ * Image container: natural aspect ratio driven by the image itself
  * No SVG inside dialog (Chrome stacking context bug) — uses &#8594; entity
  */
 ---
@@ -29,6 +30,12 @@
 
     <!-- Image / placeholder -->
     <div class="pm-img-wrap" id="pm-img-wrap">
+      <!--
+        .pm-img is ALWAYS display:block.
+        JS uses visibility:hidden / visibility:visible — never display:none.
+        This lets the image drive the container height naturally (no fixed height).
+        .pm-img-wrap min-height prevents collapse before the image loads.
+      -->
       <img class="pm-img" id="pm-img" src="" alt="" loading="lazy" />
       <div class="pm-img-placeholder" id="pm-img-placeholder" aria-hidden="true">
         <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2">
@@ -58,13 +65,12 @@
       <div class="pm-right">
         <div class="pm-section-head">Industries &amp; Applications</div>
         <div class="pm-apps" id="pm-apps"></div>
-
         <div class="pm-actions" id="pm-actions"></div>
       </div>
 
     </div>
 
-    <!-- Vectrix platform callout — shown only when product has platform data -->
+    <!-- Vectrix platform callout -->
     <div class="pm-platform" id="pm-platform" hidden>
       <div class="pm-platform-inner">
         <div class="pm-platform-badge">VECTRIX™ Design Platform</div>
@@ -76,7 +82,6 @@
 </dialog>
 
 <style>
-  /* ── Dialog reset ── */
   .pm-dialog {
     position: fixed; inset: 0;
     width: 100%; height: 100%;
@@ -87,7 +92,6 @@
   }
   .pm-dialog:not([open]) { display: none; }
 
-  /* Backdrop */
   .pm-backdrop {
     position: absolute; inset: 0;
     background: rgba(4,6,12,.78);
@@ -96,7 +100,6 @@
     cursor: pointer;
   }
 
-  /* ── Panel — WHITE, mobile-first ── */
   .pm-panel {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -124,7 +127,6 @@
     }
   }
 
-  /* ── Close button ── */
   .pm-close {
     display: flex; align-items: center; gap: 6px;
     float: right;
@@ -143,15 +145,12 @@
   .pm-close:focus-visible { outline: 2px solid #c0181e; outline-offset: 2px; }
   .pm-close svg { width: 14px; height: 14px; }
 
-  /* ── Header ── */
   .pm-header { clear: both; margin-bottom: clamp(12px,1.8vh,18px); }
-
   .pm-tag {
     display: inline-block;
     font-family: var(--font-mono);
     font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
-    background: rgba(192,24,30,.1);
-    color: #c0181e;
+    background: rgba(192,24,30,.1); color: #c0181e;
     border: 1px solid rgba(192,24,30,.25);
     padding: 3px 10px; border-radius: 2px; margin-bottom: 8px;
   }
@@ -168,51 +167,66 @@
     max-width: 900px; margin: 0;
   }
 
-  /* ── Image / placeholder ── */
-.pm-img-wrap {
-  width: 100%;
-  border-radius: 8px;
-  border: 1px solid rgba(8,56,146,.1);
-  margin-bottom: clamp(16px,2.5vh,24px);
-  background: #f0f4fb;
-  overflow: hidden;
-  position: relative;
-  min-height: clamp(180px, 28vh, 320px);
-}
-.pm-img {
-  width: 100%;
-  height: auto;
-  display: block;           /* always block — never none */
-  visibility: hidden;       /* hidden until loaded, but still occupies space */
-}
-.pm-img.pm-img--loaded {
-  visibility: visible;
-}
-.pm-img-placeholder {
-  /* Only shown when no image — absolutely overlays the wrap */
-  position: absolute;
-  inset: 0;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background:
-    linear-gradient(rgba(8,56,146,.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(8,56,146,.04) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-.pm-img-placeholder.pm-ph--visible {
-  display: flex;
-}
-.pm-img-placeholder svg  { width: 56px; height: 56px; color: rgba(8,56,146,.2); }
-.pm-img-placeholder span {
-  font-family: var(--font-mono);
-  font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
-  color: rgba(8,56,146,.35);
-}
+  /* ═══════════════════════════════════════════════════════
+     IMAGE CONTAINER — natural floating height
 
-  /* ── Body: 2-col ── */
+     Rules that must ALL be true simultaneously:
+     1. .pm-img-wrap   has min-height so it's never a thin line
+                       before the image loads. Has NO fixed height —
+                       the image drives height once loaded.
+     2. .pm-img        is ALWAYS display:block. JS uses visibility
+                       (hidden/visible) — never display:none.
+                       width:100% + height:auto = natural aspect ratio.
+     3. .pm-img-placeholder  is position:absolute so it overlays
+                       the wrap without affecting its height.
+                       Default display:none; JS sets display:flex.
+  ═══════════════════════════════════════════════════════ */
+  .pm-img-wrap {
+    position: relative;
+    width: 100%;
+    /* min-height keeps the box visible while the image is loading */
+    min-height: clamp(180px, 28vh, 320px);
+    border-radius: 8px;
+    border: 1px solid rgba(8,56,146,.1);
+    margin-bottom: clamp(16px,2.5vh,24px);
+    background: #f0f4fb;
+    overflow: hidden;
+  }
+
+  /* RULE 2: always block, always in layout, sized by its own pixels */
+  .pm-img {
+    display: block;          /* NEVER set to none in JS */
+    width: 100%;
+    height: auto;            /* natural aspect ratio */
+    visibility: hidden;      /* start hidden — JS toggles visibility only */
+    object-fit: contain;     /* show full image without cropping */
+    object-position: center;
+  }
+  .pm-img.pm-img--loaded {
+    visibility: visible;
+  }
+
+  /* RULE 3: overlay, no height contribution */
+  .pm-img-placeholder {
+    position: absolute;
+    inset: 0;
+    display: none;           /* JS sets display:flex — never display:block */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background:
+      linear-gradient(rgba(8,56,146,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .pm-img-placeholder svg  { width: 56px; height: 56px; color: rgba(8,56,146,.2); }
+  .pm-img-placeholder span {
+    font-family: var(--font-mono);
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(8,56,146,.35);
+  }
+
   .pm-body {
     display: grid;
     grid-template-columns: 1fr;
@@ -221,7 +235,6 @@
   }
   @media (min-width: 640px) { .pm-body { grid-template-columns: 1.3fr 1fr; } }
 
-  /* Section headings */
   .pm-section-head {
     font-family: var(--font-mono);
     font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
@@ -232,206 +245,61 @@
   }
   .pm-section-head:first-child { margin-top: 0; }
 
-  /* ════════════════════════════════════════
-     SPEC TABLE — 2-col with alternating rows
-  ════════════════════════════════════════ */
-  .pm-spec-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 4px;
-    font-size: clamp(12px,1.2vw,13px);
-  }
+  .pm-spec-table { width: 100%; border-collapse: collapse; margin-bottom: 4px; font-size: clamp(12px,1.2vw,13px); }
   .pm-spec-table tr:nth-child(even) td { background: rgba(8,56,146,.03); }
-  .pm-spec-table td {
-    padding: 8px 10px;
-    border-bottom: 1px solid rgba(8,56,146,.07);
-    vertical-align: top;
-    line-height: 1.45;
-  }
+  .pm-spec-table td { padding: 8px 10px; border-bottom: 1px solid rgba(8,56,146,.07); vertical-align: top; line-height: 1.45; }
   .pm-spec-table tr:last-child td { border-bottom: none; }
-  .pm-spec-key-cell {
-    font-family: var(--font-mono);
-    font-size: 11px; letter-spacing: .05em;
-    color: #5a6a88; font-weight: 600;
-    width: 42%; white-space: nowrap;
-    padding-right: 12px;
-  }
-  .pm-spec-val-cell {
-    font-family: var(--font-body);
-    font-weight: 300; color: #2a3350;
-  }
+  .pm-spec-key-cell { font-family: var(--font-mono); font-size: 11px; letter-spacing: .05em; color: #5a6a88; font-weight: 600; width: 42%; white-space: nowrap; padding-right: 12px; }
+  .pm-spec-val-cell { font-family: var(--font-body); font-weight: 300; color: #2a3350; }
 
-  
-  .pm-configs {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin-top: 10px;
-  }
+  .pm-configs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
   @media (min-width: 900px) { .pm-configs { grid-template-columns: repeat(3, 1fr); } }
+  .pm-config-card { background: #f8fafc; border: 1px solid rgba(8,56,146,.1); border-top: 2px solid rgba(8,56,146,.15); border-radius: 4px; padding: 12px 14px; transition: border-top-color .2s, background .2s; }
+  .pm-config-card:hover { border-top-color: #c0181e; background: #ffffff; }
+  .pm-config-name { font-family: var(--font-head); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: rgba(8,56,146,.9); margin-bottom: 4px; }
+  .pm-config-desc { font-family: var(--font-body); font-size: 12px; font-weight: 300; color: #5a6a88; line-height: 1.5; }
 
-  .pm-config-card {
-    background: #f8fafc;
-    border: 1px solid rgba(8,56,146,.1);
-    border-top: 2px solid rgba(8,56,146,.15);
-    border-radius: 4px;
-    padding: 12px 14px;
-    transition: border-top-color .2s, background .2s;
-  }
-  .pm-config-card:hover {
-    border-top-color: #c0181e;
-    background: #ffffff;
-  }
-  .pm-config-name {
-    font-family: var(--font-head);
-    font-weight: 700;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    color: rgba(8,56,146,.9);
-    margin-bottom: 4px;
-  }
-  .pm-config-desc {
-    font-family: var(--font-body);
-    font-size: 12px;
-    font-weight: 300;
-    color: #5a6a88;
-    line-height: 1.5;
-  }
+  .pm-apps { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; margin-bottom: 20px; }
+  .pm-app-pill { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; background: rgba(8,56,146,.05); border: 1px solid rgba(8,56,146,.15); color: rgba(8,56,146,.8); padding: 5px 12px; border-radius: 2px; }
+  .pm-app-pill::before { content: ''; width: 5px; height: 5px; flex-shrink: 0; background: #c0181e; clip-path: polygon(50% 0%,100% 50%,50% 100%,0% 50%); }
 
-  /* ── Applications pills ── */
-  .pm-apps {
-    display: flex; flex-wrap: wrap; gap: 6px;
-    margin-top: 10px; margin-bottom: 20px;
-  }
-  .pm-app-pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-family: var(--font-mono);
-    font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
-    background: rgba(8,56,146,.05);
-    border: 1px solid rgba(8,56,146,.15);
-    color: rgba(8,56,146,.8);
-    padding: 5px 12px; border-radius: 2px;
-  }
-  .pm-app-pill::before {
-    content: '';
-    width: 5px; height: 5px; flex-shrink: 0;
-    background: #c0181e;
-    clip-path: polygon(50% 0%,100% 50%,50% 100%,0% 50%);
-  }
-
-  /* ════════════════════════════════════════
-     CTA BUTTONS — proper button style
-  ════════════════════════════════════════ */
-  .pm-actions {
-    display: flex; gap: 10px; flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .pm-btn-primary {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: #c0181e; color: #ffffff;
-    font-family: var(--font-head); font-weight: 700;
-    font-size: clamp(12px,1.3vw,14px);
-    letter-spacing: .1em; text-transform: uppercase;
-    text-decoration: none;
-    padding: 14px 28px;
-    border-radius: 2px;
-    border: 2px solid #c0181e;
-    cursor: pointer; white-space: nowrap;
-    transition: background .2s, color .2s;
-    min-height: 48px;
-  }
+  .pm-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .pm-btn-primary { display: inline-flex; align-items: center; gap: 8px; background: #c0181e; color: #ffffff; font-family: var(--font-head); font-weight: 700; font-size: clamp(12px,1.3vw,14px); letter-spacing: .1em; text-transform: uppercase; text-decoration: none; padding: 14px 28px; border-radius: 2px; border: 2px solid #c0181e; cursor: pointer; white-space: nowrap; transition: background .2s, color .2s; min-height: 48px; }
   .pm-btn-primary:hover { background: #a01015; border-color: #a01015; }
-
-  .pm-btn-secondary {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: transparent; color: rgba(8,56,146,.9);
-    font-family: var(--font-head); font-weight: 700;
-    font-size: clamp(12px,1.3vw,14px);
-    letter-spacing: .1em; text-transform: uppercase;
-    text-decoration: none;
-    padding: 14px 28px;
-    border-radius: 2px;
-    border: 2px solid rgba(8,56,146,.3);
-    cursor: pointer; white-space: nowrap;
-    transition: background .2s, border-color .2s;
-    min-height: 48px;
-  }
+  .pm-btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: rgba(8,56,146,.9); font-family: var(--font-head); font-weight: 700; font-size: clamp(12px,1.3vw,14px); letter-spacing: .1em; text-transform: uppercase; text-decoration: none; padding: 14px 28px; border-radius: 2px; border: 2px solid rgba(8,56,146,.3); cursor: pointer; white-space: nowrap; transition: background .2s, border-color .2s; min-height: 48px; }
   .pm-btn-secondary:hover { background: rgba(8,56,146,.06); border-color: rgba(8,56,146,.6); }
 
-  /* ════════════════════════════════════════
-     VECTRIX™ PLATFORM CALLOUT
-  ════════════════════════════════════════ */
-  .pm-platform {
-    margin-top: clamp(16px,2.5vh,28px);
-    border-top: 1px solid rgba(8,56,146,.1);
-    padding-top: clamp(14px,2vh,22px);
-  }
-  .pm-platform-inner {
-    background: rgba(8,56,146,.04);
-    border-left: 4px solid rgba(8,56,146,.35);
-    border-radius: 0 4px 4px 0;
-    padding: clamp(14px,2vw,20px) clamp(16px,2.5vw,24px);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+  .pm-platform { margin-top: clamp(16px,2.5vh,28px); border-top: 1px solid rgba(8,56,146,.1); padding-top: clamp(14px,2vh,22px); }
+  .pm-platform-inner { background: rgba(8,56,146,.04); border-left: 4px solid rgba(8,56,146,.35); border-radius: 0 4px 4px 0; padding: clamp(14px,2vw,20px) clamp(16px,2.5vw,24px); display: flex; flex-direction: column; gap: 8px; }
   @media (min-width: 640px) { .pm-platform-inner { flex-direction: row; align-items: flex-start; gap: 20px; } }
-
-  .pm-platform-badge {
-    font-family: var(--font-mono);
-    font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
-    color: rgba(8,56,146,.9);
-    background: rgba(8,56,146,.1);
-    border: 1px solid rgba(8,56,146,.2);
-    padding: 5px 12px; border-radius: 2px;
-    white-space: nowrap; align-self: flex-start; flex-shrink: 0;
-  }
-  .pm-platform-text {
-    font-family: var(--font-body);
-    font-size: clamp(12px,1.3vw,14px);
-    font-weight: 300; color: #3a4560; line-height: 1.7; margin: 0;
-  }
+  .pm-platform-badge { font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: rgba(8,56,146,.9); background: rgba(8,56,146,.1); border: 1px solid rgba(8,56,146,.2); padding: 5px 12px; border-radius: 2px; white-space: nowrap; align-self: flex-start; flex-shrink: 0; }
+  .pm-platform-text { font-family: var(--font-body); font-size: clamp(12px,1.3vw,14px); font-weight: 300; color: #3a4560; line-height: 1.7; margin: 0; }
   .pm-platform-text strong { color: rgba(8,56,146,.9); font-weight: 600; }
 
-  /* Scrollbar */
   .pm-panel::-webkit-scrollbar       { width: 4px; }
   .pm-panel::-webkit-scrollbar-track { background: #f0f4fb; }
   .pm-panel::-webkit-scrollbar-thumb { background: rgba(8,56,146,.2); border-radius: 2px; }
 
   @keyframes pmSlideUp   { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  @keyframes pmFadeScale {
-    from { opacity: 0; transform: translate(-50%,-48%) scale(.97); }
-    to   { opacity: 1; transform: translate(-50%,-50%) scale(1); }
-  }
+  @keyframes pmFadeScale { from { opacity: 0; transform: translate(-50%,-48%) scale(.97); } to { opacity: 1; transform: translate(-50%,-50%) scale(1); } }
   @media (prefers-reduced-motion: reduce) { .pm-panel { animation: none; } }
 </style>
 
 <script>
   type ConfigCard = { name: string; desc: string; };
-
   type Product = {
-    id:           string;
-    name:         string;
-    series:       string;
-    image?:       string;
-    fullDesc:     string;
-    specs:        { key: string; val: string }[];
-    features?:    { key: string; val: string }[];
-    configs?:     ConfigCard[];
-    platform?:    string;
-    modalApps:    string[];
+    id: string; name: string; series: string; image?: string;
+    fullDesc: string; specs: { key: string; val: string }[];
+    features?: { key: string; val: string }[];
+    configs?: ConfigCard[]; platform?: string; modalApps: string[];
   };
 
-  const dialog    = document.getElementById('product-modal') as HTMLDialogElement;
-  const backdrop  = document.getElementById('pm-backdrop-el') as HTMLElement;
-  const closeBtn  = document.getElementById('pm-close') as HTMLButtonElement;
-
+  const dialog       = document.getElementById('product-modal') as HTMLDialogElement;
+  const backdrop     = document.getElementById('pm-backdrop-el') as HTMLElement;
+  const closeBtn     = document.getElementById('pm-close') as HTMLButtonElement;
   const elTag        = document.getElementById('pm-tag')!;
   const elTitle      = document.getElementById('pm-title')!;
   const elDesc       = document.getElementById('pm-desc')!;
-  const elImgWrap    = document.getElementById('pm-img-wrap')!;
   const elImg        = document.getElementById('pm-img') as HTMLImageElement;
   const elPhWrap     = document.getElementById('pm-img-placeholder')!;
   const elPhLabel    = document.getElementById('pm-placeholder-label')!;
@@ -443,69 +311,76 @@
   const elPlatform   = document.getElementById('pm-platform') as HTMLElement;
   const elPlatformTx = document.getElementById('pm-platform-text')!;
 
-  function specRow(key: string, val: string) {
-    return `<tr>
-      <td class="pm-spec-key-cell">${key}</td>
-      <td class="pm-spec-val-cell">${val}</td>
-    </tr>`;
+  function specRow(k: string, v: string) {
+    return `<tr><td class="pm-spec-key-cell">${k}</td><td class="pm-spec-val-cell">${v}</td></tr>`;
   }
-
   function configCard(c: ConfigCard) {
-    return `<div class="pm-config-card">
-      <div class="pm-config-name">${c.name}</div>
-      <div class="pm-config-desc">${c.desc}</div>
-    </div>`;
+    return `<div class="pm-config-card"><div class="pm-config-name">${c.name}</div><div class="pm-config-desc">${c.desc}</div></div>`;
   }
 
+  /**
+   * resetImage — prepare for a new product open.
+   *
+   * CRITICAL: We use visibility:hidden NOT display:none.
+   * display:none would collapse the img element to 0×0 and defeat
+   * the natural-height container — the wrap would stay at min-height
+   * forever instead of expanding to the image's intrinsic dimensions.
+   */
   function resetImage() {
-    // Fully reset: kill src, remove loaded class, clear handlers
     elImg.onload  = null;
     elImg.onerror = null;
     elImg.classList.remove('pm-img--loaded');
     elImg.removeAttribute('src');
-    elImg.style.display    = 'none';
+    elImg.style.visibility = 'hidden';   // ← visibility, NOT display:none
     elPhWrap.style.display = 'none';
   }
 
+  /**
+   * showPlaceholder — display the grid placeholder when no image is available.
+   * img stays display:block (just invisible) so the wrap keeps its min-height.
+   */
   function showPlaceholder(label: string) {
-    elImg.style.display    = 'none';
+    elImg.style.visibility = 'hidden';   // ← visibility, NOT display:none
     elPhWrap.style.display = 'flex';
     elPhLabel.textContent  = label;
   }
 
-  function loadImage(path: string, altText: string) {
-    // Always normalise to /images/products/<filename>
-    // Strip any existing path prefix and rebuild cleanly
-    const filename = path.split('/').pop() ?? path;
-    const src = `/images/products/${filename}`;
+  /**
+   * loadImage — set src and wire handlers.
+   *
+   * Path normalisation: use the path exactly as stored in products.ts.
+   * Strip any leading slash, then prepend one — handles both '/images/...'
+   * and 'images/...' formats stored in the data file.
+   */
+  function loadImage(rawPath: string, altText: string) {
+    // Normalise: strip leading slash if any, then always add one
+    const src = '/' + rawPath.replace(/^\//, '');
 
-    // Assign handlers BEFORE src — avoids the cached-image missed-load race
+    // Wire handlers BEFORE setting src to catch cached-image immediate fires
     elImg.onload = () => {
-      elPhWrap.style.display = 'none';
+      elPhWrap.style.display  = 'none';
+      // Restore visibility — display is already block (CSS), so this makes it appear
       elImg.style.visibility  = 'visible';
       elImg.classList.add('pm-img--loaded');
     };
     elImg.onerror = () => {
-      console.warn(`[ProductModal] Image failed to load: ${src}`);
+      console.warn(`[ProductModal] Image not found: ${src}`);
       showPlaceholder(altText);
     };
     elImg.alt = altText;
-    elImg.src = src;
+    elImg.src = src;   // triggers load/error
   }
 
   function openModal(id: string) {
     const products: Product[] = (window as any).__PRODUCTS__ ?? [];
     const p = products.find(x => x.id === id);
-    if (!p) {
-      console.warn(`[ProductModal] Product not found: ${id}`);
-      return;
-    }
+    if (!p) { console.warn(`[ProductModal] Product not found: ${id}`); return; }
 
     elTag.textContent   = p.series;
     elTitle.textContent = p.name;
     elDesc.textContent  = p.fullDesc;
 
-    // ── Image ──
+    // Image — use path exactly from products.ts
     resetImage();
     if (p.image) {
       loadImage(p.image, p.name);
@@ -513,11 +388,11 @@
       showPlaceholder(p.name);
     }
 
-    // ── Spec table ──
+    // Specs
     const tbody = elSpecs.querySelector('tbody')!;
     tbody.innerHTML = p.specs.map(s => specRow(s.key, s.val)).join('');
 
-    // ── Config cards ──
+    // Config cards or features
     const configs: ConfigCard[] = (p as any).configs ?? [];
     if (configs.length) {
       elConfigs.innerHTML    = configs.map(configCard).join('');
@@ -532,23 +407,18 @@
       elFeatHead.hidden   = true;
     }
 
-    // ── App pills ──
-    elApps.innerHTML = p.modalApps
-      .map(a => `<span class="pm-app-pill">${a}</span>`).join('');
+    // Apps
+    elApps.innerHTML = p.modalApps.map(a => `<span class="pm-app-pill">${a}</span>`).join('');
 
-    // ── CTAs ──
+    // CTAs
     elActions.innerHTML = `
-      <a href="/contact?product=${p.id}" class="pm-btn-primary">
-        Request a Quote &#8594;
-      </a>
-      <a href="/contact" class="pm-btn-secondary">
-        Technical Enquiry
-      </a>`;
+      <a href="/contact?product=${p.id}" class="pm-btn-primary">Request a Quote &#8594;</a>
+      <a href="/contact" class="pm-btn-secondary">Technical Enquiry</a>`;
 
-    // ── Vectrix callout ──
+    // Vectrix callout
     if ((p as any).platform) {
       elPlatformTx.innerHTML = (p as any).platform;
-      elPlatform.hidden      = false;
+      elPlatform.hidden = false;
     } else {
       elPlatform.hidden = true;
     }
@@ -561,17 +431,15 @@
   function closeModal() {
     dialog.close();
     document.body.style.overflow = '';
-    resetImage(); // clean up so stale src doesn't flash on next open
+    resetImage();
   }
 
   document.addEventListener('open-product-modal', (e: Event) => {
     openModal((e as CustomEvent<{ id: string }>).detail.id);
   });
-
   closeBtn.addEventListener('click', closeModal);
   backdrop.addEventListener('click', closeModal);
-  dialog.addEventListener('cancel', (e) => { e.preventDefault(); closeModal(); });
-
+  dialog.addEventListener('cancel', e => { e.preventDefault(); closeModal(); });
   dialog.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key !== 'Tab') return;
     const focusable = Array.from(
@@ -579,7 +447,7 @@
     ).filter(el => !el.hidden && el.offsetParent !== null);
     if (!focusable.length) return;
     const first = focusable[0], last = focusable[focusable.length - 1];
-    if (e.shiftKey && document.activeElement === first)  { e.preventDefault(); last.focus(); }
+    if (e.shiftKey && document.activeElement === first)      { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
 </script>

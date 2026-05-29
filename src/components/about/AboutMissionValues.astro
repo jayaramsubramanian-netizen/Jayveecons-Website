@@ -2,6 +2,7 @@
 // AboutMissionValues.astro — WhatWeDo design language.
 // White + blue grid bg (alternates with dark timeline).
 // Mission left | Values grid right.
+// Updated: Option E gradient · E-3 typography · metallic sheen
 ---
 
 <style>
@@ -65,53 +66,142 @@
   }
   .big-quote span { color: #c0181e; }
 
-  /* Mission copy card — dark gradient */
+  /* ══════════════════════════════════════════════
+     MISSION CARD — Option E · E-3 · metallic sheen
+  ══════════════════════════════════════════════ */
   .mission-card {
-    background:
-      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,.9) 0%, transparent 60%),
-      linear-gradient(155deg, var(--navy-deep, #060c1e) 0%, var(--ink, #090c14) 55%, var(--black, #000) 100%);
+    position: relative;              /* required for ::before */
+    overflow: hidden;
     border-radius: 12px;
-    border-top: 3px solid transparent;
-    box-shadow: 0 6px 20px rgba(0,0,0,.14);
+    border-top: 3px solid #c0181e;
     padding: clamp(16px, 2.5vw, 24px);
-    transition: border-top-color .3s;
+    transition: box-shadow .3s;
+    /* Option E gradient */
+    background:
+      radial-gradient(ellipse 100% 60% at 20% -10%, rgba(140,180,255,.14) 0%, transparent 55%),
+      radial-gradient(ellipse 60%  80% at 90% 110%, rgba(8,56,146,.25) 0%, transparent 55%),
+      linear-gradient(145deg, #0e2454 0%, #163060 50%, #1a3875 100%);
+    box-shadow:
+      0 8px 28px rgba(0,0,0,.20),
+      0 2px  6px rgba(0,0,0,.12),
+      inset 0 1px 0 rgba(192,24,30,.18);
   }
-  .mission-card:hover { border-top-color: #c0181e; }
+  /* Metallic sheen strip */
+  .mission-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(180,210,255,.35) 25%,
+      rgba(200,225,255,.55) 50%,
+      rgba(180,210,255,.35) 75%,
+      transparent 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+  .mission-card:hover {
+    box-shadow:
+      0 14px 36px rgba(0,0,0,.26),
+      0 4px  10px rgba(0,0,0,.14),
+      inset 0 1px 0 rgba(192,24,30,.25);
+  }
+
+  /* Mission body text — E-3: #e2ecf8 · 14px · 300 */
   .mission-card p {
-    font-size: clamp(13px, 1.4vw, 15px);
+    font-size: 14px;
     font-weight: 300;
     line-height: 1.8;
-    color: var(--fog, #c8cdd8);
+    color: #e2ecf8;
     margin: 0 0 12px;
+    position: relative; z-index: 2;
   }
   .mission-card p:last-child { margin-bottom: 0; }
   .hl-red   { color: rgba(233,8,15,.92);  font-weight: 600; letter-spacing: .3px; }
   .hl-green { color: rgba(8,233,27,.7);   font-weight: 600; letter-spacing: .3px; }
 
-  /* ── Values grid — 2-col on all sizes ── */
+  /* ── Values grid — 2-col ── */
   .values-col { display: flex; flex-direction: column; gap: clamp(16px, 2vh, 24px); }
+  .values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-  .values-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
+  /* ══════════════════════════════════════════════
+     VALUE CARDS — Option E · E-3 · metallic sheen
+  ══════════════════════════════════════════════ */
   .value-card {
-    background:
-      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,.9) 0%, transparent 60%),
-      linear-gradient(155deg, var(--navy-deep, #060c1e) 0%, var(--ink, #090c14) 55%, var(--black, #000) 100%);
+    position: relative;              /* required for ::before */
+    overflow: hidden;
     border-radius: 12px;
     border-top: 3px solid transparent;
-    box-shadow: 0 6px 20px rgba(0,0,0,.14);
     padding: clamp(14px, 2vw, 22px);
     transition: border-top-color .3s, box-shadow .3s;
+    /* Option E gradient */
+    background:
+      radial-gradient(ellipse 100% 60% at 20% -10%, rgba(140,180,255,.14) 0%, transparent 55%),
+      radial-gradient(ellipse 60%  80% at 90% 110%, rgba(8,56,146,.25) 0%, transparent 55%),
+      linear-gradient(145deg, #0e2454 0%, #163060 50%, #1a3875 100%);
+    box-shadow:
+      0 8px 28px rgba(0,0,0,.20),
+      0 2px  6px rgba(0,0,0,.12),
+      inset 0 1px 0 rgba(8,56,146,.12);
   }
-  .value-card:hover { border-top-color: #c0181e; box-shadow: 0 10px 28px rgba(0,0,0,.24); }
+  /* Metallic sheen strip */
+  .value-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(180,210,255,.35) 25%,
+      rgba(200,225,255,.55) 50%,
+      rgba(180,210,255,.35) 75%,
+      transparent 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+  .value-card:hover {
+    border-top-color: #c0181e;
+    box-shadow:
+      0 14px 36px rgba(0,0,0,.26),
+      0 4px  10px rgba(0,0,0,.14),
+      inset 0 1px 0 rgba(192,24,30,.25);
+  }
 
-  .value-icon { width: 28px; height: 28px; color: #e02428; margin-bottom: 10px; opacity: .85; display: block; }
-  .value-name { font-family: var(--font-head); font-weight: 700; font-size: clamp(13px, 1.5vw, 16px); text-transform: uppercase; letter-spacing: .06em; color: var(--white, #fff); margin-bottom: 5px; }
-  .value-desc { font-size: 12px; font-weight: 300; color: var(--fog, #c8cdd8); line-height: 1.55; }
+  /* Icon */
+  .value-icon {
+    width: 28px; height: 28px;
+    color: #e02428;
+    margin-bottom: 10px;
+    opacity: .85;
+    display: block;
+    position: relative; z-index: 2;
+  }
+
+  /* Title — E-3: #ffffff · 700 */
+  .value-name {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(13px, 1.5vw, 16px);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #ffffff;
+    margin-bottom: 5px;
+    position: relative; z-index: 2;
+  }
+
+  /* Description — E-3: #e2ecf8 · 14px · 300 */
+  .value-desc {
+    font-size: 14px;
+    font-weight: 300;
+    color: #e2ecf8;
+    line-height: 1.7;
+    position: relative; z-index: 2;
+  }
 
   /* Reveal */
   .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }

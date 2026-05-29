@@ -307,6 +307,8 @@ export const products: Product[] = [
     category:  'processing',
     name:      'Crusher',
     series:    'VECTOMEC™',
+    image:     '/images/products/crusher.png',
+
     shortDesc: 'Primary and secondary size reduction of run-of-mine rock, clinker, and aggregate. Jaw, impact, and cone crusher configurations to match feed size and product specification.',
     apps:      ['Mining', 'Aggregates', 'Cement'],
     fullDesc:  'Jayveecons supplies jaw, impact, and hammer crusher configurations sized and specified to your feed material hardness, maximum lump size, required product size, and throughput. We also supply complete crushing circuit packages including vibrating feeders, screens, conveyors, and the crusher itself as an integrated system.',
@@ -330,6 +332,8 @@ export const products: Product[] = [
     category:  'processing',
     name:      'Nodulizer / Disc Pelletiser',
     series:    'VECTOMEC™',
+    image:     '/images/products/nodulizer.png',
+
     shortDesc: 'Inclined rotating pan that forms fine powders into uniform spherical nodules or pellets. Critical in VSK cement production and iron ore pelletising processes.',
     apps:      ['Cement VSK', 'Iron ore', 'Fertiliser'],
     fullDesc:  'The nodulizer is an inclined rotating pan onto which fine powder is fed along with controlled water addition. As the pan rotates, particles aggregate into spherical balls that grow to a target size and discharge over the rim. In VSK cement production, nodulising is an essential step — raw meal must be formed into uniform nodules of 8–20mm before charging to the shaft kiln. Jayveecons has been building nodulizers for VSK plants since 1987.',
@@ -349,6 +353,8 @@ export const products: Product[] = [
     category:  'processing',
     name:      'Vibrating Screens',
     series:    'VECTOMEC™',
+    image:     '/images/products/screens.png',
+
     shortDesc: 'Single and multi-deck vibrating screens for particle size classification and oversize removal. Linear and circular motion configurations.',
     apps:      ['Mining', 'Aggregates', 'Food'],
     fullDesc:  'Vibrating screens separate bulk material into two or more size fractions by passing it over one or more tensioned wire mesh or polyurethane screen panels, each with a defined aperture. Jayveecons supplies both circular-motion screens and linear-motion screens for high-throughput dry classification and heavy-duty mining applications.',
@@ -367,6 +373,8 @@ export const products: Product[] = [
     category:  'processing',
     name:      'Industrial Dryer',
     series:    'VECTOMEC™',
+    image:     '/images/products/rotary_dryer.png',
+
     shortDesc: 'Rotary drum dryer for reducing moisture content in bulk materials prior to processing or storage. Direct or indirect fired configurations.',
     apps:      ['Mining', 'Food', 'Waste'],
     fullDesc:  'A rotary drum dryer is an inclined rotating cylinder through which wet bulk material travels counter-current or co-current to a hot gas stream, progressively losing moisture. Jayveecons supplies the complete drying system including the drum, riding rings, support rollers, drive, burner, and cyclone/baghouse for dust recovery.',
@@ -389,6 +397,8 @@ export const products: Product[] = [
     category:  'ancillary',
     name:      'Hoppers & Bins',
     series:    'VECTOMEC™',
+    image:     '/images/products/classifier.png',
+
     shortDesc: 'Fabricated storage and feed hoppers for material surge capacity and controlled feed to downstream equipment. Engineered geometry to prevent bridging and ratholing.',
     apps:      ['All sectors'],
     fullDesc:  'A hopper or bin is the critical interface between intermittent supply and continuous process demand. Jayveecons engineers hopper geometry based on your material\'s wall friction angle, cohesive strength, and bulk density — ensuring reliable mass flow discharge every time.',
@@ -412,6 +422,8 @@ export const products: Product[] = [
     category:  'ancillary',
     name:      'Silos & Storage Tanks',
     series:    'VECTOMEC™',
+    image:     '/images/products/classifier.png',
+
     shortDesc: 'Vertical storage vessels for bulk powders, granules, and liquids. Flat-bottom and cone-bottom configurations; 5T to 1000T+ capacity.',
     apps:      ['Cement', 'Food', 'Chemical'],
     fullDesc:  'Silos are tall, cylindrical storage vessels designed to hold large volumes of bulk powder or granular material in a compact footprint. Jayveecons supplies flat-bottom silos with aeration floor systems and cone-bottom silos for free-flowing granular materials. We supply the complete silo package including shell, roof, access ladder, aeration pads, level indicators, and dust vent filter.',
@@ -435,6 +447,8 @@ export const products: Product[] = [
     category:  'ancillary',
     name:      'Pressure Vessels',
     series:    'VECTOMEC™',
+    image:     '/images/products/classifier.png',
+
     shortDesc: 'Fabricated pressure vessels for pneumatic conveying boosters, compressed air receivers, and process applications. Hydrostatic test certified.',
     apps:      ['Pneumatic systems', 'Process'],
     fullDesc:  'Jayveecons fabricates pressure vessels to IS 2825 (Indian Standard for unfired pressure vessels) and can work to ASME Section VIII Division 1 when specified. Every vessel is hydrostatic pressure tested before despatch, and we provide full material traceability, weld maps, and inspection certificates.',
@@ -459,6 +473,8 @@ export const products: Product[] = [
     category:  'ancillary',
     name:      'Rotary Air Lock',
     series:    'VECTOMEC™',
+    image:     '/images/products/classifier.png',
+
     shortDesc: 'Rotary valve that meters bulk material between zones of different pressure while maintaining the pressure differential. Essential in pneumatic conveying and dust collectors.',
     apps:      ['Cement', 'Pneumatic systems'],
     fullDesc:  'A rotary airlock uses a slowly rotating multi-vane rotor inside a close-tolerance housing to transfer bulk material from one pressure zone to another while minimising air leakage. They are indispensable wherever a pneumatic conveying system, dust collector, or pressurised process must accept or discharge material without losing its pressure seal.',
@@ -482,6 +498,8 @@ export const products: Product[] = [
     category:  'ancillary',
     name:      'Chimney & Flue Stacks',
     series:    'VECTOMEC™',
+        image:     '/images/products/classifier.png',
+
     shortDesc: 'Fabricated mild steel and stainless steel chimney stacks and flue gas ducts for industrial kilns, dryers, and furnaces. Insulated and refractory-lined to process temperature requirements.',
     apps:      ['Cement', 'Mining', 'Steel'],
     fullDesc:  'Jayveecons designs and fabricates self-supporting and guyed steel chimney stacks, flue gas ducts, and expansion joints for cement kilns, rotary dryers, coal-fired furnaces, and waste-heat recovery systems. Our stacks are designed to IS 6533 and sized for the required gas velocity and dispersion height. Internal refractory lining and external insulation are applied where required to manage shell temperature and thermal expansion.',
@@ -505,6 +523,8 @@ export const products: Product[] = [
     category:  'ancillary',
     name:      'Grinding Media',
     series:    'VECTOMEC™',
+        image:     '/images/products/classifier.png',
+
     shortDesc: 'Steel grinding balls and cylpebs for ball mill and rod mill applications. Supplied in various grades and sizes to match your mill configuration, material hardness, and target product fineness.',
     apps:      ['Ball mills', 'Cement', 'Mining'],
     fullDesc:  'Grinding media are the steel balls or cylpebs that tumble inside a ball mill and break down feed material into fine powder. They are a consumable item — they wear down through attrition and impact and must be replenished regularly. Jayveecons supplies forged and cast grinding balls and cylpebs matched to your mill dimensions, liner type, feed material hardness, and target product fineness.',
@@ -548,6 +568,8 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Rollers & Pulleys',
     series:    'VECTOMEC™',
+        image:     '/images/products/classifier.png',
+
     shortDesc: 'Drive, tail, snub, and bend pulleys for belt conveyor systems. Rubber-lagged for drive grip, precision-balanced shafts — manufactured in-house to customer drawings or OEM specifications.',
     apps:      ['Belt conveyors', 'OEM replacement'],
     fullDesc:  'Conveyor pulleys transmit drive force to the belt, maintain tension, and change direction of travel. Jayveecons manufactures all standard conveyor pulley types in-house: shells rolled from plate and welded to machined end discs; shafts machined from forged or rolled bar; each pulley dynamically balanced before lagging is applied.',
@@ -569,6 +591,8 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Gearboxes & Speed Reducers',
     series:    'VECTOMEC™',
+        image:     '/images/products/classifier.png',
+
     shortDesc: 'Helical, bevel-helical, and worm gear reducers for conveyor, mill, kiln, and feeder drive applications. Custom gear ratios to match process speed and torque requirements.',
     apps:      ['Conveyors', 'Mills', 'Kilns', 'Elevators'],
     fullDesc:  'Every driven piece of equipment in a bulk handling plant runs at a specific shaft speed much lower than the electric motor driving it. Jayveecons supplies helical, bevel-helical, and worm-and-wheel gear reducers, and can pair them with motor and coupling as a complete matched drive package for any of our conveying or processing equipment.',
@@ -591,6 +615,8 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Shafts & Spindles',
     series:    'VECTOMEC™',
+        image:     '/images/products/classifier.png',
+
     shortDesc: 'Precision-machined drive shafts, stub shafts, conveyor head and tail shafts, and idler spindles. Manufactured to drawing or reverse-engineered from sample for OEM replacement.',
     apps:      ['Conveyors', 'Elevators', 'Mills', 'OEM replacement'],
     fullDesc:  'Jayveecons machines shafts on CNC lathes and milling centres, working to tolerances of ±0.01mm on bearing journal diameters. We can manufacture from your drawings, reverse-engineer from a sample or sketch, or design from your load and speed data. Material selection — from EN8/EN24 carbon and alloy steels to 316 stainless — is matched to the duty, environment, and service life requirement.',
@@ -611,6 +637,8 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Conveyor Belts',
     series:    'VECTOMEC™',
+        image:     '/images/products/classifier.png',
+
     shortDesc: 'Replacement conveyor belts in fabric ply, steel cord, heat-resistant, oil-resistant, and food-grade grades. Supplied cut-to-length with mechanical or vulcanised splicing.',
     apps:      ['Belt conveyors', 'OEM replacement', 'Upgrades'],
     fullDesc:  'Jayveecons supplies conveyor belts across the full range of grades and constructions, cut to your exact loop length and width, with splicing hardware or vulcanisation carried out on-site by our installation team.',
@@ -629,6 +657,8 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Replacement Elevator Buckets',
     series:    'VECTOMEC™',
+        image:     '/images/products/classifier.png',
+
     shortDesc: 'Replacement buckets for belt and chain bucket elevators — stamped steel, polyethylene, and polyurethane grades. Supplied individually or in full re-bucketing sets.',
     apps:      ['Bucket elevators', 'Cement', 'Grain', 'Mining'],
     fullDesc:  'Jayveecons supplies replacement buckets in stamped mild steel, abrasion-resistant steel, HDPE, and polyurethane — each grade suited to different material types and operating conditions. We match dimensions precisely to the OEM bucket specification, or fabricate to your measurement if the original manufacturer is unknown.',
@@ -647,6 +677,8 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Elevator Belts & Chains',
     series:    'VECTOMEC™',
+        image:     '/images/products/classifier.png',
+
     shortDesc: 'Replacement elevator belts (rubber or PVC), elevator chains (forged and cast link), casing panels, head and boot section fabrications for elevator refurbishment.',
     apps:      ['Bucket elevators', 'OEM replacement'],
     fullDesc:  'Jayveecons supplies replacement elevator belts cut to your elevator\'s loop length and bucket pitch, and elevator chains matched to your existing chain pitch and breaking load specification. We also fabricate replacement casing panels, head drums, boot assemblies, and take-up frames where the original structure has corroded or worn beyond repair.',
@@ -670,6 +702,8 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Screw Flights & Wear Parts',
     series:    'VECTOMEC™',
+        image:     '/images/products/classifier.png',
+
     shortDesc: 'Replacement screw flights, hard-faced and abrasion-resistant flighting, trough liners, hanger bearing assemblies, and end seals for screw conveyors.',
     apps:      ['Screw conveyors', 'OEM replacement', 'Upgrades'],
     fullDesc:  'Jayveecons fabricates replacement screw flights to match your existing conveyor\'s pitch, diameter, shaft size, and hand. For high-wear duties — fly ash, cement raw meal, sand, clinker grit — we offer hard-faced flights and full AR steel (Hardox 400/450) flighting that lasts significantly longer than standard mild steel.',
@@ -688,6 +722,8 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Sensors & Instrumentation',
     series:    'VECTOMEC™',
+        image:     '/images/products/classifier.png',
+
     shortDesc: 'Conveyor safety and monitoring instrumentation: belt speed sensors, misalignment switches, zero-speed switches, level sensors, pull-cord emergency stops, and proximity switches.',
     apps:      ['Conveyors', 'Elevators', 'Silos', 'All systems'],
     fullDesc:  'Jayveecons supplies the full range of conveyor safety and process monitoring instrumentation, sourced from quality manufacturers and configured for your specific equipment. We supply individual devices, pre-assembled marshalling panels, or complete pre-wired conveyor control panels ready for connection to your PLC or DCS.',
@@ -708,6 +744,8 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Custom Fabrications & Wear Parts',
     series:    'VECTOMEC™',
+        image:     '/images/products/classifier.png',
+
     shortDesc: 'Chutes, transition pieces, skirt boards, wear liners (UHMWPE, ceramic, AR steel), shaft sleeves, and any other non-standard component. Fabricated to drawing, sample, or reverse-engineered.',
     apps:      ['Custom fabrication', 'OEM replacement'],
     fullDesc:  'Over nearly four decades of serving cement, mining, and mineral processing plants, Jayveecons has developed the fabrication capability and material knowledge to produce virtually any non-standard steel component your plant needs. Bring us a drawing, a sample, a sketch on paper, or simply a photograph of the worn part — our engineers will reverse-engineer the geometry, select the appropriate material, and return a fabricated replacement that fits and lasts.',

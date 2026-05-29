@@ -1,8 +1,10 @@
 ---
 /**
  * IndustriesSection.astro — LIGHT white + blue grid
- * Cards: navy gradient on light section
- * Mobile-first: 1 col → 2 col → 4 col
+ * Cards: Option E navy · E-3 typography · metallic lustre restored
+ * bg: radial highlight + #0e2454 → #163060 → #1a3875
+ * title: #ffffff  15px  700
+ * desc:  #e2ecf8  14px  300  (AAA contrast)
  */
 const industries = [
   { status: 'served', name: 'Cement',                    desc: 'Integrated equipment solutions for VSK and rotary kiln cement plants, including vertical shaft kilns, grinding systems, material handling and feed systems.' },
@@ -44,7 +46,6 @@ const industries = [
       </div>
     </div>
 
-    <!-- Mobile: 1 col → tablet: 2 col → desktop: 4 col -->
     <div class="ind-grid" role="list">
       {industries.map(ind => (
         <div class={`ind-card ${ind.status} reveal`} role="listitem">
@@ -59,7 +60,7 @@ const industries = [
 </section>
 
 <style>
-  /* ── WHITE + BLUE GRID BACKGROUND ── */
+  /* ── Section shell ── */
   .ind-section {
     padding: clamp(56px,8vh,96px) 0;
     background-color: #f8fafc;
@@ -80,7 +81,6 @@ const industries = [
     padding: 0 clamp(16px,4vw,48px);
   }
 
-  /* Header */
   .ind-header {
     display: flex;
     align-items: flex-end;
@@ -90,18 +90,14 @@ const industries = [
     margin-bottom: clamp(24px,4vh,48px);
   }
 
-  /* Section tag — crimson on light bg */
   .section-tag { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
   .tag-line    { width: 28px; height: 2px; background: #c0181e; flex-shrink: 0; }
   .section-tag span { font-family: var(--font-mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: #c0181e; }
 
-  /* Headline — navy + red accent (light section) */
-  .section-headline { font-family: var(--font-head); font-weight: 800; font-size:clamp(32px,4.5vw,56px); text-transform: uppercase; line-height: .97; color: rgba(8,56,146,.9); margin-bottom: 14px; }
+  .section-headline { font-family: var(--font-head); font-weight: 800; font-size: clamp(32px,4.5vw,56px); text-transform: uppercase; line-height: .97; color: rgba(8,56,146,.9); margin-bottom: 14px; }
   .accent { color: #c0181e; }
-
   .section-sub { font-size: clamp(13px,1.4vw,15px); font-weight: 400; color: #2a3550; line-height: 1.75; max-width: 560px; }
 
-  /* Legend */
   .ind-legend { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
   .legend-item { display: flex; align-items: center; gap: 7px; }
   .legend-dot { width: 10px; height: 10px; border-top: 2px solid; }
@@ -109,62 +105,149 @@ const industries = [
   .legend-dot.target { border-color: var(--teal); }
   .legend-item span { font-size: 12px; color: #5a6a88; font-family: var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
 
-  /* Grid — mobile: 1 col → tablet: 2 col → desktop: 4 col */
-  .ind-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
+  /* ── Grid ── */
+  .ind-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
   @media (min-width: 560px)  { .ind-grid { grid-template-columns: repeat(2,1fr); gap: 16px; } }
   @media (min-width: 1024px) { .ind-grid { grid-template-columns: repeat(4,1fr); gap: 20px; } }
 
-  /* Card — navy gradient on light section (matches WhatWeDo node-card) */
+  /* ════════════════════════════════════════════════════════════
+     CARD — Option E bg · E-3 typography · metallic lustre
+
+     The lustre is achieved with three layered techniques:
+     1. Radial gradient at top-left (simulates a light source)
+     2. Thin top-edge highlight via ::before pseudo-element
+     3. Outer box-shadow + inset accent glow per status colour
+
+     Background stops (no black):
+       #0e2454  →  #163060  →  #1a3875
+  ════════════════════════════════════════════════════════════ */
   .ind-card {
-    background:
-      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,0.9) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
-      linear-gradient(155deg, var(--navy-deep) 0%, var(--ink) 55%, var(--black) 100%);
+    position: relative;
     padding: clamp(18px,2.5vw,26px);
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.14);
     border-top: 3px solid transparent;
-    transition: border-top-color .25s, box-shadow .25s, transform .25s;
-  }
-  .ind-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,.22); }
-  .ind-card.served { border-top-color: var(--crimson); }
-  .ind-card.target { border-top-color: var(--teal-l); }
+    overflow: hidden;
+    isolation: isolate;
+    transition: transform .25s, box-shadow .25s;
 
+    /* Base gradient — no black */
+    background:
+      radial-gradient(ellipse 100% 60% at 20% -10%, rgba(140,180,255,.14) 0%, transparent 55%),
+      radial-gradient(ellipse 60%  80% at 90% 110%, rgba(8,56,146,.25) 0%, transparent 55%),
+      linear-gradient(145deg, #0e2454 0%, #163060 50%, #1a3875 100%);
+  }
+  /* metallic-sheen */
+  .ind-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(180,210,255,.35) 25%,
+      rgba(200,225,255,.55) 50%,
+      rgba(180,210,255,.35) 75%,
+      transparent 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Metallic sheen line — thin bright strip across the top of the card */
+  .ind-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(180,210,255,.35) 25%,
+      rgba(200,225,255,.55) 50%,
+      rgba(180,210,255,.35) 75%,
+      transparent 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Hover — lift and deepen shadow */
+  .ind-card:hover {
+    transform: translateY(-3px);
+  }
+
+  /* Status colour — top border + matching inset glow */
+  .ind-card.served {
+    border-top-color: #c0181e;
+    box-shadow:
+      0 8px 28px rgba(0,0,0,.20),
+      0 2px  6px rgba(0,0,0,.12),
+      inset 0 1px 0 rgba(192,24,30,.18);
+  }
+  .ind-card.target {
+    border-top-color: var(--teal-l, #14b8a6);
+    box-shadow:
+      0 8px 28px rgba(0,0,0,.20),
+      0 2px  6px rgba(0,0,0,.12),
+      inset 0 1px 0 rgba(20,184,166,.14);
+  }
+  .ind-card.served:hover {
+    box-shadow:
+      0 14px 36px rgba(0,0,0,.26),
+      0 4px  10px rgba(0,0,0,.14),
+      inset 0 1px 0 rgba(192,24,30,.25);
+  }
+  .ind-card.target:hover {
+    box-shadow:
+      0 14px 36px rgba(0,0,0,.26),
+      0 4px  10px rgba(0,0,0,.14),
+      inset 0 1px 0 rgba(20,184,166,.20);
+  }
+
+  /* Badge */
   .ind-badge {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 10px;
     letter-spacing: .15em;
     text-transform: uppercase;
     padding: 3px 8px;
     margin-bottom: 10px;
     display: inline-block;
     border-radius: 2px;
+    position: relative;
+    z-index: 2;
   }
-  .ind-card.served .ind-badge { background: rgba(192,24,30,.15); color: var(--crimson-l); }
-  .ind-card.target .ind-badge { background: rgba(13,122,110,.15); color: var(--teal-l); }
+  .ind-card.served .ind-badge { background: rgba(192,24,30,.22); color: #ff9999; }
+  .ind-card.target .ind-badge { background: rgba(20,184,166,.18); color: #5eead4; }
 
+  /* Title — E-3: #ffffff · 15px min, scales to 17px · weight 700 */
   .ind-name {
     font-family: var(--font-head);
     font-weight: 700;
-    font-size: clamp(17px,2vw,22px);
+    font-size: clamp(15px, 1.6vw, 17px);
     text-transform: uppercase;
+    letter-spacing: .04em;
     color: #ffffff;
     margin-bottom: 8px;
-    line-height: 1.1;
-  }
-  .ind-desc {
-    font-size: clamp(12px,1.2vw,13px);
-    font-weight: 300;
-    color: var(--fog);
-    line-height: 1.6;
-    margin: 0;
+    line-height: 1.15;
+    position: relative;
+    z-index: 2;
   }
 
-  /* Reveal */
+  /* Description — E-3: #e2ecf8 · fixed 14px · weight 300 · 1.7 leading */
+  .ind-desc {
+    font-family: var(--font-body);
+    font-size: 14px;          /* fixed — not clamped — matches the E-3 preview */
+    font-weight: 300;
+    color: #e2ecf8;
+    line-height: 1.7;
+    margin: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ── Reveal animation ── */
   .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
   @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }

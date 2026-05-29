@@ -9,7 +9,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <style>
 /* PAGE HEADER */
-.page-header{position:relative;padding:130px 0 72px;overflow:hidden;background:linear-gradient(155deg,var(--navy-deep) 0%,var(--ink) 55%,var(--black) 100%)}
+.page-header{position:relative;padding:130px 0 72px;overflow:hidden;background:linear-gradient(145deg, #0e2454 0%, #163060 50%, #1a3875 100%)}
 .page-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 60% 50%,rgba(26,50,96,.6),transparent 65%)}
 .page-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(192,24,30,.3) 50%,transparent)}
 .page-header-inner{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,48px)}
@@ -96,7 +96,7 @@ section{position:relative;z-index:1}
 .ind-status span{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#ff7070}
 .ind-status span.target{color:var(--teal-l)}
 .ind-name{font-family:var(--font-head);font-weight:800;font-size:clamp(28px,4vw,46px);text-transform:uppercase;letter-spacing:.01em;color:var(--white);line-height:.95;margin-bottom:14px}
-.ind-desc{font-size:clamp(14px,1.5vw,15px);font-weight:300;color:var(--fog);line-height:1.8;margin-bottom:20px}
+.ind-desc{font-size:clamp(14px,1.5vw,15px);font-weight:300;color: #e2ecf8;line-height:1.8;margin-bottom:20px}
 .ind-products-title{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#ff7070;margin-bottom:10px}
 .ind-products{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px}
 .ind-product-tag{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:rgba(13,26,58,.8);border:1px solid rgba(51,96,184,.3);color:#7ab0ff;padding:4px 10px}
@@ -116,6 +116,23 @@ section{position:relative;z-index:1}
   position:relative;overflow:hidden;
   transition:background .3s;
 }
+  /* metallic-sheen */
+  .target-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(180,210,255,.35) 25%,
+      rgba(200,225,255,.55) 50%,
+      rgba(180,210,255,.35) 75%,
+      transparent 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
 .target-card:hover{background:rgba(13,122,110,.06)}
 .target-card::before{
   content:'';position:absolute;top:0;right:0;

@@ -117,6 +117,23 @@ import { exploreLinks } from '../../data/careers.ts';
       radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%);
     /* NO transform, NO z-index, NO will-change, NO animation */
   }
+  /* metallic-sheen */
+  .explore-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(180,210,255,.35) 25%,
+      rgba(200,225,255,.55) 50%,
+      rgba(180,210,255,.35) 75%,
+      transparent 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
   .explore-card:hover {
     border-bottom-color: #c0181e;
     box-shadow: 0 8px 28px rgba(0,0,0,0.24);

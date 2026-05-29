@@ -1,6 +1,7 @@
 ---
 // AboutRecognition.astro — WhatWeDo design language.
 // White + blue grid bg. Cards match node-card style.
+// Updated: Option E gradient · E-3 typography · metallic sheen
 // 1-col → 2-col@640px → 3-col@1024px
 ---
 
@@ -58,23 +59,52 @@
   @media (min-width: 640px)  { .rec-grid { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 1024px) { .rec-grid { grid-template-columns: repeat(3, 1fr); } }
 
-  /* Award card — matches WhatWeDo node-card */
+  /* ══════════════════════════════════════════════
+     AWARD CARD — Option E · E-3 · metallic sheen
+  ══════════════════════════════════════════════ */
   .rec-card {
-    background:
-      radial-gradient(ellipse 90% 70% at 35% 40%, rgba(8,56,146,.9) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 60% at 95% 90%, rgba(192,24,30,.07) 0%, transparent 50%),
-      linear-gradient(155deg, var(--navy-deep, #060c1e) 0%, var(--ink, #090c14) 55%, var(--black, #000) 100%);
+    position: relative;
+    overflow: hidden;
     border-radius: 12px;
     border-top: 3px solid #c0181e;
-    box-shadow: 0 6px 20px rgba(0,0,0,.14);
     padding: clamp(20px, 3vw, 32px);
     transition: box-shadow .3s, transform .3s;
+    /* Option E gradient */
+    background:
+      radial-gradient(ellipse 100% 60% at 20% -10%, rgba(140,180,255,.14) 0%, transparent 55%),
+      radial-gradient(ellipse 60%  80% at 90% 110%, rgba(8,56,146,.25) 0%, transparent 55%),
+      linear-gradient(145deg, #0e2454 0%, #163060 50%, #1a3875 100%);
+    box-shadow:
+      0 8px 28px rgba(0,0,0,.20),
+      0 2px  6px rgba(0,0,0,.12),
+      inset 0 1px 0 rgba(192,24,30,.18);
+  }
+  /* Metallic sheen strip */
+  .rec-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(180,210,255,.35) 25%,
+      rgba(200,225,255,.55) 50%,
+      rgba(180,210,255,.35) 75%,
+      transparent 100%
+    );
+    z-index: 1;
+    pointer-events: none;
   }
   .rec-card:hover {
-    box-shadow: 0 12px 30px rgba(0,0,0,.24);
     transform: translateY(-3px);
+    box-shadow:
+      0 14px 36px rgba(0,0,0,.26),
+      0 4px  10px rgba(0,0,0,.14),
+      inset 0 1px 0 rgba(192,24,30,.25);
   }
 
+  /* Year — large crimson numerals */
   .rec-year {
     font-family: var(--font-head);
     font-weight: 800;
@@ -82,16 +112,22 @@
     color: #e02428;
     line-height: 1;
     margin-bottom: 8px;
+    position: relative; z-index: 2;
   }
+
+  /* Award name — E-3: #ffffff · 700 */
   .rec-name {
     font-family: var(--font-head);
     font-weight: 700;
     font-size: clamp(15px, 1.8vw, 19px);
     text-transform: uppercase;
     letter-spacing: .04em;
-    color: var(--white, #fff);
+    color: #ffffff;
     margin-bottom: 4px;
+    position: relative; z-index: 2;
   }
+
+  /* Org tag */
   .rec-org {
     font-family: var(--font-mono);
     font-size: 10px;
@@ -100,15 +136,20 @@
     color: #ff7070;
     margin-bottom: 12px;
     opacity: .85;
-  }
-  .rec-desc {
-    font-size: 13px;
-    font-weight: 300;
-    color: var(--fog, #c8cdd8);
-    line-height: 1.65;
+    position: relative; z-index: 2;
   }
 
-  /* Placeholder card */
+  /* Description — E-3: #e2ecf8 · 14px · 300 */
+  .rec-desc {
+    font-size: 14px;
+    font-weight: 300;
+    color: #e2ecf8;
+    line-height: 1.7;
+    margin: 0;
+    position: relative; z-index: 2;
+  }
+
+  /* Placeholder card — light, no dark gradient */
   .rec-placeholder {
     background: rgba(8,56,146,.04);
     border: 1.5px dashed rgba(8,56,146,.2);
