@@ -1,9 +1,10 @@
 ---
 // AboutCTA.astro
-// Final call-to-action band — dynamic year, two buttons.
+// Final call-to-action band — dynamic year, trapezoidal buttons
 ---
 
 <style>
+  /* ── Section shell ── */
   .cta-band {
     position: relative;
     overflow: hidden;
@@ -17,7 +18,7 @@
   .cta-band::before {
     content: '';
     position: absolute; inset: 0;
-    background: radial-gradient(ellipse 60% 80% at 50% 110%, rgba(192,24,30,.1), transparent 60%);
+    background: radial-gradient(ellipse 60% 80% at 50% 110%, rgba(192,24,30,.12), transparent 60%);
     pointer-events: none;
   }
   .cta-band::after {
@@ -25,73 +26,177 @@
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(192,24,30,.3) 50%, transparent);
+    background: linear-gradient(90deg, transparent, rgba(192,24,30,.35) 50%, transparent);
+  }
+
+  /* Metallic sheen */
+  .cta-sheen {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(180,210,255,.35) 25%,
+      rgba(200,225,255,.55) 50%,
+      rgba(180,210,255,.35) 75%,
+      transparent 100%
+    );
+    z-index: 2;
+    pointer-events: none;
   }
 
   .cta-inner {
     position: relative;
     z-index: 1;
-    max-width: 1440px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 0 clamp(16px, 4vw, 48px);
   }
 
+  /* Eyebrow */
   .cta-eyebrow {
     font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: .2em;
+    font-size: 12px;
+    letter-spacing: .22em;
     color: #ff7070;
     text-transform: uppercase;
     margin-bottom: 18px;
   }
+
+  /* Headline */
   .cta-headline {
     font-family: var(--font-head);
     font-weight: 800;
     font-size: clamp(36px, 5.5vw, 68px);
     text-transform: uppercase;
     line-height: .97;
-    margin-bottom: 16px;
-    color: var(--white);
+    margin-bottom: 20px;
+    color: #ffffff;
   }
-  .cta-headline .accent { color: var(--crimson-l); }
+  .cta-headline .accent { color: #e55; }
 
+  /* Sub — E-3 readable */
   .cta-sub {
-    font-size: clamp(14px, 1.6vw, 16px);
+    font-family: var(--font-body);
+    font-size: clamp(15px, 1.6vw, 17px);
     font-weight: 300;
-    color: var(--fog);
-    margin-bottom: 40px;
-    line-height: 1.65;
+    color: #e2ecf8;
+    margin-bottom: 44px;
+    line-height: 1.7;
   }
 
+  /* ════════════════════════════════════════════════════
+     TRAPEZOIDAL BUTTONS
+     clip-path cuts the left and right edges at an angle,
+     creating a parallelogram / industrial trapezoid shape.
+     Both buttons same size; colour alternates.
+  ════════════════════════════════════════════════════ */
   .cta-actions {
     display: flex;
     justify-content: center;
-    gap: 16px;
+    align-items: center;
+    gap: clamp(20px, 3vw, 50px);              
     flex-wrap: wrap;
+    row-gap: 14px;
   }
+
+  /* Shared base */
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 16px 44px;
+    white-space: nowrap;
+    cursor: pointer;
+    border: none;
+    transition: filter .2s, transform .2s;
+    /* Trapezoid: wider at top, angled sides */
+    clip-path: polygon(16px 0%, 100% 0%, calc(100% - 16px) 100%, 0% 100%);
+    margin-inline: 0px;
+    position: relative;
+  }
+  .cta-btn:hover {
+    filter: brightness(1.12);
+    transform: translateY(-2px);
+    z-index: 2;
+  }
+  .cta-btn:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+  }
+
+  /* Primary — crimson fill */
+  .cta-btn-primary {
+    background: #c0181e;
+    color: #ffffff;
+    z-index: 1;
+  }
+
+  /* Secondary — navy fill, slightly lighter than band */
+  .cta-btn-secondary {
+    background: rgba(30,80,170,.55);
+    color: #e2ecf8;
+    border: 1px solid rgba(180,210,255,.2);
+    z-index: 0;
+  }
+
+  /* On mobile, stack buttons and restore full rectangular width */
+  @media (max-width: 560px) {
+    .cta-actions { flex-direction: column; gap: 10px; }
+    .cta-btn {
+      clip-path: none;
+      margin-inline: 0;
+      width: 100%;
+      justify-content: center;
+      border-radius: 2px;
+    }
+    .cta-btn-secondary { border: 1px solid rgba(180,210,255,.25); }
+  }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 </style>
 
 <section class="cta-band" aria-labelledby="cta-about-heading">
+  <div class="cta-sheen" aria-hidden="true"></div>
   <div class="cta-inner">
+
     <div class="cta-eyebrow reveal">Work with Us</div>
+
     <h2 class="cta-headline reveal" id="cta-about-heading">
       Ready to Build<br><span class="accent">Something Great?</span>
     </h2>
+
     <p class="cta-sub reveal" id="cta-years-text">
       39 years of engineering experience, at your project's service.
     </p>
+
     <div class="cta-actions reveal">
-      <a href="/careers" class="about-btn-secondary">
-        Join Us →</a>
-      <a href="/contact" class="about-btn-primary">
+      <!-- Secondary (navy) → Primary (crimson) → Secondary (navy) -->
+      <!-- Alternating colours reads left-to-right as: explore → act → explore -->
+      <a href="/careers" class="cta-btn cta-btn-secondary">
+        Join Our Team
+      </a>
+      <a href="/contact" class="cta-btn cta-btn-primary">
         Request a Quote
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
           <path d="M5 12h14M12 5l7 7-7 7"/>
         </svg>
       </a>
-      <a href="/products" class="about-btn-secondary">View Our Products →</a>
+      <a href="/products" class="cta-btn cta-btn-secondary">
+        View Products
+      </a>
     </div>
-    
+
   </div>
 </section>
 

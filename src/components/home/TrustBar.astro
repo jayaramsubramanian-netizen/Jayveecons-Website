@@ -1,83 +1,100 @@
 ---
 /**
- * TrustBar.astro — Crimson trust band
- * Mobile: wraps to 2 col. Desktop: single row.
+ * TrustBar.astro — JS requestAnimationFrame marquee
+ * Speed = px per frame. Increase to go faster, decrease to go slower.
  */
-interface Props { yearsOld: number; }
+interface Props { yearsOld?: number; }
 const { yearsOld } = Astro.props;
 
 const items = [
-  { label: 'Trusted by Material Processing Industries Worldwide',     icon: 'M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z' },
-  { label: 'VECTRIX™ Design Platform',  icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
-  { label: 'VECTOMEC™ Equipment',       icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
-  { label: 'End-to-End Engineering',    icon: 'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2 M9 7a4 4 0 100 8 4 4 0 000-8z' },
-  { label: 'Proven On-Site Delivery',   icon: 'M20 6L9 17l-5-5' },
-  
-  
+  { label: 'Trusted by Material Processing Industries Worldwide', icon: 'M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z' },
+  { label: 'VECTRIX™ Design Platform',                           icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
+  { label: 'VECTOMEC™ Equipment',                                icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
+  { label: 'End-to-End Engineering',                             icon: 'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2 M9 7a4 4 0 100 8 4 4 0 000-8z' },
+  { label: 'Proven On-Site Delivery',                            icon: 'M20 6L9 17l-5-5' },
 ];
 ---
 
-<div class="trust-bar" role="list" aria-label="Key company credentials">
-  <div class="trust-inner">
-    {items.map(item => (
-      <div class="trust-item" role="listitem">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d={item.icon} />
-        </svg>
-        <span>{item.label}</span>
-      </div>
-    ))}
+<!-- Outer shell — inline styles guaranteed -->
+<div id="jvc-tb-outer" style="background:#c0181e; position:relative; overflow:hidden; cursor:default; user-select:none;">
+
+  <!-- Fade edges -->
+  <div style="position:absolute;top:0;bottom:0;left:0;width:80px;background:linear-gradient(to right,#c0181e,transparent);z-index:2;pointer-events:none;"></div>
+  <div style="position:absolute;top:0;bottom:0;right:0;width:80px;background:linear-gradient(to left,#c0181e,transparent);z-index:2;pointer-events:none;"></div>
+
+  <!-- Track — JS will translateX this -->
+  <div id="jvc-tb-track" style="display:flex;flex-direction:row;flex-wrap:nowrap;width:max-content;will-change:transform;position:relative;z-index:1;" aria-hidden="true">
+
+    <!-- Group A -->
+    <div style="display:flex;flex-direction:row;align-items:center;flex-shrink:0;flex-wrap:nowrap;">
+      {items.map(item => (
+        <div style="display:inline-flex;flex-direction:row;align-items:center;gap:10px;padding:13px 32px;white-space:nowrap;pointer-events:none;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;" aria-hidden="true"><path d={item.icon}/></svg>
+          <span style="font-family:sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#fff;white-space:nowrap;">{item.label}</span>
+          <span style="font-size:7px;color:rgba(255,255,255,.35);" aria-hidden="true">◆</span>
+        </div>
+      ))}
+    </div>
+
+    <!-- Group B — identical, seamless loop -->
+    <div style="display:flex;flex-direction:row;align-items:center;flex-shrink:0;flex-wrap:nowrap;" aria-hidden="true">
+      {items.map(item => (
+        <div style="display:inline-flex;flex-direction:row;align-items:center;gap:10px;padding:13px 32px;white-space:nowrap;pointer-events:none;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;" aria-hidden="true"><path d={item.icon}/></svg>
+          <span style="font-family:sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#fff;white-space:nowrap;">{item.label}</span>
+          <span style="font-size:7px;color:rgba(255,255,255,.35);" aria-hidden="true">◆</span>
+        </div>
+      ))}
+    </div>
+
   </div>
 </div>
 
-<style>
-  .trust-bar {
-    background: var(--crimson);
-    overflow: hidden;
-    position: relative;
-  }
-  .trust-bar::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,.06) 50%, transparent 70%);
-    background-size: 200% 100%;
-    animation: shimmer 5s linear infinite;
-    pointer-events: none;
-  }
+<!-- Screen-reader list -->
+<ul style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;list-style:none;" aria-label="Key company credentials">
+  {items.map(item => <li>{item.label}</li>)}
+</ul>
 
-  .trust-inner {
-    max-width: 1440px;
-    margin: 0 auto;
-    padding: 0 clamp(16px,4vw,48px);
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;             /* wraps on mobile */
-    min-height: 52px;
-    position: relative;
-    z-index: 1;
-  }
+<script>
+(function () {
+  // ─────────────────────────────────────────────
+  // SPEED CONTROL — pixels scrolled per frame
+  // Lower  = slower  (try 0.3 – 0.6)
+  // Higher = faster  (try 1.0 – 2.0)
+  const SPEED = 0.5;
+  // ─────────────────────────────────────────────
 
-  .trust-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: clamp(10px,1.5vh,13px) clamp(10px,2vw,22px);
-    border-right: 1px solid rgba(255,255,255,.18);
-    white-space: nowrap;
-    min-height: 44px;            /* touch target */
-  }
-  .trust-item:last-child { border-right: none; }
+  const track = document.getElementById('jvc-tb-track');
+  if (!track) return;
 
-  /* On very small screens show 2 per row */
-  @media (max-width: 480px) {
-    .trust-item { flex: 1 1 50%; border-right: none; border-bottom: 1px solid rgba(255,255,255,.12); }
-    .trust-item:nth-last-child(-n+2) { border-bottom: none; }
-  }
+  // Wait for layout so offsetWidth is accurate
+  requestAnimationFrame(() => {
+    // Half the track = one group width (we duplicated items)
+    const groupWidth = track.scrollWidth / 2;
 
-  .trust-item svg  { width: 14px; height: 14px; flex-shrink: 0; opacity: .85; }
-  .trust-item span { font-family: var(--font-body); font-weight: 600; font-size: 12px; letter-spacing: .05em; color: var(--white); text-transform: uppercase; }
+    let pos = 0;
+    let raf = null;
 
-  @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-  @media (prefers-reduced-motion: reduce) { .trust-bar::before { animation: none; } }
-</style>
+    function tick() {
+      pos += SPEED;
+      if (pos >= groupWidth) pos = 0;   // seamless reset
+      track.style.transform = `translateX(-${pos}px)`;
+      raf = requestAnimationFrame(tick);
+    }
+
+    // Pause when tab is hidden (saves CPU)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        cancelAnimationFrame(raf);
+      } else {
+        raf = requestAnimationFrame(tick);
+      }
+    });
+
+    // Respect reduced motion — freeze but keep items visible
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    raf = requestAnimationFrame(tick);
+  });
+})();
+</script>

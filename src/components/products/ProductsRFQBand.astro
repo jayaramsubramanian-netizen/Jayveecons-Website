@@ -1,8 +1,8 @@
 ---
 /**
  * ProductsRfqBand.astro — closing CTA band
- * DARK navy gradient — matches ServicesCta and index.astro CTA band.
- * Two-column layout: copy left, buttons right (stacks on mobile).
+ * WHITE + blue grid background (matches light product sections)
+ * Trapezoidal buttons · E-3 typography · navy text on light bg
  */
 ---
 
@@ -23,46 +23,42 @@
     </div>
 
     <div class="rfq-actions reveal">
-      <a href="/contact" class="btn-primary">
+      <a href="/contact" class="rfq-btn rfq-btn-primary">
         Request a Quote
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
           <path d="M5 12h14M12 5l7 7-7 7"/>
         </svg>
       </a>
-      <a href="/contact?type=technical" class="btn-secondary">Technical Enquiry →</a>
+      <a href="/contact?type=technical" class="rfq-btn rfq-btn-secondary">
+        Technical Enquiry
+      </a>
     </div>
 
   </div>
 </section>
 
 <style>
-  /* ── Section — dark navy gradient, closes the page ── */
+  /* ── Section — white + blue grid ── */
   .rfq-section {
     position: relative;
     overflow: hidden;
     padding-block: clamp(64px, 9vh, 104px);
-    background:
-      radial-gradient(ellipse 100% 60% at 20% -10%, rgba(140,180,255,.14) 0%, transparent 55%),
-      radial-gradient(ellipse 60%  80% at 90% 110%, rgba(8,56,146,.25) 0%, transparent 55%),
-      linear-gradient(145deg, #0e2454 0%, #163060 50%, #1a3875 100%);
+    background-color: #f8fafc;
+    background-image:
+      linear-gradient(rgba(8,56,146,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8,56,146,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    border-top: 1px solid rgba(8,56,146,.08);
   }
 
-  /* Subtle bottom radial glow */
+  /* Top crimson accent line */
   .rfq-section::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 60% 80% at 50% 110%, rgba(192,24,30,.1), transparent 60%);
-    pointer-events: none;
-  }
-
-  /* Top accent line */
-  .rfq-section::after {
-    content: '';
-    position: absolute;
     top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(192,24,30,.35) 50%, transparent);
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #c0181e 30%, #c0181e 70%, transparent);
+    pointer-events: none;
   }
 
   /* ── Container ── */
@@ -88,13 +84,13 @@
     }
   }
 
-  /* ── Copy ── */
+  /* ── Copy — dark text on light background ── */
   .rfq-eyebrow {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: .2em;
     text-transform: uppercase;
-    color: var(--crimson-l);
+    color: #c0181e;
     margin-bottom: 14px;
   }
 
@@ -104,17 +100,18 @@
     font-size: clamp(32px, 4.5vw, 58px);
     text-transform: uppercase;
     line-height: .97;
-    color: var(--white);
-    margin-bottom: 14px;
+    color: rgba(8,56,146,.9);
+    margin-bottom: 16px;
   }
-  .rfq-headline .accent { color: var(--crimson-l); }
+  .rfq-headline .accent { color: #c0181e; }
 
+  /* E-3 readability: 16px · 300 · dark navy */
   .rfq-sub {
     font-family: var(--font-body);
     font-size: clamp(14px, 1.5vw, 16px);
     font-weight: 300;
-    color: var(--fog);
-    line-height: 1.7;
+    color: #2a3550;
+    line-height: 1.75;
     max-width: 580px;
   }
 
@@ -122,58 +119,70 @@
   .rfq-actions {
     display: flex;
     flex-direction: row;
-    gap: 14px;
+    gap: clamp(20px, 3vw, 40px);
     flex-wrap: wrap;
     align-items: center;
   }
   @media (min-width: 1024px) {
     .rfq-actions {
       flex-direction: column;
-      align-items: flex-end;
-      gap: 12px;
+      align-items: flex-start;
+      gap: 14px;
     }
   }
 
-  /* ── Buttons — identical to ServicesCta ── */
-  .btn-primary {
+  /* ════════════════════════════════════════
+     TRAPEZOIDAL BUTTONS — matches AboutCTA
+  ════════════════════════════════════════ */
+  .rfq-btn {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: var(--crimson);
-    color: var(--white);
     font-family: var(--font-head);
     font-weight: 700;
     font-size: 15px;
     letter-spacing: .1em;
     text-transform: uppercase;
     text-decoration: none;
-    padding: 15px 36px;
-    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
-    transition: background .2s, transform .2s;
+    padding: 16px 44px;
     white-space: nowrap;
-    min-height: 44px;
+    cursor: pointer;
+    border: none;
+    transition: filter .2s, transform .2s;
+    clip-path: polygon(16px 0%, 100% 0%, calc(100% - 16px) 100%, 0% 100%);
+    min-height: 48px;
   }
-  .btn-primary:hover { background: var(--crimson-l); transform: translateX(2px); }
+  .rfq-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+  }
+  .rfq-btn:focus-visible {
+    outline: 2px solid #c0181e;
+    outline-offset: 3px;
+  }
 
-  .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    background: transparent;
-    color: var(--chrome);
-    font-family: var(--font-head);
-    font-weight: 600;
-    font-size: 15px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: 14px 36px;
-    border: 1px solid rgba(208,212,220,.2);
-    transition: color .2s, border-color .2s;
-    white-space: nowrap;
-    min-height: 44px;
+  /* Primary — crimson fill */
+  .rfq-btn-primary {
+    background: #c0181e;
+    color: #ffffff;
   }
-  .btn-secondary:hover { color: var(--white); border-color: rgba(208,212,220,.5); }
+
+  /* Secondary — navy fill (Option E dark, sits well on white bg) */
+  .rfq-btn-secondary {
+    background: #163060;
+    color: #e2ecf8;
+  }
+
+  /* Mobile: stack full-width, remove trapezoid */
+  @media (max-width: 560px) {
+    .rfq-actions { flex-direction: column; gap: 10px; width: 100%; }
+    .rfq-btn {
+      clip-path: none;
+      border-radius: 2px;
+      width: 100%;
+      justify-content: center;
+    }
+  }
 
   /* ── Reveal ── */
   .reveal {
@@ -182,7 +191,6 @@
     transition: opacity .65s ease, transform .65s ease;
   }
   .reveal.visible { opacity: 1; transform: none; }
-
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
   }

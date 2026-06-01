@@ -7,7 +7,9 @@
 
 export type ProductCategory = 'handling' | 'processing' | 'ancillary' | 'accessories';
 
-export interface SpecRow  { key: string; val: string; }
+export interface SpecRow     { key: string; val: string; }
+export interface ConfigCard  { name: string; desc: string; }
+
 export interface Product {
   id:          string;
   category:    ProductCategory;
@@ -19,6 +21,8 @@ export interface Product {
   fullDesc:    string;
   specs:       SpecRow[];
   features?:   SpecRow[];
+  configs?:    ConfigCard[];   // ← application configuration cards
+  platform?:   string;         // ← Vectrix platform callout HTML
   modalApps:   string[];
 }
 
@@ -124,7 +128,7 @@ export const products: Product[] = [
   {
     id:        'bucket-elevator-belt',
     category:  'handling',
-    name:      'Bucket Elevator — Belt Type',
+    name:      'Bucket Elevators',
     series:    'VECTOMEC™',
     shortDesc: 'Vertical elevation of flowable bulk materials using buckets mounted on a continuous belt. Ideal for light-to-medium density materials at high throughput.',
     image:     'images/products/bucket_elevator.png',
@@ -395,9 +399,9 @@ export const products: Product[] = [
   {
     id:        'hopper',
     category:  'ancillary',
-    name:      'Hoppers & Bins',
+    name:      'Hoppers & Storage',
     series:    'VECTOMEC™',
-    image:     '/images/products/classifier.png',
+    image:     '/images/products/hopper_screw_feeder.png',
 
     shortDesc: 'Fabricated storage and feed hoppers for material surge capacity and controlled feed to downstream equipment. Engineered geometry to prevent bridging and ratholing.',
     apps:      ['All sectors'],

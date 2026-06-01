@@ -12,7 +12,7 @@
   </div>
 
   <!-- SERVICE 1 — dark navy -->
-  <div class="svc-block dark" id="engineering">
+  <div class="svc-block light" id="engineering">
     <div class="sl-inner svc-inner">
       <div class="svc-num-col">
         <div class="svc-num">01</div>
@@ -37,7 +37,7 @@
   </div>
 
   <!-- SERVICE 2 — light -->
-  <div class="svc-block light" id="fabrication">
+  <div class="svc-block dark" id="fabrication">
     <div class="sl-inner svc-inner">
       <div class="svc-num-col">
         <div class="svc-num">02</div>
@@ -61,7 +61,7 @@
   </div>
 
   <!-- SERVICE 3 — dark navy -->
-  <div class="svc-block dark" id="erection">
+  <div class="svc-block light" id="erection">
     <div class="sl-inner svc-inner">
       <div class="svc-num-col">
         <div class="svc-num">03</div>
@@ -86,7 +86,7 @@
   </div>
 
   <!-- SERVICE 4 — light -->
-  <div class="svc-block light" id="parts">
+  <div class="svc-block dark" id="parts">
     <div class="sl-inner svc-inner">
       <div class="svc-num-col">
         <div class="svc-num">04</div>
@@ -111,7 +111,7 @@
   </div>
 
   <!-- SERVICE 5 — dark navy -->
-  <div class="svc-block dark" id="repairs">
+  <div class="svc-block light" id="repairs">
     <div class="sl-inner svc-inner">
       <div class="svc-num-col">
         <div class="svc-num">05</div>
@@ -158,12 +158,13 @@
 
 <style>
   /* ── Outer section — 1440px cap, centred ── */
-  .sl-section {
-    width: 100%;
-    max-width: 1440px;
-    margin-inline: auto;
-    overflow: hidden;
-  }
+ .sl-section {
+  width: 100%;
+  background:
+    radial-gradient(ellipse 100% 60% at 20% -10%, rgba(140,180,255,.14) 0%, transparent 55%),
+    radial-gradient(ellipse 60%  80% at 90% 110%, rgba(8,56,146,.25) 0%, transparent 55%),
+    linear-gradient(145deg, #0e2454 0%, #163060 50%, #1a3875 100%);
+}
 
   /* ── Each service block fills the capped column ── */
   .svc-block {
@@ -171,14 +172,11 @@
     border-left: 4px solid transparent;
     transition: border-left-color .3s;
   }
-  .svc-block:hover { border-left-color: var(--crimson); }
+  
 
   /* ── DARK background — navy gradient ── */
   .svc-block.dark {
-    background:
-      radial-gradient(ellipse 90% 70% at 65% 40%, rgba(8,56,146,0.85) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 60% at 5%  90%, rgba(192,24,30,.07) 0%, transparent 50%),
-      linear-gradient(145deg, #0e2454 0%, #163060 50%, #1a3875 100%);
+    background: transparent;
   }
 
   /* ── LIGHT background — white + blue grid ── */
@@ -193,6 +191,7 @@
   /* ── Section header block ── */
   .sl-header-block {
     padding-block: clamp(40px, 6vh, 64px) clamp(16px, 2vh, 24px);
+    background: transparent;
   }
 
   /* ── Shared inner container ── */
@@ -279,7 +278,8 @@
     align-items: center;
     gap: 20px;
     padding-bottom: clamp(16px, 2vw, 24px);
-    border-bottom: 1px solid rgba(51,96,184,.15);
+    border-bottom: 2px solid rgba(51,96,184,.15);
+    transition: border-color .3s;
   }
   @media (min-width: 768px) {
     .svc-num-col {
@@ -289,10 +289,13 @@
       padding-bottom: 0;
       padding-right: clamp(24px, 3vw, 40px);
       border-bottom: none;
-      border-right: 1px solid rgba(51,96,184,.15);
+       border-right: 2px solid rgba(51,96,184,.15);
+       transition: border-color .3s;
     }
   }
-
+.svc-block:not(.sl-header-block):hover .svc-num-col {
+  border-color: #c0181e;
+}
   .svc-num {
     font-family: var(--font-head);
     font-weight: 800;
@@ -451,9 +454,7 @@
   .svc-cta svg { width: 12px; height: 12px; }
 
 /* Border-left lights up when section scrolls in */
-  .svc-block.svc-active {
-    border-left-color: var(--crimson);
-  }
+ .svc-block.svc-active .svc-num-col { border-color: var(--crimson); }
 
   /* Ghost number brightens — same as .tl-active .tl-year */
   .dark.svc-active  .svc-num { color: rgba(192,24,30,.65); transition: color .5s ease; }
