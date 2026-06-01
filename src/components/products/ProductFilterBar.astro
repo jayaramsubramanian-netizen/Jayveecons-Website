@@ -1,9 +1,10 @@
 ---
 /**
  * ProductFilterBar.astro — sticky dark filter bar
- * Props: counts — build-time category counts from products.ts
- * JS: vanilla, no framework. Dispatches custom 'product-filter' event
- * that ProductGrid listens to. Keeps components decoupled.
+ * FIXES:
+ *   1. Search always visible — stacked below tabs on mobile
+ *   2. Search dispatches cat:'all' when query is non-empty
+ *      so ProductGrid searches across every category
  */
 interface Props {
   counts: {
@@ -17,7 +18,7 @@ const { counts } = Astro.props;
 const total = Object.values(counts).reduce((a, b) => a + b, 0);
 
 const tabs = [
-  { id: 'all',         label: 'All Products',        count: total          },
+  { id: 'all',         label: 'All Products',        count: total              },
   { id: 'handling',    label: 'Material Handling',    count: counts.handling    },
   { id: 'processing',  label: 'Material Processing',  count: counts.processing  },
   { id: 'ancillary',   label: 'Ancillary Equipment',  count: counts.ancillary   },
@@ -28,7 +29,7 @@ const tabs = [
 <div class="pfb-wrap" id="filter-bar" role="navigation" aria-label="Product category filter">
   <div class="pfb-inner">
 
-    <!-- Category tabs -->
+    <!-- Row 1: Category tabs -->
     <div class="pfb-tabs" role="tablist" aria-label="Filter products by category">
       {tabs.map((tab, i) => (
         <button
@@ -44,8 +45,8 @@ const tabs = [
       ))}
     </div>
 
-    <!-- Search -->
-    <div class="pfb-search">
+    <!-- Row 2 on mobile / inline on desktop: Search -->
+    <div class="pfb-search" role="search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <circle cx="11" cy="11" r="8"/>
         <line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -53,8 +54,8 @@ const tabs = [
       <input
         type="search"
         id="product-search"
-        placeholder="Search products…"
-        aria-label="Search products"
+        placeholder="Search all products…"
+        aria-label="Search all products"
         autocomplete="off"
         spellcheck="false"
       >
@@ -70,7 +71,7 @@ const tabs = [
 </div>
 
 <style>
-  /* ── Sticky dark bar — sits just below the fixed navbar (70px) ── */
+  /* ── Sticky dark bar ── */
   .pfb-wrap {
     position: sticky;
     top: 70px;
@@ -79,33 +80,40 @@ const tabs = [
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(51,96,184,.18);
-    /* Subtle crimson top accent line */
     box-shadow:
       0 1px 0 rgba(192,24,30,.25) inset,
       0 4px 20px rgba(0,0,0,.4);
   }
 
-  /* ── Inner layout ── */
+  /* ── Inner layout
+     Mobile   (<640px): two rows — tabs on top, search below
+     Desktop  (≥640px): single row — tabs left, search right
+  ── */
   .pfb-inner {
     width: 100%;
     max-width: 1440px;
     margin-inline: auto;
     padding-inline: 16px;
     box-sizing: border-box;
+    /* Mobile: stack rows */
     display: flex;
-    align-items: stretch;
-    gap: 0;
-    min-height: 52px;
+    flex-direction: column;
   }
   @media (min-width: 480px)  { .pfb-inner { padding-inline: 20px; } }
+  @media (min-width: 640px)  {
+    .pfb-inner {
+      flex-direction: row;   /* single row on desktop */
+      align-items: stretch;
+      min-height: 52px;
+    }
+  }
   @media (min-width: 768px)  { .pfb-inner { padding-inline: 32px; } }
   @media (min-width: 1024px) { .pfb-inner { padding-inline: 48px; } }
 
-  /* ── Tab list — scrollable on mobile ── */
+  /* ── Tab list ── */
   .pfb-tabs {
     display: flex;
     align-items: stretch;
-    gap: 0;
     overflow-x: auto;
     scrollbar-width: none;
     flex: 1;
@@ -118,7 +126,7 @@ const tabs = [
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    padding: 0 clamp(12px, 2vw, 24px);
+    padding: 0 clamp(10px, 2vw, 24px);
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: .1em;
@@ -131,13 +139,13 @@ const tabs = [
     white-space: nowrap;
     flex-shrink: 0;
     transition: color .2s, border-bottom-color .2s;
-    min-height: 52px;
-    /* Touch target */
+    min-height: 44px;
     min-width: 44px;
   }
-  .pfb-tab:hover                    { color: var(--fog); }
-  .pfb-tab.active                   { color: var(--white); border-bottom-color: var(--crimson); }
-  .pfb-tab:focus-visible            { outline: 2px solid var(--crimson); outline-offset: -2px; }
+  @media (min-width: 640px) { .pfb-tab { min-height: 52px; } }
+  .pfb-tab:hover       { color: var(--fog); }
+  .pfb-tab.active      { color: var(--white); border-bottom-color: var(--crimson); }
+  .pfb-tab:focus-visible { outline: 2px solid var(--crimson); outline-offset: -2px; }
 
   /* Count pill */
   .pfb-count {
@@ -149,27 +157,38 @@ const tabs = [
     transition: background .2s, color .2s;
     font-variant-numeric: tabular-nums;
   }
-  .pfb-tab.active .pfb-count {
-    background: var(--crimson);
-    color: var(--white);
-  }
+  .pfb-tab.active .pfb-count { background: var(--crimson); color: var(--white); }
 
-  /* ── Search — hidden on narrow mobile, shown at 480px ── */
+  /* ── Search
+     Mobile  (<640px): full-width row below tabs with top border
+     Desktop (≥640px): right-aligned inline, left border separator
+  ── */
   .pfb-search {
-    display: none;
+    display: flex;           /* ALWAYS visible — was display:none on mobile */
     align-items: center;
     gap: 8px;
-    padding: 8px 0 8px clamp(12px, 2vw, 20px);
-    border-left: 1px solid rgba(51,96,184,.15);
-    flex-shrink: 0;
+    /* Mobile: own row with border top */
+    padding: 8px 0;
+    border-top: 1px solid rgba(51,96,184,.12);
+    width: 100%;
   }
-  @media (min-width: 480px) { .pfb-search { display: flex; } }
+  @media (min-width: 640px) {
+    .pfb-search {
+      width: auto;
+      flex-shrink: 0;
+      /* Desktop: inline with left separator */
+      padding: 8px 0 8px clamp(12px, 2vw, 20px);
+      border-top: none;
+      border-left: 1px solid rgba(51,96,184,.15);
+    }
+  }
 
   .pfb-search > svg {
     width: 14px; height: 14px;
     color: #4a5a7a;
     flex-shrink: 0;
   }
+
   .pfb-search input {
     background: transparent;
     border: none;
@@ -177,24 +196,24 @@ const tabs = [
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: .08em;
-    width: clamp(100px, 14vw, 200px);
+    /* Mobile: expand to fill; Desktop: fixed width */
+    flex: 1;
+    min-width: 0;
     outline: none;
     padding: 4px 0;
     caret-color: var(--crimson);
+  }
+  @media (min-width: 640px) {
+    .pfb-search input { flex: none; width: clamp(100px, 14vw, 200px); }
   }
   .pfb-search input::placeholder { color: #3d4a60; }
 
   /* Clear button */
   .pfb-clear {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 2px;
-    color: #4a5a7a;
-    display: flex;
-    align-items: center;
-    transition: color .2s;
-    flex-shrink: 0;
+    background: none; border: none; cursor: pointer;
+    padding: 2px; color: #4a5a7a;
+    display: flex; align-items: center;
+    transition: color .2s; flex-shrink: 0;
   }
   .pfb-clear:hover { color: var(--fog); }
   .pfb-clear svg   { width: 12px; height: 12px; }
@@ -202,17 +221,27 @@ const tabs = [
 </style>
 
 <script>
-  const bar        = document.getElementById('filter-bar')!;
-  const tabs       = bar.querySelectorAll<HTMLButtonElement>('.pfb-tab');
-  const searchEl   = document.getElementById('product-search') as HTMLInputElement;
-  const clearBtn   = document.getElementById('search-clear') as HTMLButtonElement;
+  const bar      = document.getElementById('filter-bar')!;
+  const tabs     = bar.querySelectorAll<HTMLButtonElement>('.pfb-tab');
+  const searchEl = document.getElementById('product-search') as HTMLInputElement;
+  const clearBtn = document.getElementById('search-clear') as HTMLButtonElement;
 
-  // Dispatch a custom event — ProductGrid listens to this
+  /**
+   * dispatch — sends the product-filter event to ProductGrid.
+   *
+   * BUG FIX #2: When a search query is present, always dispatch
+   * cat:'all' so the grid searches across every category regardless
+   * of which tab is active. When query is empty, use the active tab.
+   */
   function dispatch(cat: string, query: string) {
+    const effectiveCat = query.length > 0 ? 'all' : cat;
     document.dispatchEvent(new CustomEvent('product-filter', {
-      detail: { cat, query }
+      detail: { cat: effectiveCat, query }
     }));
   }
+
+  // Active tab tracker (separate from what we dispatch)
+  let activeCat = 'all';
 
   // ── Tab clicks ──
   tabs.forEach(tab => {
@@ -223,21 +252,19 @@ const tabs = [
       });
       tab.classList.add('active');
       tab.setAttribute('aria-selected', 'true');
-      dispatch(tab.dataset.cat!, searchEl.value.trim());
-
-      // Scroll active tab into view on mobile
+      activeCat = tab.dataset.cat!;
+      dispatch(activeCat, searchEl.value.trim());
       tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     });
   });
 
-  // ── Search input ──
+  // ── Search input — debounced ──
   let timer: ReturnType<typeof setTimeout>;
   searchEl.addEventListener('input', () => {
     clearTimeout(timer);
     const q = searchEl.value.trim();
     clearBtn.hidden = q.length === 0;
     timer = setTimeout(() => {
-      const activeCat = bar.querySelector<HTMLButtonElement>('.pfb-tab.active')?.dataset.cat ?? 'all';
       dispatch(activeCat, q);
     }, 180);
   });
@@ -246,7 +273,6 @@ const tabs = [
   clearBtn.addEventListener('click', () => {
     searchEl.value = '';
     clearBtn.hidden = true;
-    const activeCat = bar.querySelector<HTMLButtonElement>('.pfb-tab.active')?.dataset.cat ?? 'all';
     dispatch(activeCat, '');
     searchEl.focus();
   });
