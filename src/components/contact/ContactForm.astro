@@ -11,7 +11,8 @@
     </div>
     <h2 class="form-title">Ready to Build <span class="accent">Something Great</span></h2>
 
-    <div id="form-body">
+    <form id="rfq-form" novalidate>
+      <div id="form-body">
       <!-- Section: Your Details -->
       <div class="form-section-title">Your Details</div>
       <div class="form-row">
@@ -95,11 +96,17 @@
       </div>
 
       <p class="form-note">* Required fields. Your information is used solely to respond to your enquiry and is never shared with third parties.</p>
-      <button class="btn-submit" type="button" onclick="handleSubmit()">
+      <div class="honeypot" aria-hidden="true">
+        <label for="website">Website</label>
+        <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+      <p class="form-error" id="form-error" role="alert" hidden></p>
+      <button class="btn-submit" type="submit">
         Send Enquiry
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
-    </div>
+      </div>
+    </form>
 
     <!-- Success state -->
     <div class="form-success" id="form-success">
@@ -261,6 +268,8 @@
     color: #5a6478;
     margin-top: 8px;
   }
+  .honeypot { position: absolute; left: -9999px; }
+  .form-error { color: #ffb4b4; font-family: var(--font-body); font-size: 14px; margin: 12px 0 0; }
 
   /* ── Submit button ── */
   .btn-submit {
@@ -315,32 +324,50 @@
 </style>
 
 <script>
-  function handleSubmit() {
-    const required = ['first-name', 'last-name', 'email', 'company', 'enquiry-type', 'message'];
-    let valid = true;
+  const form = document.getElementById('rfq-form') as HTMLFormElement | null;
 
-    required.forEach(id => {
-      const el = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-      if (!el) return;
-      if (!el.value.trim()) {
-        el.style.borderColor = 'rgba(192,24,30,.8)';
-        if (valid) el.focus();
-        valid = false;
-      } else {
-        el.style.borderColor = '';
+  form?.addEventListener('submit', async event => {
+    event.preventDefault();
+    const error = document.getElementById('form-error') as HTMLParagraphElement | null;
+    const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    if (error) error.hidden = true;
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending…';
+    }
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok || !result?.ok) throw new Error(result?.error || 'Unable to send your enquiry.');
+
+      const formBody = document.getElementById('form-body');
+      const formSuccess = document.getElementById('form-success');
+      const formWrap = document.getElementById('rfq-form-wrap');
+      if (formBody) formBody.style.display = 'none';
+      if (formSuccess) formSuccess.style.display = 'block';
+      if (formWrap) window.scrollTo({ top: formWrap.offsetTop - 100, behavior: 'smooth' });
+    } catch (exception) {
+      if (error) {
+        error.textContent = exception instanceof Error ? exception.message : 'Unable to send your enquiry. Please try again.';
+        error.hidden = false;
       }
-    });
-
-    if (!valid) return;
-
-    const formBody    = document.getElementById('form-body');
-    const formSuccess = document.getElementById('form-success');
-    const formWrap    = document.getElementById('rfq-form-wrap');
-
-    if (formBody)    formBody.style.display    = 'none';
-    if (formSuccess) formSuccess.style.display = 'block';
-    if (formWrap)    window.scrollTo({ top: formWrap.offsetTop - 100, behavior: 'smooth' });
-  }
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Send Enquiry';
+      }
+    }
+  });
 
   document.querySelectorAll('.form-control').forEach(el => {
     el.addEventListener('input', () => (el as HTMLElement).style.borderColor = '');

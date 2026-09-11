@@ -106,7 +106,7 @@ export const products: Product[] = [
     name:      'Belt Conveyor',
     series:    'VECTOMEC™',
     shortDesc: 'Continuous loop belt on powered and idler pulleys — the workhorse of bulk material transport across long horizontal distances and gentle inclines.',
-    image:     'images/belt_con.jpg',
+    image:     '/images/belt_con.jpg',
     apps:      ['Mining', 'Cement', 'Aggregates', 'Food'],
     fullDesc:  'Belt conveyors are the most widely used bulk material transport system in the world. Jayveecons designs and builds complete belt conveyor systems including the belt, structure, pulleys, idlers, drive system, and take-up arrangement, tailored to your throughput, lump size, and installation geometry.',
     specs: [
@@ -131,7 +131,7 @@ export const products: Product[] = [
     name:      'Bucket Elevators',
     series:    'VECTOMEC™',
     shortDesc: 'Vertical elevation of flowable bulk materials using buckets mounted on a continuous belt. Ideal for light-to-medium density materials at high throughput.',
-    image:     'images/products/bucket_elevator.png',
+    image:     '/images/products/bucket_elevator.png',
     apps:      ['Cement', 'Grain', 'Fertiliser'],
     fullDesc:  'Belt-type bucket elevators are used extensively in cement, grain, and fertiliser industries to elevate bulk materials vertically with minimal material degradation. Jayveecons designs and fabricates complete elevator assemblies including casing, head and boot sections, belting, buckets, drive and tensioning arrangements.',
     specs: [
@@ -149,7 +149,7 @@ export const products: Product[] = [
     name:      'Bucket Elevator — Chain Type',
     series:    'VECTOMEC™',
     shortDesc: 'Heavy-duty vertical elevation using chain-mounted buckets. Handles hot, abrasive, and heavy materials that exceed belt-type limitations.',
-    image:     'images/be-chain.jpg',
+    image:     '/images/be-chain.jpg',
     apps:      ['Mining', 'Steel', 'Cement'],
     fullDesc:  'Where belt-type elevators reach their limits — extreme heat, heavy abrasive lumps, and high bulk densities — chain-type bucket elevators take over. Jayveecons fabricates both single-strand and double-strand chain elevator configurations, with forged steel or cast link chain, heavy-duty fabricated steel buckets, and robust head and boot section construction.',
     specs: [
@@ -201,7 +201,7 @@ export const products: Product[] = [
     name:      'Vertical Shaft Kiln (VSK)',
     series:    'VECTOMEC™',
     shortDesc: 'Stationary vertical calcination shaft for small-to-medium scale cement and lime production. The technology that founded Jayveecons in 1987.',
-    image:     'images/cement_kiln.jpg',
+    image:     '/images/cement_kiln.jpg',
     apps:      ['Cement — Mini plants', 'Lime', 'Calcination'],
     fullDesc:  'The Vertical Shaft Kiln is the technology that founded Jayveecons in 1987 — and it remains our deepest area of expertise. Raw meal is nodulised, mixed with solid fuel, and charged from the top. As nodules descend under gravity through progressively hotter zones, calcination occurs and clinker forms. The VSK\'s key advantages over rotary kilns are significantly lower capital cost, simpler civil works, lower power consumption, and profitability at 50–300 TPD.',
     specs: [
@@ -228,7 +228,7 @@ export const products: Product[] = [
     name:      'Ball Mill / Grinding Mill',
     series:    'VECTOMEC™',
     shortDesc: 'Rotating cylindrical vessel with grinding media that reduces material to fine powder. Used in cement, mining, and mineral processing for particle size reduction.',
-    image:     'images/products/ball_mill.png',
+    image:     '/images/products/ball_mill.png',
     apps:      ['Cement', 'Mining', 'Ceramics'],
     fullDesc:  'Ball mills are the standard in cement and mineral grinding. A cylindrical mill shell lined with wear-resistant liners rotates on trunnion bearings, tumbling steel or ceramic grinding media against the feed material to produce fine powder. Jayveecons designs both overflow and grate-discharge configurations, with open-circuit and closed-circuit arrangements.',
     specs: [
@@ -555,7 +555,7 @@ export const products: Product[] = [
     name:      'Idler Rollers',
     series:    'VECTOMEC™',
     shortDesc: 'In-house manufactured carrying, return, impact, and training idlers for belt conveyor systems. Precision-balanced for long service life.',
-    image:     'images/idler.jpg',
+    image:     '/images/idler.jpg',
     apps:      ['Belt conveyors', 'OEM replacement'],
     fullDesc:  'Jayveecons manufactures idler rollers in-house on CNC equipment, using precision-selected deep-groove ball bearings, labyrinth seals, and precision-turned shells. All rollers are spin-balanced before despatch to eliminate vibration at operating speed.',
     specs: [

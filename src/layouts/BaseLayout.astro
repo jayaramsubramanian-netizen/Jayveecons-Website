@@ -49,7 +49,7 @@ const {
   description,
   keywords,
   currentPath = '/',
-  ogImage     = 'https://www.jayveecons.com/images/og-default.jpg',
+  ogImage     = 'https://www.jayveecons.com/images/logo.png',
 } = Astro.props;
 
 // Canonical URL — strip trailing slash except for root
@@ -91,9 +91,9 @@ const canonicalURL = new URL(
   <meta name="twitter:image"       content={ogImage} />
 
   <!-- Favicon -->
-  <link rel="icon"             type="image/svg+xml" href="/favicon.svg" />
-  <link rel="icon"             type="image/png"     href="/favicon.png" />
-  <link rel="apple-touch-icon"                      href="/apple-touch-icon.png" />
+  <link rel="icon"             type="image/svg+xml" href="/images/favicon.svg" />
+  <link rel="alternate icon"   type="image/x-icon"  href="/images/favicon.ico" />
+  <link rel="manifest"                              href="/site.webmanifest" />
 
   <!-- Google Fonts — loaded once here, shared by all pages -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
