@@ -1,81 +1,18 @@
 ---
-import BaseLayout          from '../layouts/BaseLayout.astro';
-import ProductsPageHeader  from '../components/products/ProductsPageHeader.astro';
-import ProductFilterBar    from '../components/products/ProductFilterBar.astro';
-import ProductGrid         from '../components/products/ProductGrid.astro';
-import ProductsRfqBand     from '../components/products/ProductsRfqBand.astro';
-import ProductModal        from '../components/products/ProductModal.astro';
-import { products }        from '../data/products';
-
-const seo = {
-  title: 'Products — VECTOMEC™ Equipment Line | Jayveecons Group',
-  description: 'The complete VECTOMEC™ catalogue — material handling systems, processing equipment, and ancillary hardware for cement, mining, food, and waste management industries. Est. 1987, Bengaluru, India.',
-  keywords: [
-    'bulk material handling equipment India',
-    'screw conveyor manufacturer India',
-    'bucket elevator manufacturer India',
-    'belt conveyor manufacturer Karnataka',
-    'VSK vertical shaft kiln India',
-    'ball mill manufacturer India',
-    'crusher manufacturer India',
-    'VECTOMEC equipment',
-    'Jayveecons products',
-    'industrial equipment Bengaluru',
-  ].join(', '),
-};
-
-// Build category counts at build time — zero client JS needed
-const categories = ['handling', 'processing', 'ancillary', 'accessories'] as const;
-type Cat = typeof categories[number];
-const counts = categories.reduce<Record<Cat, number>>((acc, c) => {
-  acc[c] = products.filter(p => p.category === c).length;
-  return acc;
-}, {} as Record<Cat, number>);
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-
 <BaseLayout
-  title={seo.title}
-  description={seo.description}
-  keywords={seo.keywords}
+  title="Products — VECTOMEC™ Equipment | Jayveecons Group"
+  description="Explore Jayveecons VECTOMEC™ bulk material handling and processing equipment. Contact our Malur, Karnataka engineering team for product information, specifications, and a quote."
+  keywords="VECTOMEC equipment, bulk material handling equipment India, screw conveyor, bucket elevator, ball mill, Jayveecons products"
   currentPath="/products"
 >
-  <!-- 1. Page header — DARK navy gradient -->
-  <ProductsPageHeader />
-
-  <!-- 2. Sticky filter bar + search — thin dark bar -->
-  <ProductFilterBar counts={counts} />
-
-  <!-- 3. All product cards — alternating dark/light by category -->
-  <ProductGrid products={products} />
-
-  <!-- 4. RFQ closing band — DARK navy gradient -->
-  <ProductsRfqBand />
-
-  <!--
-    5. Modal — single instance, populated by JS on card click.
-       Rendered once in the DOM; content swapped via data attributes.
-       client:load so the dialog JS is available immediately after paint.
-  -->
-  <ProductModal />
-
-  <!-- JSON-LD structured data — rendered at build time -->
-  <script type="application/ld+json" is:inline>{JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    "name": "VECTOMEC™ Equipment Catalogue — Jayveecons Group",
-    "description": seo.description,
-    "url": "https://www.jayveecons.com/products",
-    "numberOfItems": products.length,
-    "itemListElement": products.map((p, i) => ({
-      "@type": "ListItem",
-      "position": i + 1,
-      "name": p.name,
-      "description": p.shortDesc,
-      "url": `https://www.jayveecons.com/products#${p.id}`,
-    }))
-  })}</script>
-
+  <section style="min-height:60vh; display:flex; align-items:center; justify-content:center; text-align:center; padding:48px 24px; background:#f8fafc;">
+    <div>
+      <p style="font-family:var(--font-mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#c0181e; margin-bottom:16px;">VECTOMEC™ Equipment Line</p>
+      <h1 style="font-family:var(--font-head); font-size:clamp(32px,5vw,56px); font-weight:800; text-transform:uppercase; color:rgba(8,56,146,.9); margin-bottom:16px;">Product Catalogue<br><span style="color:#c0181e;">Coming Soon</span></h1>
+      <p style="font-size:16px; font-weight:300; color:#2a3550; max-width:480px; line-height:1.7; margin-bottom:32px;">We are preparing a full interactive catalogue of VECTOMEC™ equipment. In the meantime, contact us directly for product information and quotes.</p>
+      <a href="/contact" style="display:inline-flex; align-items:center; gap:10px; background:#c0181e; color:#fff; font-family:var(--font-head); font-weight:700; font-size:14px; letter-spacing:.1em; text-transform:uppercase; padding:16px 44px; text-decoration:none; clip-path:polygon(16px 0%,100% 0%,calc(100% - 16px) 100%,0% 100%);">Request a Quote →</a>
+    </div>
+  </section>
 </BaseLayout>
-
-
-

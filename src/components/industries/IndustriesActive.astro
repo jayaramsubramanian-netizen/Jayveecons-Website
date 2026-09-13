@@ -19,7 +19,7 @@
     <div class="ind-card-grid" role="list">
 
       <!-- 01 CEMENT -->
-      <article class="ind-card reveal" role="listitem" data-industry-id="cement">
+      <article class="ind-card reveal" role="listitem" data-industry-id="cement" tabindex="0" aria-haspopup="dialog" aria-controls="industry-modal" aria-label="View details for Cement industry">
         <div class="ind-card-num">01 / 05</div>
         <div class="ind-card-status">Active — Core Sector Since 1987</div>
         <h3 class="ind-card-name">Cement</h3>
@@ -37,7 +37,7 @@
       </article>
 
       <!-- 02 MINING -->
-      <article class="ind-card reveal" role="listitem" data-industry-id="mining">
+      <article class="ind-card reveal" role="listitem" data-industry-id="mining" tabindex="0" aria-haspopup="dialog" aria-controls="industry-modal" aria-label="View details for Mining and Aggregates industry">
         <div class="ind-card-num">02 / 05</div>
         <div class="ind-card-status">Active</div>
         <h3 class="ind-card-name">Mining &amp; Aggregates</h3>
@@ -55,7 +55,7 @@
       </article>
 
       <!-- 03 FOOD -->
-      <article class="ind-card reveal" role="listitem" data-industry-id="food">
+      <article class="ind-card reveal" role="listitem" data-industry-id="food" tabindex="0" aria-haspopup="dialog" aria-controls="industry-modal" aria-label="View details for Food Processing industry">
         <div class="ind-card-num">03 / 05</div>
         <div class="ind-card-status">Active</div>
         <h3 class="ind-card-name">Food Processing</h3>
@@ -73,7 +73,7 @@
       </article>
 
       <!-- 04 WASTE -->
-      <article class="ind-card reveal" role="listitem" data-industry-id="waste">
+      <article class="ind-card reveal" role="listitem" data-industry-id="waste" tabindex="0" aria-haspopup="dialog" aria-controls="industry-modal" aria-label="View details for Waste Management industry">
         <div class="ind-card-num">04 / 05</div>
         <div class="ind-card-status">Active — Integrated Equipment Solutions</div>
         <h3 class="ind-card-name">Waste Management</h3>
@@ -91,7 +91,7 @@
       </article>
 
       <!-- 05 STEEL -->
-      <article class="ind-card reveal" role="listitem" data-industry-id="steel">
+      <article class="ind-card reveal" role="listitem" data-industry-id="steel" tabindex="0" aria-haspopup="dialog" aria-controls="industry-modal" aria-label="View details for Steel, Coal and Fertilizers industry">
         <div class="ind-card-num">05 / 05</div>
         <div class="ind-card-status">Active — Built for Extreme Conditions</div>
         <h3 class="ind-card-name">Steel, Coal &amp; Fertilizers</h3>
@@ -118,7 +118,7 @@ window.__INDUSTRIES__ = {
   cement: {
     id: 'cement',
     num: '01',
-    image: '/images/industries/vsk-complete-system.png',
+    image: '/images/industries/vsk-complete-system.webp',
     sector: 'Cement Industry — Our Founding Sector',
     status: 'Active — Core Sector Since 1987',
     headline: 'Built on Process. Engineered for Performance.',
@@ -141,7 +141,7 @@ window.__INDUSTRIES__ = {
   mining: {
     id: 'mining',
     num: '02',
-    image: '/images/industries/ind_mining.png',
+    image: '/images/industries/ind_mining.webp',
     sector: 'Mining, Ore Processing & Aggregates',
     status: 'Active',
     headline: 'Built for Throughput. Engineered for Material Control.',
@@ -158,7 +158,7 @@ window.__INDUSTRIES__ = {
   food: {
     id: 'food',
     num: '03',
-    image: '/images/industries/ind_foodandagri.png',
+    image: '/images/industries/ind_foodandagri.webp',
     sector: 'Food Processing & Agriculture',
     status: 'Active',
     headline: 'Built for Purity. Engineered for Safety.',
@@ -175,7 +175,7 @@ window.__INDUSTRIES__ = {
   waste: {
     id: 'waste',
     num: '04',
-    image: '/images/industries/ind_waste.png',
+    image: '/images/industries/ind_waste.webp',
     sector: 'Waste Management & Recovery',
     status: 'Active — Integrated Equipment Solutions',
     headline: 'Built for Recovery. Engineered for Transformation.',
@@ -192,7 +192,7 @@ window.__INDUSTRIES__ = {
   steel: {
     id: 'steel',
     num: '05',
-    image: '/images/industries/ind_steel_and_ceramic.png',
+    image: '/images/industries/ind_steel_and_ceramic.webp',
     sector: 'Steel · Coal · Refractory · Fertilizers',
     status: 'Active — Built for Extreme Conditions',
     headline: 'Built for Extreme. Engineered for Continuity.',
@@ -216,11 +216,29 @@ window.__INDUSTRIES__ = {
   }, { threshold: 0.07 });
   document.querySelectorAll('.ind-active-section .reveal').forEach(el => obs.observe(el));
 
-  // Wire buttons to modal
+  const openIndustryModal = (id: string) => {
+    document.dispatchEvent(new CustomEvent('open-industry-modal', { detail: { id } }));
+  };
+
+  // Both the detail button and the non-interactive parts of each card open its modal.
   document.querySelectorAll('.ind-card-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-industry-id');
-      document.dispatchEvent(new CustomEvent('open-industry-modal', { detail: { id } }));
+      if (id) openIndustryModal(id);
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>('.ind-card').forEach(card => {
+    const open = () => openIndustryModal(card.dataset.industryId!);
+    card.addEventListener('click', (event) => {
+      if ((event.target as Element).closest('a, button, input, select, textarea')) return;
+      open();
+    });
+    card.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        open();
+      }
     });
   });
 </script>
@@ -276,6 +294,7 @@ window.__INDUSTRIES__ = {
     flex-direction: column;
     gap: 0;
     transition: border-top-color .25s, box-shadow .25s, transform .25s;
+    cursor: pointer;
   }
   /* metallic-sheen */
   .ind-card::before {
@@ -299,6 +318,7 @@ window.__INDUSTRIES__ = {
     box-shadow: 0 10px 32px rgba(0,0,0,.32);
     transform: translateY(-3px);
   }
+  .ind-card:focus-visible { outline: 3px solid var(--crimson); outline-offset: 3px; }
 
   .ind-card-num {
     font-family: var(--font-mono);

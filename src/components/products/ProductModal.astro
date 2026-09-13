@@ -383,7 +383,7 @@
     // Image — use path exactly from products.ts
     resetImage();
     if (p.image) {
-      loadImage(p.image, p.name);
+      loadImage(p.image.replace(/\.png$/i, '.webp'), p.name);
     } else {
       showPlaceholder(p.name);
     }

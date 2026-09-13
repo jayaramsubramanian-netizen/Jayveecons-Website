@@ -18,7 +18,13 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      filter: (page) => !page.includes("/thank-you"),
+      // Keep temporary/legacy duplicate routes out of search results.
+      filter: (page) => ![
+        "/thank-you",
+        "/products1",
+        "/industry",
+        "/api/",
+      ].some((path) => page.includes(path)),
     }),
   ],
 

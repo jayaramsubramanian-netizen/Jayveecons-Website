@@ -135,7 +135,7 @@ const blockClass = [
   {!hasProductGrid && imgSrc && (
     <div class="ind-visual">
       <img
-        src={imgSrc}
+        src={imgSrc.replace(/\.png$/i, '.webp')}
         alt={imgAlt}
         loading={imgEager ? 'eager' : 'lazy'}
         width="900"
@@ -156,7 +156,7 @@ const blockClass = [
           <div class="pgp-item">
             <img
               class="pgp-photo"
-              src={item.imgSrc}
+              src={item.imgSrc.replace(/\.png$/i, '.webp')}
               alt={item.imgAlt}
               loading="lazy"
               width="400"

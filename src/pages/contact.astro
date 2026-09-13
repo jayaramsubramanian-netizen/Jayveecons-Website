@@ -55,6 +55,7 @@ const seo = {
 
   <MapEmbed />
 
+  <Fragment slot="head">
   <script type="application/ld+json" is:inline>{JSON.stringify({
     "@context": "https://schema.org",
     "@graph": [
@@ -117,6 +118,7 @@ const seo = {
       }
     ]
   })}</script>
+  </Fragment>
 
 </BaseLayout>
 

@@ -42,6 +42,7 @@ interface Props {
   keywords?:    string;
   currentPath?: string;
   ogImage?:     string;
+  noindex?:     boolean;
 }
 
 const {
@@ -50,6 +51,7 @@ const {
   keywords,
   currentPath = '/',
   ogImage     = 'https://www.jayveecons.com/images/logo.png',
+  noindex     = false,
 } = Astro.props;
 
 // Canonical URL — strip trailing slash except for root
@@ -69,7 +71,7 @@ const canonicalURL = new URL(
   <title>{title}</title>
   <meta name="description" content={description} />
   {keywords && <meta name="keywords" content={keywords} />}
-  <meta name="robots"      content="index, follow" />
+  <meta name="robots"      content={noindex ? 'noindex, follow' : 'index, follow'} />
   <meta name="author"      content="Jayveecons Group" />
   <link rel="canonical"    href={canonicalURL} />
 
@@ -102,6 +104,9 @@ const canonicalURL = new URL(
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet"
   />
+
+  <!-- Page-specific structured data and other head metadata. -->
+  <slot name="head" />
 </head>
 
 <body>

@@ -62,10 +62,14 @@ function byCategory(cat: string) {
                 data-search={`${p.name} ${p.apps.join(' ')} ${p.modalApps.join(' ')}`.toLowerCase()}
                 role="listitem"
                 id={p.id}
+                tabindex="0"
+                aria-haspopup="dialog"
+                aria-controls="product-modal"
+                aria-label={`View details for ${p.name}`}
               >
                 <div class="prod-img" aria-hidden="true">
                   {p.image
-                    ? <img src={p.image} alt={p.name} loading="lazy" decoding="async" width="400" height="220"/>
+                    ? <img src={p.image.replace(/\.png$/i, '.webp')} alt={p.name} loading="lazy" decoding="async" width="400" height="220" />
                     : <div class="prod-img-placeholder">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
                       </div>
@@ -204,6 +208,7 @@ function byCategory(cat: string) {
   .prod-card {
     display: flex; flex-direction: column;
     position: relative; overflow: hidden;
+    cursor: pointer;
     border-radius: 4px;
     border-left: 3px solid transparent;
     transition: border-left-color .3s, transform .2s, box-shadow .2s;
@@ -226,6 +231,7 @@ function byCategory(cat: string) {
   }
 
   .prod-card:hover { border-left-color: #c0181e; transform: translateY(-2px); }
+  .prod-card:focus-visible { outline: 3px solid var(--crimson); outline-offset: 3px; }
 
   /* ── LIGHT section → BLUE GRADIENT card ── */
   .cat-section--light .prod-card {
@@ -436,6 +442,22 @@ function byCategory(cat: string) {
   document.querySelectorAll<HTMLButtonElement>('.prod-detail-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.dispatchEvent(new CustomEvent('open-product-modal', { detail: { id: btn.dataset.productId! } }));
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>('.prod-card').forEach(card => {
+    const open = () => document.dispatchEvent(new CustomEvent('open-product-modal', {
+      detail: { id: card.dataset.id! }
+    }));
+    card.addEventListener('click', (event) => {
+      if ((event.target as Element).closest('a, button, input, select, textarea')) return;
+      open();
+    });
+    card.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        open();
+      }
     });
   });
 </script>
