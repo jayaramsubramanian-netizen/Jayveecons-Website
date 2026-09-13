@@ -13,7 +13,6 @@
     "npm": ">=9.6.5"
   },
   "dependencies": {
-    "@astrojs/node": "^11.1.4",
     "@astrojs/sitemap": "^3.7.3",
     "astro": "^7.2.6",
     "nodemailer": "^9.0.5"
