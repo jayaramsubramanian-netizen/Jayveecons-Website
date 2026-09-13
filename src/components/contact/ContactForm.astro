@@ -1,5 +1,5 @@
 ---
-// ContactForm.astro — no imports needed, pure HTML + CSS component
+// ContactForm.astro — EmailJS client-side form submission
 ---
 
 <div class="reveal">
@@ -121,7 +121,6 @@
 </div>
 
 <style>
-  /* ── Form wrapper ── */
   .rfq-form-wrap {
     background:
       radial-gradient(ellipse 100% 60% at 20% -10%, rgba(140,180,255,.14) 0%, transparent 55%),
@@ -134,238 +133,118 @@
   @media (min-width: 768px)  { .rfq-form-wrap { padding: 36px; } }
   @media (min-width: 1024px) { .rfq-form-wrap { padding: 44px; } }
 
-  /* ── Eyebrow ── */
-  .form-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .form-eyebrow-line {
-    width: 30px;
-    height: 2px;
-    background: var(--crimson);
-    flex-shrink: 0;
-  }
-  .form-eyebrow span {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--crimson-l);
-  }
+  .form-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .form-eyebrow-line { width: 30px; height: 2px; background: var(--crimson); flex-shrink: 0; }
+  .form-eyebrow span { font-family: var(--font-mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--crimson-l); }
 
-  /* ── Heading ── */
-  .form-title {
-    font-family: var(--font-head);
-    font-weight: 800; 
-    font-size:clamp(32px,4.5vw,56px);
-    line-height: 1;
-    letter-spacing: .03em;
-    text-transform: uppercase;
-    color: var(--white);
-    margin-bottom: 24px;
-  }
+  .form-title { font-family: var(--font-head); font-weight: 800; font-size:clamp(32px,4.5vw,56px); line-height: 1; letter-spacing: .03em; text-transform: uppercase; color: var(--white); margin-bottom: 24px; }
   @media (min-width: 480px)  { .form-title { font-size: 30px; } }
   @media (min-width: 768px)  { .form-title { font-size: 36px; margin-bottom: 32px; } }
   @media (min-width: 1024px) { .form-title { font-size: 40px; margin-bottom: 36px; } }
   .form-title .accent { color: var(--crimson-l); }
 
-  /* ── Section dividers ── */
-  .form-section-title {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: #ff7070;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(51,96,184,.15);
-    margin-bottom: 16px;
-    margin-top: 8px;
-  }
+  .form-section-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #ff7070; padding-bottom: 10px; border-bottom: 1px solid rgba(51,96,184,.15); margin-bottom: 16px; margin-top: 8px; }
 
-  /* ── Layout: single column → two columns at 480px ── */
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-    margin-bottom: 0;
-  }
-  @media (min-width: 480px) {
-    .form-row { grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-  }
+  .form-row { display: grid; grid-template-columns: 1fr; gap: 0; margin-bottom: 0; }
+  @media (min-width: 480px) { .form-row { grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; } }
 
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    margin-bottom: 16px;
-  }
+  .form-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px; }
 
-  /* ── Labels ── */
-  .form-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--chrome);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+  .form-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--chrome); display: flex; align-items: center; gap: 5px; }
   .form-label .req { color: var(--crimson-l); }
 
-  /* ── Inputs — white background, dark text ── */
-  .form-control {
-    background: #ffffff;
-    border: 1px solid #d0d4dc;
-    color: #1a1d24;
-    font-family: var(--font-body);
-    font-size: 14px;
-    font-weight: 400;
-    padding: 12px 16px;
-    outline: none;
-    transition: border-color .2s, box-shadow .2s;
-    width: 100%;
-    -webkit-appearance: none;
-    appearance: none;
-    border-radius: 6px;
-    box-sizing: border-box;
-  }
-  .form-control:focus {
-    border-color: var(--crimson);
-    box-shadow: 0 0 0 3px rgba(192,24,30,.15);
-    background: #ffffff;
-  }
+  .form-control { background: #ffffff; border: 1px solid #d0d4dc; color: #1a1d24; font-family: var(--font-body); font-size: 14px; font-weight: 400; padding: 12px 16px; outline: none; transition: border-color .2s, box-shadow .2s; width: 100%; -webkit-appearance: none; appearance: none; border-radius: 6px; box-sizing: border-box; }
+  .form-control:focus { border-color: var(--crimson); box-shadow: 0 0 0 3px rgba(192,24,30,.15); background: #ffffff; }
   .form-control::placeholder { color: #9ca3b0; }
-  /* Select options still need dark bg for readability in browser dropdowns */
   .form-control option { background: #ffffff; color: #1a1d24; }
-  textarea.form-control  { resize: vertical; min-height: 110px; line-height: 1.6; }
-  select.form-control    { cursor: pointer; }
+  textarea.form-control { resize: vertical; min-height: 110px; line-height: 1.6; }
+  select.form-control { cursor: pointer; }
 
-  /* ── Checkboxes ── */
   .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
-  .checkbox-item  { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-  .checkbox-item input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: var(--crimson);
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-  .checkbox-item span {
-    font-family: var(--font-body);
-    font-size: 14px;
-    font-weight: 300;
-    color: var(--fog);
-  }
+  .checkbox-item { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .checkbox-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--crimson); cursor: pointer; flex-shrink: 0; }
+  .checkbox-item span { font-family: var(--font-body); font-size: 14px; font-weight: 300; color: var(--fog); }
 
-  /* ── Note ── */
-  .form-note {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: .05em;
-    color: #5a6478;
-    margin-top: 8px;
-  }
+  .form-note { font-family: var(--font-mono); font-size: 11px; letter-spacing: .05em; color: #5a6478; margin-top: 8px; }
   .honeypot { position: absolute; left: -9999px; }
   .form-error { color: #ffb4b4; font-family: var(--font-body); font-size: 14px; margin: 12px 0 0; }
 
-  /* ── Submit button ── */
-  .btn-submit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    background: var(--crimson);
-    color: var(--white);
-    font-family: var(--font-head);
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    padding: 17px 32px;
-    border: none;
-    cursor: pointer;
-    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
-    transition: background .2s, transform .15s;
-    margin-top: 8px;
-  }
-  .btn-submit:hover  { background: var(--crimson-l); transform: translateY(-1px); }
+  .btn-submit { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: var(--crimson); color: var(--white); font-family: var(--font-head); font-weight: 700; font-size: 15px; letter-spacing: .12em; text-transform: uppercase; padding: 17px 32px; border: none; cursor: pointer; clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%); transition: background .2s, transform .15s; margin-top: 8px; }
+  .btn-submit:hover { background: var(--crimson-l); transform: translateY(-1px); }
   .btn-submit:active { transform: translateY(0); }
-  .btn-submit svg    { width: 18px; height: 18px; }
+  .btn-submit svg { width: 18px; height: 18px; }
 
-  /* ── Success state ── */
   .form-success { display: none; text-align: center; padding: 40px 20px; }
-  .form-success svg {
-    width: 52px; height: 52px;
-    color: var(--teal-l);
-    margin: 0 auto 16px;
-    display: block;
-  }
-  .form-success h3 {
-    font-family: var(--font-head);
-    font-weight: 700;
-    font-size: 26px;
-    text-transform: uppercase;
-    color: var(--white);
-    margin-bottom: 8px;
-  }
+  .form-success svg { width: 52px; height: 52px; color: var(--teal-l); margin: 0 auto 16px; display: block; }
+  .form-success h3 { font-family: var(--font-head); font-weight: 700; font-size: 26px; text-transform: uppercase; color: var(--white); margin-bottom: 8px; }
   @media (min-width: 768px) { .form-success h3 { font-size: 28px; } }
-  .form-success p {
-    font-family: var(--font-body);
-    font-size: 14px;
-    font-weight: 300;
-    color: var(--fog);
-    line-height: 1.7;
-  }
+  .form-success p { font-family: var(--font-body); font-size: 14px; font-weight: 300; color: var(--fog); line-height: 1.7; }
   .form-success p strong { color: var(--chrome); font-weight: 500; }
 </style>
 
 <script>
-  const form = document.getElementById('rfq-form') as HTMLFormElement | null;
+  // ── EmailJS credentials ──────────────────────────────────────
+  const EMAILJS_PUBLIC_KEY  = 'RvlglQbNQVffIJhrw';
+  const EMAILJS_SERVICE_ID  = 'service_8iekf99';
+  const EMAILJS_TEMPLATE_ID = 'template_0qg3o0d';
+  // ────────────────────────────────────────────────────────────
 
-  form?.addEventListener('submit', async event => {
+  // Load EmailJS SDK from CDN
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+  script.onload = () => {
+    (window as any).emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  };
+  document.head.appendChild(script);
+
+  const form       = document.getElementById('rfq-form') as HTMLFormElement | null;
+  const errorEl    = document.getElementById('form-error') as HTMLParagraphElement | null;
+  const formBody   = document.getElementById('form-body') as HTMLElement | null;
+  const formSuccess = document.getElementById('form-success') as HTMLElement | null;
+  const formWrap   = document.getElementById('rfq-form-wrap') as HTMLElement | null;
+
+  form?.addEventListener('submit', async (event) => {
     event.preventDefault();
-    const error = document.getElementById('form-error') as HTMLParagraphElement | null;
-    const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
 
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
+    // Honeypot check
+    const honeypot = form.querySelector<HTMLInputElement>('input[name="website"]');
+    if (honeypot?.value) return;
 
-    if (error) error.hidden = true;
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.textContent = 'Sending…';
-    }
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+
+    if (errorEl) errorEl.hidden = true;
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
+
+    // Build template params from form fields
+    const fd = new FormData(form);
+    const products = fd.getAll('products').join(', ') || 'Not specified';
+
+    const templateParams = {
+      from_name:    `${fd.get('first_name')} ${fd.get('last_name')}`,
+      reply_to:      fd.get('email'),
+      phone:         fd.get('phone')       || 'Not provided',
+      company:       fd.get('company'),
+      designation:   fd.get('designation') || 'Not provided',
+      enquiry_type:  fd.get('enquiry_type'),
+      industry:      fd.get('industry')    || 'Not specified',
+      products,
+      message:       fd.get('message'),
+    };
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' },
-      });
-      const result = await response.json().catch(() => null);
-      if (!response.ok || !result?.ok) throw new Error(result?.error || 'Unable to send your enquiry.');
+      const ejs = (window as any).emailjs;
+      if (!ejs) throw new Error('Email service not ready. Please try again.');
 
-      const formBody = document.getElementById('form-body');
-      const formSuccess = document.getElementById('form-success');
-      const formWrap = document.getElementById('rfq-form-wrap');
-      if (formBody) formBody.style.display = 'none';
+      await ejs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+
+      if (formBody)    formBody.style.display = 'none';
       if (formSuccess) formSuccess.style.display = 'block';
-      if (formWrap) window.scrollTo({ top: formWrap.offsetTop - 100, behavior: 'smooth' });
-    } catch (exception) {
-      if (error) {
-        error.textContent = exception instanceof Error ? exception.message : 'Unable to send your enquiry. Please try again.';
-        error.hidden = false;
-      }
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.textContent = 'Send Enquiry';
-      }
+      if (formWrap)    window.scrollTo({ top: formWrap.offsetTop - 100, behavior: 'smooth' });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Unable to send your enquiry. Please try again.';
+      if (errorEl) { errorEl.textContent = msg; errorEl.hidden = false; }
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Send Enquiry'; }
     }
   });
 
