@@ -37,7 +37,7 @@ export const products: Product[] = [
     name:      'Screw Conveyor',
     series:    'VECTOMEC™',
     shortDesc: 'Rotating helical screw blade within a trough or tube, moving bulk material horizontally, on incline, or vertically. Sealed design suits dusty, abrasive, and food-grade applications.',
-    image:     '/images/products/screw_con1.png',   // ← corrected path
+    image:     'images/products/screw_con1.webp',   // ← corrected path
     apps:      ['Cement', 'Food', 'Mining', 'Waste'],
  
     fullDesc:  'The screw conveyor is one of the most adaptable bulk material handling systems in industrial use — suited equally to fine powders, granules, wet sludge, and abrasive materials across every major process industry. Jayveecons designs and fabricates screw conveyors for horizontal, inclined, and vertical orientations, engineered precisely to your material\'s bulk density, particle size distribution, abrasiveness, moisture content, and throughput requirement. Every VECTOMEC™ screw conveyor is engineered on the VECTRIX™ Design Platform, Jayveecons\' proprietary process calculation and fabrication environment built on nearly four decades of screw conveyor design knowledge.',
@@ -106,7 +106,7 @@ export const products: Product[] = [
     name:      'Belt Conveyor',
     series:    'VECTOMEC™',
     shortDesc: 'Continuous loop belt on powered and idler pulleys — the workhorse of bulk material transport across long horizontal distances and gentle inclines.',
-    image:     '/images/belt_con.jpg',
+    image:     'images/products/belt_conveyor.webp',
     apps:      ['Mining', 'Cement', 'Aggregates', 'Food'],
     fullDesc:  'Belt conveyors are the most widely used bulk material transport system in the world. Jayveecons designs and builds complete belt conveyor systems including the belt, structure, pulleys, idlers, drive system, and take-up arrangement, tailored to your throughput, lump size, and installation geometry.',
     specs: [
@@ -131,7 +131,7 @@ export const products: Product[] = [
     name:      'Bucket Elevators',
     series:    'VECTOMEC™',
     shortDesc: 'Vertical elevation of flowable bulk materials using buckets mounted on a continuous belt. Ideal for light-to-medium density materials at high throughput.',
-    image:     '/images/products/bucket_elevator.png',
+    image:     'images/products/bucket_elevator.webp',
     apps:      ['Cement', 'Grain', 'Fertiliser'],
     fullDesc:  'Belt-type bucket elevators are used extensively in cement, grain, and fertiliser industries to elevate bulk materials vertically with minimal material degradation. Jayveecons designs and fabricates complete elevator assemblies including casing, head and boot sections, belting, buckets, drive and tensioning arrangements.',
     specs: [
@@ -149,7 +149,6 @@ export const products: Product[] = [
     name:      'Bucket Elevator — Chain Type',
     series:    'VECTOMEC™',
     shortDesc: 'Heavy-duty vertical elevation using chain-mounted buckets. Handles hot, abrasive, and heavy materials that exceed belt-type limitations.',
-    image:     '/images/be-chain.jpg',
     apps:      ['Mining', 'Steel', 'Cement'],
     fullDesc:  'Where belt-type elevators reach their limits — extreme heat, heavy abrasive lumps, and high bulk densities — chain-type bucket elevators take over. Jayveecons fabricates both single-strand and double-strand chain elevator configurations, with forged steel or cast link chain, heavy-duty fabricated steel buckets, and robust head and boot section construction.',
     specs: [
@@ -201,7 +200,6 @@ export const products: Product[] = [
     name:      'Vertical Shaft Kiln (VSK)',
     series:    'VECTOMEC™',
     shortDesc: 'Stationary vertical calcination shaft for small-to-medium scale cement and lime production. The technology that founded Jayveecons in 1987.',
-    image:     '/images/cement_kiln.jpg',
     apps:      ['Cement — Mini plants', 'Lime', 'Calcination'],
     fullDesc:  'The Vertical Shaft Kiln is the technology that founded Jayveecons in 1987 — and it remains our deepest area of expertise. Raw meal is nodulised, mixed with solid fuel, and charged from the top. As nodules descend under gravity through progressively hotter zones, calcination occurs and clinker forms. The VSK\'s key advantages over rotary kilns are significantly lower capital cost, simpler civil works, lower power consumption, and profitability at 50–300 TPD.',
     specs: [
@@ -228,7 +226,7 @@ export const products: Product[] = [
     name:      'Ball Mill / Grinding Mill',
     series:    'VECTOMEC™',
     shortDesc: 'Rotating cylindrical vessel with grinding media that reduces material to fine powder. Used in cement, mining, and mineral processing for particle size reduction.',
-    image:     '/images/products/ball_mill.png',
+    image:     'images/products/ball_mill.webp',
     apps:      ['Cement', 'Mining', 'Ceramics'],
     fullDesc:  'Ball mills are the standard in cement and mineral grinding. A cylindrical mill shell lined with wear-resistant liners rotates on trunnion bearings, tumbling steel or ceramic grinding media against the feed material to produce fine powder. Jayveecons designs both overflow and grate-discharge configurations, with open-circuit and closed-circuit arrangements.',
     specs: [
@@ -245,7 +243,7 @@ export const products: Product[] = [
     name:      'Air Classifier',
     series:    'VECTOMEC™',
     shortDesc: 'Dynamic rotor-based air classifier that separates fine particles from coarse by centrifugal and aerodynamic forces. Delivers precise cut-point control from 10 to 300 microns for cement, mineral, and chemical powder finishing.',
-    image:     '/images/products/classifier.png',
+    image:     'images/products/classifier.webp',
     apps:      ['Cement', 'Mining', 'Chemicals', 'Food'],
 
     fullDesc:  'The VECTOMEC™ Air Classifier is a high-efficiency dynamic separator that uses a precision-speed rotating rotor to impose a centrifugal force field on an ascending air-particle stream. Fine particles whose aerodynamic drag exceeds the centrifugal force pass inward through the rotor and exit as product; coarse particles are rejected outward and returned for regrinding. The result is a sharp, controllable separation at any cut point between 10 and 300 microns — essential in closed-circuit cement and mineral grinding systems where product fineness directly governs quality and energy consumption. Every VECTOMEC™ Air Classifier is engineered on the VECTRIX™ Design Platform, sized to your airflow, throughput, and target Blaine or d97 specification.',
@@ -311,7 +309,6 @@ export const products: Product[] = [
     category:  'processing',
     name:      'Crusher',
     series:    'VECTOMEC™',
-    image:     '/images/products/crusher.png',
 
     shortDesc: 'Primary and secondary size reduction of run-of-mine rock, clinker, and aggregate. Jaw, impact, and cone crusher configurations to match feed size and product specification.',
     apps:      ['Mining', 'Aggregates', 'Cement'],
@@ -336,7 +333,6 @@ export const products: Product[] = [
     category:  'processing',
     name:      'Nodulizer / Disc Pelletiser',
     series:    'VECTOMEC™',
-    image:     '/images/products/nodulizer.png',
 
     shortDesc: 'Inclined rotating pan that forms fine powders into uniform spherical nodules or pellets. Critical in VSK cement production and iron ore pelletising processes.',
     apps:      ['Cement VSK', 'Iron ore', 'Fertiliser'],
@@ -357,7 +353,6 @@ export const products: Product[] = [
     category:  'processing',
     name:      'Vibrating Screens',
     series:    'VECTOMEC™',
-    image:     '/images/products/screens.png',
 
     shortDesc: 'Single and multi-deck vibrating screens for particle size classification and oversize removal. Linear and circular motion configurations.',
     apps:      ['Mining', 'Aggregates', 'Food'],
@@ -377,7 +372,7 @@ export const products: Product[] = [
     category:  'processing',
     name:      'Industrial Dryer',
     series:    'VECTOMEC™',
-    image:     '/images/products/rotary_dryer.png',
+    image:     'images/products/rotary_dryer.webp',
 
     shortDesc: 'Rotary drum dryer for reducing moisture content in bulk materials prior to processing or storage. Direct or indirect fired configurations.',
     apps:      ['Mining', 'Food', 'Waste'],
@@ -401,7 +396,7 @@ export const products: Product[] = [
     category:  'ancillary',
     name:      'Hoppers & Storage',
     series:    'VECTOMEC™',
-    image:     '/images/products/hopper_screw_feeder.png',
+    image:     'images/products/hopper_screw_feeder.webp',
 
     shortDesc: 'Fabricated storage and feed hoppers for material surge capacity and controlled feed to downstream equipment. Engineered geometry to prevent bridging and ratholing.',
     apps:      ['All sectors'],
@@ -426,7 +421,7 @@ export const products: Product[] = [
     category:  'ancillary',
     name:      'Silos & Storage Tanks',
     series:    'VECTOMEC™',
-    image:     '/images/products/classifier.png',
+    image:     'images/products/classifier.webp',
 
     shortDesc: 'Vertical storage vessels for bulk powders, granules, and liquids. Flat-bottom and cone-bottom configurations; 5T to 1000T+ capacity.',
     apps:      ['Cement', 'Food', 'Chemical'],
@@ -451,7 +446,7 @@ export const products: Product[] = [
     category:  'ancillary',
     name:      'Pressure Vessels',
     series:    'VECTOMEC™',
-    image:     '/images/products/classifier.png',
+    image:     'images/products/classifier.webp',
 
     shortDesc: 'Fabricated pressure vessels for pneumatic conveying boosters, compressed air receivers, and process applications. Hydrostatic test certified.',
     apps:      ['Pneumatic systems', 'Process'],
@@ -477,7 +472,7 @@ export const products: Product[] = [
     category:  'ancillary',
     name:      'Rotary Air Lock',
     series:    'VECTOMEC™',
-    image:     '/images/products/classifier.png',
+    image:     'images/products/classifier.webp',
 
     shortDesc: 'Rotary valve that meters bulk material between zones of different pressure while maintaining the pressure differential. Essential in pneumatic conveying and dust collectors.',
     apps:      ['Cement', 'Pneumatic systems'],
@@ -502,7 +497,7 @@ export const products: Product[] = [
     category:  'ancillary',
     name:      'Chimney & Flue Stacks',
     series:    'VECTOMEC™',
-        image:     '/images/products/classifier.png',
+        image:     'images/products/classifier.webp',
 
     shortDesc: 'Fabricated mild steel and stainless steel chimney stacks and flue gas ducts for industrial kilns, dryers, and furnaces. Insulated and refractory-lined to process temperature requirements.',
     apps:      ['Cement', 'Mining', 'Steel'],
@@ -527,7 +522,7 @@ export const products: Product[] = [
     category:  'ancillary',
     name:      'Grinding Media',
     series:    'VECTOMEC™',
-        image:     '/images/products/classifier.png',
+        image:     'images/products/classifier.webp',
 
     shortDesc: 'Steel grinding balls and cylpebs for ball mill and rod mill applications. Supplied in various grades and sizes to match your mill configuration, material hardness, and target product fineness.',
     apps:      ['Ball mills', 'Cement', 'Mining'],
@@ -555,7 +550,6 @@ export const products: Product[] = [
     name:      'Idler Rollers',
     series:    'VECTOMEC™',
     shortDesc: 'In-house manufactured carrying, return, impact, and training idlers for belt conveyor systems. Precision-balanced for long service life.',
-    image:     '/images/idler.jpg',
     apps:      ['Belt conveyors', 'OEM replacement'],
     fullDesc:  'Jayveecons manufactures idler rollers in-house on CNC equipment, using precision-selected deep-groove ball bearings, labyrinth seals, and precision-turned shells. All rollers are spin-balanced before despatch to eliminate vibration at operating speed.',
     specs: [
@@ -572,7 +566,7 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Rollers & Pulleys',
     series:    'VECTOMEC™',
-        image:     '/images/products/classifier.png',
+        image:     'images/products/classifier.webp',
 
     shortDesc: 'Drive, tail, snub, and bend pulleys for belt conveyor systems. Rubber-lagged for drive grip, precision-balanced shafts — manufactured in-house to customer drawings or OEM specifications.',
     apps:      ['Belt conveyors', 'OEM replacement'],
@@ -595,7 +589,7 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Gearboxes & Speed Reducers',
     series:    'VECTOMEC™',
-        image:     '/images/products/classifier.png',
+        image:     'images/products/classifier.webp',
 
     shortDesc: 'Helical, bevel-helical, and worm gear reducers for conveyor, mill, kiln, and feeder drive applications. Custom gear ratios to match process speed and torque requirements.',
     apps:      ['Conveyors', 'Mills', 'Kilns', 'Elevators'],
@@ -619,7 +613,7 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Shafts & Spindles',
     series:    'VECTOMEC™',
-        image:     '/images/products/classifier.png',
+        image:     'images/products/classifier.webp',
 
     shortDesc: 'Precision-machined drive shafts, stub shafts, conveyor head and tail shafts, and idler spindles. Manufactured to drawing or reverse-engineered from sample for OEM replacement.',
     apps:      ['Conveyors', 'Elevators', 'Mills', 'OEM replacement'],
@@ -641,7 +635,7 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Conveyor Belts',
     series:    'VECTOMEC™',
-        image:     '/images/products/classifier.png',
+        image:     'images/products/classifier.webp',
 
     shortDesc: 'Replacement conveyor belts in fabric ply, steel cord, heat-resistant, oil-resistant, and food-grade grades. Supplied cut-to-length with mechanical or vulcanised splicing.',
     apps:      ['Belt conveyors', 'OEM replacement', 'Upgrades'],
@@ -661,7 +655,7 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Replacement Elevator Buckets',
     series:    'VECTOMEC™',
-        image:     '/images/products/classifier.png',
+        image:     'images/products/classifier.webp',
 
     shortDesc: 'Replacement buckets for belt and chain bucket elevators — stamped steel, polyethylene, and polyurethane grades. Supplied individually or in full re-bucketing sets.',
     apps:      ['Bucket elevators', 'Cement', 'Grain', 'Mining'],
@@ -681,7 +675,7 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Elevator Belts & Chains',
     series:    'VECTOMEC™',
-        image:     '/images/products/classifier.png',
+        image:     'images/products/classifier.webp',
 
     shortDesc: 'Replacement elevator belts (rubber or PVC), elevator chains (forged and cast link), casing panels, head and boot section fabrications for elevator refurbishment.',
     apps:      ['Bucket elevators', 'OEM replacement'],
@@ -706,7 +700,7 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Screw Flights & Wear Parts',
     series:    'VECTOMEC™',
-        image:     '/images/products/classifier.png',
+        image:     'images/products/classifier.webp',
 
     shortDesc: 'Replacement screw flights, hard-faced and abrasion-resistant flighting, trough liners, hanger bearing assemblies, and end seals for screw conveyors.',
     apps:      ['Screw conveyors', 'OEM replacement', 'Upgrades'],
@@ -726,7 +720,7 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Sensors & Instrumentation',
     series:    'VECTOMEC™',
-        image:     '/images/products/classifier.png',
+        image:     'images/products/classifier.webp',
 
     shortDesc: 'Conveyor safety and monitoring instrumentation: belt speed sensors, misalignment switches, zero-speed switches, level sensors, pull-cord emergency stops, and proximity switches.',
     apps:      ['Conveyors', 'Elevators', 'Silos', 'All systems'],
@@ -748,7 +742,7 @@ export const products: Product[] = [
     category:  'accessories',
     name:      'Custom Fabrications & Wear Parts',
     series:    'VECTOMEC™',
-        image:     '/images/products/classifier.png',
+        image:     'images/products/classifier.webp',
 
     shortDesc: 'Chutes, transition pieces, skirt boards, wear liners (UHMWPE, ceramic, AR steel), shaft sleeves, and any other non-standard component. Fabricated to drawing, sample, or reverse-engineered.',
     apps:      ['Custom fabrication', 'OEM replacement'],

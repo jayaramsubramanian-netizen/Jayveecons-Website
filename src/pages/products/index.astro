@@ -1,0 +1,68 @@
+---
+import BaseLayout          from '../../layouts/BaseLayout.astro';
+import ProductsPageHeader  from '../../components/products/ProductsPageHeader.astro';
+import ProductFilterBar    from '../../components/products/ProductFilterBar.astro';
+import ProductGrid         from '../../components/products/ProductGrid.astro';
+import ProductsRfqBand     from '../../components/products/ProductsRfqBand.astro';
+import { products }        from '../../data/products';
+
+const seo = {
+  title: 'Products — VECTOMEC™ Equipment Line | Jayveecons Group',
+  description: 'The complete VECTOMEC™ catalogue — material handling systems, processing equipment, and ancillary hardware for cement, mining, food, and waste management industries. Est. 1987, Bengaluru, India.',
+  keywords: [
+    'bulk material handling equipment India',
+    'screw conveyor manufacturer India',
+    'bucket elevator manufacturer India',
+    'belt conveyor manufacturer Karnataka',
+    'VSK vertical shaft kiln India',
+    'ball mill manufacturer India',
+    'crusher manufacturer India',
+    'VECTOMEC equipment',
+    'Jayveecons products',
+    'industrial equipment Bengaluru',
+  ].join(', '),
+};
+
+const categories = ['handling', 'processing', 'ancillary', 'accessories'] as const;
+type Cat = typeof categories[number];
+const counts = categories.reduce<Record<Cat, number>>((acc, c) => {
+  acc[c] = products.filter(p => p.category === c).length;
+  return acc;
+}, {} as Record<Cat, number>);
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  currentPath="/products"
+>
+  <!-- 1. Page header — DARK navy gradient -->
+  <ProductsPageHeader />
+
+  <!-- 2. Sticky filter bar + search — RED bar -->
+  <ProductFilterBar counts={counts} />
+
+  <!-- 3. Product grid — alternating light/dark sections, cards link to /products/[id] -->
+  <ProductGrid products={products} />
+
+  <!-- 4. RFQ closing band — white grid -->
+  <ProductsRfqBand />
+
+  <!-- JSON-LD structured data -->
+  <script type="application/ld+json" is:inline>{JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "VECTOMEC™ Equipment Catalogue — Jayveecons Group",
+    "description": seo.description,
+    "url": "https://www.jayveecons.com/products",
+    "numberOfItems": products.length,
+    "itemListElement": products.map((p, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "name": p.name,
+      "description": p.shortDesc,
+      "url": `https://www.jayveecons.com/products/${p.id}`,
+    }))
+  })}</script>
+</BaseLayout>
